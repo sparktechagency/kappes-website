@@ -1,12 +1,12 @@
-import ProductView from "@/components/ProductPage/productView";
+import ProductPgae from "@/components/ProductPage/productPgae";
 import React from "react";
 
-function ProductPage() {
+function ProductDetilsPage() {
   return (
     <div>
-      <ProductView />
+      <ProductPgae />
     </div>
   );
 }
 
-export default ProductPage;
+export default ProductDetilsPage;
