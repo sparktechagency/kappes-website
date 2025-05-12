@@ -63,7 +63,7 @@ function Footer() {
     },
   ];
   return (
-    <footer className="bg-black mt-10 text-white">
+    <footer className="bg-black  text-white">
       {/* Top Section */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8 px-8 py-12 lg:px-32 mx-auto">
         {/* Branding & Description */}

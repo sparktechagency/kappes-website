@@ -1,7 +1,8 @@
+import LogIn from "@/components/Auth/login";
 import React from "react";
 
 function Login() {
-  return <div className="bg-red-300">Login</div>;
+  return <LogIn />;
 }
 
 export default Login;

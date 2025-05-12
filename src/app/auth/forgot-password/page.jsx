@@ -1,7 +1,12 @@
+import ForgotPasswordForm from "@/components/Auth/forgotPassword";
 import React from "react";
 
 function ForgotPassword() {
-  return <div className="bg-sky-400">forgot-password</div>;
+  return (
+    <div className="w-screen h-[100vh] flex items-center justify-center">
+      <ForgotPasswordForm />
+    </div>
+  );
 }
 
 export default ForgotPassword;
