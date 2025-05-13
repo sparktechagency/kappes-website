@@ -1,55 +1,36 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-
 import Image from "next/image";
 import { HiOutlineUser } from "react-icons/hi";
-import { LuShoppingCart } from "react-icons/lu";
-import { LuHeart } from "react-icons/lu";
-import { FiLock } from "react-icons/fi";
-import { FiLogOut } from "react-icons/fi";
-import { Separator } from "../ui/separator";
-const Sidebar = () => {
+import { LuShoppingCart, LuHeart } from "react-icons/lu";
+import { FiLock, FiLogOut } from "react-icons/fi";
+
+const Sidebar = ({ setSelectedMenu, selectedMenu }) => {
   const menuItem = [
     {
       id: 1,
-      icon: (
-        <HiOutlineUser
-          size={25}
-          className="text-[#AF1500] group-hover:text-white"
-        />
-      ),
+      icon: <HiOutlineUser size={25} />,
       label: "My Profile",
     },
     {
       id: 2,
-      icon: (
-        <LuShoppingCart
-          size={24}
-          className="text-[#AF1500] group-hover:text-white"
-        />
-      ),
+      icon: <LuShoppingCart size={24} />,
       label: "Order History",
     },
     {
       id: 3,
-      icon: (
-        <LuHeart size={24} className="text-[#AF1500] group-hover:text-white" />
-      ),
+      icon: <LuHeart size={24} />,
       label: "Wishlist",
     },
     {
       id: 4,
-      icon: (
-        <FiLock size={24} className="text-[#AF1500] group-hover:text-white" />
-      ),
+      icon: <FiLock size={24} />,
       label: "Change Password",
     },
     {
       id: 5,
-      icon: (
-        <FiLogOut size={24} className="text-[#AF1500] group-hover:text-white" />
-      ),
+      icon: <FiLogOut size={24} />,
       label: "Logout",
     },
   ];
@@ -70,17 +51,30 @@ const Sidebar = () => {
           <p className="text-xs text-gray-500">demo@example.com</p>
         </div>
       </div>
-      <hr />
       <div className="mt-4 px-2">
         <ul className="space-y-2">
           {menuItem.map((item) => (
-            <li key={item.id}>
+            <li key={item.id} onClick={() => setSelectedMenu(item.id)}>
               <Link
                 href="#"
-                className="flex items-center gap-2 p-2 rounded-md group hover:bg-[#AF1500] transition-colors duration-200"
+                className={`flex items-center gap-2 p-2 rounded-md group transition-colors duration-200   ${
+                  selectedMenu === item.id
+                    ? "bg-[#AF1500]"
+                    : "hover:bg-[#AF1500] "
+                }`}
               >
-                <span className="group-hover:text-white">{item.icon}</span>
-                <span className="text-sm text-[#AF1500] group-hover:text-white">
+                <span
+                  className={`${
+                    selectedMenu === item.id ? "text-white" : "text-[#AF1500]"
+                  }`}
+                >
+                  {item.icon}
+                </span>
+                <span
+                  className={`text-sm ${
+                    selectedMenu === item.id ? "text-white" : "text-[#AF1500]"
+                  }`}
+                >
                   {item.label}
                 </span>
               </Link>
