@@ -1,7 +1,12 @@
 import React from "react";
+import Sidebar from "./sidebar";
 
-function layout() {
-  return <div>layout</div>;
+function ProfileLayout() {
+  return (
+    <div className="w-full h-screen ">
+      <Sidebar />
+    </div>
+  );
 }
 
-export default layout;
+export default ProfileLayout;

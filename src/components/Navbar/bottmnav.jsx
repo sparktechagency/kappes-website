@@ -45,7 +45,7 @@ function BottomNav() {
           </Link>
         </div>
         <div className="flex items-center space-x-4">
-          <Link href="#" className=" hover:text-kappes ">
+          <Link href="./become-seller-login" className=" hover:text-kappes ">
             Become a Seller
           </Link>
           <Link href="#" className=" hover:text-kappes">
