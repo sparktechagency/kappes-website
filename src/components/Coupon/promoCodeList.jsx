@@ -1,7 +1,8 @@
 "use client";
+
 import { useState } from "react";
 import { Calendar, Copy, ShoppingBag } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -25,41 +26,43 @@ const PromoCodeCard = ({ promo }) => {
   };
 
   return (
-    <Card className="overflow-hidden mb-4 border rounded-lg shadow-sm p-0">
-      <div className="flex flex-col md:flex-row w-full h-full">
-        {/* Left content */}
-        <div className="flex flex-col md:flex-row p-4 flex-1">
-          <div className="flex-shrink-0 flex items-start">
-            <div className="w-16 h-16 bg-blue-100 rounded-md overflow-hidden flex items-center justify-center">
-              <img
-                src={promo.image}
-                alt={promo.title}
-                className="w-full h-full object-cover"
-              />
-            </div>
+    <Card className="overflow-hidden mb-4 rounded-2xl shadow-sm border p-0">
+      <div className="flex flex-col md:flex-row">
+        {/* Left section */}
+        <div className="flex flex-col md:flex-row flex-1 p-4 gap-4">
+          {/* Logo */}
+          <div className="w-16 h-16 rounded-md overflow-hidden bg-muted flex items-center justify-center">
+            <img
+              src={promo.image}
+              alt={promo.title}
+              className="w-full h-full object-cover"
+            />
           </div>
 
-          <div className="flex-1 ml-0 md:ml-4 mt-3 md:mt-0">
-            <div className="flex items-start justify-between">
-              <div>
-                <h3 className="font-medium text-gray-900">{promo.title}</h3>
-                <div className="flex items-center text-gray-500 text-sm mt-1">
-                  <Calendar className="h-3.5 w-3.5 mr-1" />
-                  <span>Expired: {promo.expiry}</span>
-                </div>
+          {/* Info */}
+          <div className="flex flex-col justify-between flex-1">
+            <div>
+              <h3 className="text-base font-medium text-gray-900">
+                {promo.title}
+              </h3>
+              <div className="flex items-center text-sm text-gray-500 mt-1">
+                <Calendar className="w-4 h-4 mr-1" />
+                <span>Expired: {promo.expiry}</span>
               </div>
+
+              <h2 className="text-lg font-bold mt-2">{promo.discount}</h2>
+              <p className="text-sm text-muted-foreground mt-1">
+                {promo.description}
+              </p>
             </div>
 
-            <h2 className="text-lg font-bold mt-2">{promo.discount}</h2>
-
-            <p className="text-gray-600 text-sm mt-1">{promo.description}</p>
-
+            {/* Promo Code */}
             <div className="mt-3">
               {showCode ? (
                 <div className="flex items-center">
                   <Badge
                     variant="outline"
-                    className="px-3 py-1 border-dashed border-gray-300 bg-gray-50 text-gray-800"
+                    className="bg-gray-100 border-dashed border-gray-300 text-gray-800 px-3 py-1"
                   >
                     {promo.code}
                   </Badge>
@@ -69,7 +72,7 @@ const PromoCodeCard = ({ promo }) => {
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-8 w-8 ml-2"
+                          className="ml-2"
                           onClick={handleCopyCode}
                         >
                           <Copy className="h-4 w-4" />
@@ -83,7 +86,6 @@ const PromoCodeCard = ({ promo }) => {
                 </div>
               ) : (
                 <Button
-                  variant="default"
                   className="bg-green-600 hover:bg-green-700 text-white"
                   onClick={() => setShowCode(true)}
                 >
@@ -94,10 +96,10 @@ const PromoCodeCard = ({ promo }) => {
           </div>
         </div>
 
-        {/* Right content - Red box with icon */}
-        <div className="bg-sky-700 flex-shrink-0 w-full h-full md:w-32 flex items-center justify-center p-6">
+        {/* Right section */}
+        <div className="bg-red-700 flex md:w-32 w-full justify-center items-center p-6 md:rounded-none rounded-b-2xl md:rounded-r-2xl md:rounded-l-none">
           <div className="bg-white rounded-full p-3">
-            <ShoppingBag className="h-8 w-8 text-red-700" />
+            <ShoppingBag className="w-8 h-8 text-red-700" />
           </div>
         </div>
       </div>

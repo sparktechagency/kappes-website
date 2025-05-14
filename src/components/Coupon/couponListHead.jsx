@@ -14,7 +14,7 @@ function CouponListHead() {
         />
 
         <div className="flex flex-col justify-between">
-          <h2 className="text-3xl text-sky-500 font-bold font-comfortaa">
+          <h2 className="text-3xl font-bold font-comfortaa">
             The Canuck Mall Promo Code & Deals – April 2025
           </h2>
           <p>
