@@ -11,6 +11,9 @@
     color: var(--kappes-footer);
   }
 }
+.font-comfortaa {
+  font-family: var(--font-comfortaa);
+}
 
 @theme inline {
   --color-background: var(--background);
