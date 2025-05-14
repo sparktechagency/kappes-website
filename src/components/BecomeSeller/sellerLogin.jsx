@@ -26,7 +26,7 @@ export default function SellerLogin() {
   };
 
   return (
-    <Card className="w-full max-w-md bg-[#f7e8e5]">
+    <Card className="w-full h-full  bg-[#f7e8e5]">
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl font-bold text-center text-red-700">
           Welcome Back
@@ -46,6 +46,7 @@ export default function SellerLogin() {
             type="email"
             placeholder="Enter your email address"
             required
+            className="bg-white"
           />
         </div>
 
@@ -59,12 +60,13 @@ export default function SellerLogin() {
               type={showPassword ? "text" : "password"}
               placeholder="Create a password"
               required
+              className="bg-white"
             />
             <Button
               type="button"
               variant="ghost"
               size="icon"
-              className="absolute right-0 top-0 h-full"
+              className="absolute right-0 top-0 h-full hover:bg-transparent"
               onClick={togglePasswordVisibility}
             >
               {!showPassword ? (

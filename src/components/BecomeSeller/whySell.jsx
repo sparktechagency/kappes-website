@@ -55,12 +55,12 @@ export default function WhySellOnCanuckMall() {
   ];
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 py-12 md:py-16">
+    <div className="w-full  mx-auto px-4 py-12 md:py-16 lg:px-32">
       <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-center mb-10 md:mb-16">
         Why Sell on The Canuck Mall ?
       </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+      <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
         {benefits.map((benefit, index) => (
           <div key={index} className="flex flex-col">
             <div className="flex items-center justify-center space-x-4">

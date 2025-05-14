@@ -66,14 +66,17 @@ function SimpleSteps() {
     },
   ];
   return (
-    <div className="w-full mx-auto lg:mx-32">
-      <h1>5 Simple Steps to Start Selling on The Canuck Mall</h1>
-      <div className=" grid grid-cols-4 gap-8 ">
+    <div className="w-full mx-auto ">
+      <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-center mb-10 md:mb-16">
+        5 Simple Steps to Start Selling
+        <br /> on The Canuck Mall
+      </h2>
+      <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mx-auto gap-8 px-6 lg:px-32 ">
         {steps.map((item) => (
-          <Card className="w-80" key={item.id}>
-            <CardContent>
+          <Card className="max-w-md h-60 mx-auto border-red-700 " key={item.id}>
+            <CardContent className="flex flex-col items-start justify-between h-[90%] lg:h-full my-auto">
               <div className="bg-kappes w-fit p-2 rounded-lg">{item.icon}</div>
-              <Label>{item.title}</Label>
+              <Label className="text-2xl">{item.title}</Label>
               <CardDescription>{item.description}</CardDescription>
             </CardContent>
           </Card>

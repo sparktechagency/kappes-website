@@ -6,7 +6,7 @@ export default function AboutUs() {
       {/* About Us Section */}
       <h2 className="text-3xl font-bold text-center">About Us</h2>
       <section className="flex flex-col-reverse md:flex md:flex-row items-start gap-8 text-justify">
-        <div className="flex-1 space-y-4">
+        <div className="flex-1 space-y-4 ">
           <p>
             Welcome to <strong>The Canuck Mall</strong>, Canada’s premier online
             marketplace, where quality meets convenience. We are dedicated to
