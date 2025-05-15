@@ -37,7 +37,7 @@ const Sidebar = ({ setSelectedMenu, selectedMenu }) => {
 
   return (
     <>
-      <div className="bg-white w-52 h-[30rem] flex-col items-center justify-center rounded-lg border shadow-sm hidden md:flex">
+      <div className="bg-white min-w-52 h-[30rem] flex-col items-center justify-center rounded-lg border shadow-sm hidden md:flex">
         <div className="flex flex-col items-center pt-4 py-4">
           <Image
             src="/assets/userProfile/profileImage.jpg"

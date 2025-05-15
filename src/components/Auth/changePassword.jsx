@@ -16,7 +16,7 @@ export default function ChangePassword({ selectedMenu }) {
     setShowConfirmPassword(!showConfirmPassword);
   if (selectedMenu !== 4) return null;
   return (
-    <Card className="w-full h-fit max-w-md mx-auto shadow-sm">
+    <Card className="w-full h-fit  max-w-md  shadow-sm">
       <CardContent className="pt-6">
         <div className="space-y-6">
           <div className="space-y-2">

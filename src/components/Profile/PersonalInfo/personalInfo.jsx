@@ -8,7 +8,7 @@ export default function PersonalInfo({ selectedMenu }) {
   if (selectedMenu !== 1) return null;
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 w-full">
       <PersonalInfoCard />
       <ShippingAddressCard />
     </div>
@@ -17,7 +17,7 @@ export default function PersonalInfo({ selectedMenu }) {
 
 function PersonalInfoCard() {
   return (
-    <Card className="p-0 w-full h-fit md:w-[28rem] lg:w-[40rem] overflow-hidden">
+    <Card className="p-0 w-full h-fit md:w-full lg:w-[40rem] lx:w-[60rem] overflow-hidden">
       <div className="bg-kappes px-4 flex items-center justify-between">
         <div className="flex items-center gap-4 text-white">
           <span>
@@ -169,7 +169,7 @@ function PersonalInfoCard() {
 
 const ShippingAddressCard = () => {
   return (
-    <Card className="p-0 w-full h-fit md:w-[28rem] lg:w-[40rem] overflow-hidden">
+    <Card className="p-0 w-full h-fit md:w-full lg:w-[40rem] overflow-hidden">
       <div className="bg-kappes px-4 flex items-center justify-between">
         <div className="flex items-center gap-4 text-white">
           <span>
