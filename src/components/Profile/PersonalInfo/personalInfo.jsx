@@ -17,7 +17,7 @@ export default function PersonalInfo({ selectedMenu }) {
 
 function PersonalInfoCard() {
   return (
-    <Card className="p-0 sm:w-[16rem] h-fit md:w-[28rem] lg:w-[40rem] overflow-hidden">
+    <Card className="p-0 w-full h-fit md:w-[28rem] lg:w-[40rem] overflow-hidden">
       <div className="bg-kappes px-4 flex items-center justify-between">
         <div className="flex items-center gap-4 text-white">
           <span>
@@ -169,7 +169,7 @@ function PersonalInfoCard() {
 
 const ShippingAddressCard = () => {
   return (
-    <Card className="p-0 sm:w-[16rem] h-fit md:w-[28rem] lg:w-[40rem] overflow-hidden">
+    <Card className="p-0 w-full h-fit md:w-[28rem] lg:w-[40rem] overflow-hidden">
       <div className="bg-kappes px-4 flex items-center justify-between">
         <div className="flex items-center gap-4 text-white">
           <span>

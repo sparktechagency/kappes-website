@@ -14,7 +14,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-
+import { MdLogout } from "react-icons/md";
 import { Button } from "../ui/button";
 import { ChevronRight, MapPin, Store, HandCoins, Tag } from "lucide-react";
 function TopNav() {
@@ -84,9 +84,11 @@ function TopNav() {
                 <h3 className="my-2 text-xl font-comfortaa font-bold">
                   Sarah Jones
                 </h3>
-                <Button variant="outline" className="">
-                  View Profile
-                </Button>
+                <Link href="/profile/4545">
+                  <Button variant="outline" className="cursor-pointer">
+                    View Profile
+                  </Button>
+                </Link>
               </div>
 
               <div className="mt-6 space-y-2 px-4 bg-red-400">
@@ -118,6 +120,17 @@ function TopNav() {
                   <Tag className="h-4 w-4" />
                   <span>Deals & Offers</span>
                   <ChevronRight className="h-4 w-4 ml-auto" />
+                </Button>
+              </div>
+              <div className="mt-6 space-y-2 px-4  h-full flex items-end">
+                <Button variant="ghost" className="w-fit justify-start gap-2 ">
+                  <MdLogout
+                    size={40}
+                    className="w-10 h-10 text-lg font-semibold text-red-800"
+                  />
+                  <span className="text-lg font-comfortaa font-semibold text-red-800">
+                    Log Out
+                  </span>
                 </Button>
               </div>
             </DrawerContent>
