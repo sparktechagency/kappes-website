@@ -22,6 +22,9 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Upload } from "lucide-react";
+import * as RPNInput from "react-phone-number-input";
+import flags from "react-phone-number-input/flags";
+import Link from "next/link";
 
 // Business type options
 const businessTypes = [
@@ -110,7 +113,7 @@ export default function BusinessListingForm() {
   };
 
   return (
-    <div className="flex flex-col items-center w-full p-4 bg-gray-50">
+    <div className="flex flex-col items-center w-full p-4 ">
       <div className="w-full max-w-4xl">
         <div className="text-center mb-6">
           <h1 className="text-2xl font-bold text-red-700">
@@ -121,7 +124,7 @@ export default function BusinessListingForm() {
           </p>
         </div>
 
-        <Card className="w-full">
+        <Card className="w-full bg-[#f9f5f4] border-none">
           <CardContent className="pt-6">
             <Form {...form}>
               <form
@@ -144,6 +147,7 @@ export default function BusinessListingForm() {
                             <Input
                               placeholder="Enter your Business name"
                               {...field}
+                              className="bg-white"
                             />
                           </FormControl>
                           <FormMessage />
@@ -163,7 +167,7 @@ export default function BusinessListingForm() {
                             defaultValue={field.value}
                           >
                             <FormControl>
-                              <SelectTrigger>
+                              <SelectTrigger className="w-full bg-white">
                                 <SelectValue placeholder="Select business category" />
                               </SelectTrigger>
                             </FormControl>
@@ -197,6 +201,7 @@ export default function BusinessListingForm() {
                             <Input
                               placeholder="Enter your business email address"
                               {...field}
+                              className="bg-white"
                             />
                           </FormControl>
                           <FormMessage />
@@ -223,7 +228,7 @@ export default function BusinessListingForm() {
                                 <span>🇨🇦</span>
                               </div>
                               <Input
-                                className="rounded-l-none"
+                                className="rounded-l-none bg-white"
                                 placeholder="Enter your business phone number"
                                 {...field}
                               />
@@ -252,7 +257,7 @@ export default function BusinessListingForm() {
                                 id="logo-upload"
                                 type="file"
                                 accept="image/*"
-                                className="hidden"
+                                className="hidden bg-white"
                                 onChange={handleLogoChange}
                               />
                             </div>
@@ -323,7 +328,7 @@ export default function BusinessListingForm() {
                             <Textarea
                               placeholder="Describe your business in a few sentences"
                               {...field}
-                              className="resize-none"
+                              className="resize-none bg-white"
                               rows={4}
                             />
                           </FormControl>
@@ -351,7 +356,7 @@ export default function BusinessListingForm() {
                             defaultValue={field.value}
                           >
                             <FormControl>
-                              <SelectTrigger>
+                              <SelectTrigger className="w-full bg-white">
                                 <SelectValue placeholder="Please choose your Province" />
                               </SelectTrigger>
                             </FormControl>
@@ -380,7 +385,7 @@ export default function BusinessListingForm() {
                             defaultValue={field.value}
                           >
                             <FormControl>
-                              <SelectTrigger>
+                              <SelectTrigger className="w-full bg-white">
                                 <SelectValue placeholder="Please choose your territory" />
                               </SelectTrigger>
                             </FormControl>
@@ -408,7 +413,7 @@ export default function BusinessListingForm() {
                             defaultValue={field.value}
                           >
                             <FormControl>
-                              <SelectTrigger>
+                              <SelectTrigger className="w-full bg-white">
                                 <SelectValue placeholder="Please choose your city" />
                               </SelectTrigger>
                             </FormControl>
@@ -435,6 +440,7 @@ export default function BusinessListingForm() {
                             <Input
                               placeholder="Enter your detail address"
                               {...field}
+                              className="bg-white"
                             />
                           </FormControl>
                           <FormMessage />
@@ -445,12 +451,14 @@ export default function BusinessListingForm() {
                 </div>
 
                 <div className="flex justify-end">
-                  <Button
-                    type="submit"
-                    className="bg-red-700 hover:bg-red-800 text-white px-8"
-                  >
-                    Continue
-                  </Button>
+                  <Link href="business-listing/verification">
+                    <Button
+                      type="submit"
+                      className="bg-red-700 hover:bg-red-800 text-white px-8"
+                    >
+                      Continue
+                    </Button>
+                  </Link>
                 </div>
               </form>
             </Form>

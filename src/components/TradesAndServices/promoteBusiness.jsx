@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const PromoteBusiness = () => {
   return (
@@ -20,9 +21,11 @@ const PromoteBusiness = () => {
             easier than ever to increase your visibility and grow your business
             in Canada. Let us help you stand out and attract more customers!
           </p>
-          <Button className="bg-red-600 hover:bg-red-700 font-comfortaa text-lg text-white">
-            Add your Business
-          </Button>
+          <Link href="/business-listing">
+            <Button className="bg-red-600 hover:bg-red-700 font-comfortaa text-lg text-white">
+              Add your Business
+            </Button>
+          </Link>
         </div>
 
         {/* Image */}

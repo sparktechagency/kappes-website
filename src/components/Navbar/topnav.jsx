@@ -1,49 +1,3 @@
-// import SearchBox from "@/common/components/searchBox";
-// import Image from "next/image";
-// import React from "react";
-// import { HiOutlineShoppingCart } from "react-icons/hi";
-// import { FaRegUser } from "react-icons/fa";
-// import Link from "next/link";
-
-// function TopNav() {
-//   return (
-//     <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 px-4 py-2 flex  sm:flex-row items-center justify-center sm:justify-between gap-3 lg:px-32">
-//       {/* Logo */}
-//       <div className="flex-shrink-0">
-//         <Image
-//           src="/assets/topnavimg.png"
-//           alt="Website Logo"
-//           width={100}
-//           height={100}
-//           className="object-contain"
-//         />
-//       </div>
-
-//       {/* Search box */}
-//       <div className="w-full sm:w-auto flex-1">
-//         <SearchBox />
-//       </div>
-
-//       {/* Right section: icons */}
-//       <div className="flex items-center gap-2 mt-2 sm:mt-0">
-//         <button className="text-gray-500 hover:text-gray-700 focus:outline-none">
-//           <HiOutlineShoppingCart size={24} />
-//         </button>
-
-//         <Link
-//           href="/cart"
-//           className="flex items-center gap-2 text-gray-500 hover:text-gray-700"
-//         >
-//           <FaRegUser size={20} />
-//           <span className="hidden md:inline">Sign In</span>
-//         </Link>
-//       </div>
-//     </nav>
-//   );
-// }
-
-// export default TopNav;
-
 "use client";
 
 import SearchBox from "@/common/components/searchBox";
@@ -61,6 +15,8 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 
+import { Button } from "../ui/button";
+import { ChevronRight, MapPin, Store, HandCoins, Tag } from "lucide-react";
 function TopNav() {
   // Simulated user state (replace with actual auth state)
   const user = { name: "John Doe", image: null }; // null means not logged in
@@ -68,7 +24,7 @@ function TopNav() {
   return (
     <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 px-4 py-2 flex sm:flex-row items-center justify-center sm:justify-between gap-3 lg:px-32">
       {/* Logo */}
-      <div className="flex-shrink-0">
+      <Link href="/" className="flex-shrink-0">
         <Image
           src="/assets/topnavimg.png"
           alt="Website Logo"
@@ -76,7 +32,7 @@ function TopNav() {
           height={100}
           className="object-contain"
         />
-      </div>
+      </Link>
 
       {/* Search box */}
       <div className="w-full sm:w-auto flex-1">
@@ -86,9 +42,11 @@ function TopNav() {
       {/* Right Section */}
       <div className="flex items-center gap-4 mt-2 sm:mt-0">
         {/* Cart */}
-        <button className="text-gray-500 hover:text-gray-700 focus:outline-none">
-          <HiOutlineShoppingCart size={24} />
-        </button>
+        <Link href="/check-out">
+          <Button className="text-gray-500 hover:text-gray-700 focus:outline-none bg-white shadow-none w-10 h-10 rounded-full hover:bg-gray-300 cursor-pointer">
+            <HiOutlineShoppingCart size={24} />
+          </Button>
+        </Link>
 
         {/* Conditional: Sign In or Avatar */}
         {!user ? (
@@ -112,15 +70,55 @@ function TopNav() {
                 </Avatar>
               </button>
             </DrawerTrigger>
-            <DrawerContent className="p-4">
-              <DrawerHeader>
-                <DrawerTitle>Account</DrawerTitle>
-              </DrawerHeader>
-              <div className="px-4 py-2 space-y-2">
-                <p className="font-medium">{user.name}</p>
-                <button className="text-red-600 text-sm hover:underline">
-                  Logout
-                </button>
+            <DrawerContent className="p-4 ">
+              <div className="ml-4 mt-4">
+                <Avatar className="w-25 h-25 ">
+                  <Image
+                    width={1000}
+                    height={1000}
+                    alt="profile img"
+                    src="/assets/userProfile/profileImage.jpg"
+                  />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+                <h3 className="my-2 text-xl font-comfortaa font-bold">
+                  Sarah Jones
+                </h3>
+                <Button variant="outline" className="">
+                  View Profile
+                </Button>
+              </div>
+
+              <div className="mt-6 space-y-2 px-4 bg-red-400">
+                <Button variant="ghost" className="w-full justify-start gap-2">
+                  <MapPin className="h-4 w-4" />
+                  <span>Shop By Province</span>
+                  <ChevronRight className="h-4 w-4 ml-auto" />
+                </Button>
+
+                <Button variant="ghost" className="w-full justify-start gap-2">
+                  <MapPin className="h-4 w-4" />
+                  <span>Shop By Territory</span>
+                  <ChevronRight className="h-4 w-4 ml-auto" />
+                </Button>
+
+                <Button variant="ghost" className="w-full justify-start gap-2">
+                  <Store className="h-4 w-4" />
+                  <span>Shop By Store</span>
+                  <ChevronRight className="h-4 w-4 ml-auto" />
+                </Button>
+
+                <Button variant="ghost" className="w-full justify-start gap-2">
+                  <HandCoins className="h-4 w-4" />
+                  <span>Trades & Services</span>
+                  <ChevronRight className="h-4 w-4 ml-auto" />
+                </Button>
+
+                <Button variant="ghost" className="w-full justify-start gap-2">
+                  <Tag className="h-4 w-4" />
+                  <span>Deals & Offers</span>
+                  <ChevronRight className="h-4 w-4 ml-auto" />
+                </Button>
               </div>
             </DrawerContent>
           </Drawer>

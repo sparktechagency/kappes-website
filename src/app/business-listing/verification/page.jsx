@@ -2,17 +2,16 @@ import VerificationSuccess from "@/common/components/verificationSuccess";
 import OTPverification from "@/components/Auth/OTPverification";
 import React from "react";
 
-function VerifyOTP() {
+function page() {
   return (
-    <div className="bg-amber-600">
+    <>
       <OTPverification />
-
       <VerificationSuccess Content={<Content />} />
-    </div>
+    </>
   );
 }
 
-export default VerifyOTP;
+export default page;
 
 const Content = () => {
   return (
