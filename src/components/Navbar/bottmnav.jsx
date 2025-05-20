@@ -148,8 +148,14 @@ function BottomNav() {
                 <DropdownMenuItem>
                   {provideIcon({ name: "shopByStore" })} Shop By Store
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  {provideIcon({ name: "tradesAndService" })} Trades & Services
+                <DropdownMenuItem asChild>
+                  <Link
+                    href="/trades-&-services"
+                    className="flex items-center gap-2"
+                  >
+                    {provideIcon({ name: "tradesAndService" })} Trades &
+                    Services
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   {provideIcon({ name: "dealsAndOffer" })} Deals & Offers

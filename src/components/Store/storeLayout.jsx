@@ -9,7 +9,7 @@ function StoreLayout() {
     <div className="lg:px-32">
       <StoreCover />
       <StoreBanner />
-      <div className="flex items-start justify-start my-10 border">
+      <div className="flex items-start justify-start my-10 ">
         <Filter />
         <ShopProductList />
       </div>

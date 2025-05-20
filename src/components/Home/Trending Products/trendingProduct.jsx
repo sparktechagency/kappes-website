@@ -1,23 +1,21 @@
 "use client";
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { IoArrowForward } from "react-icons/io5";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
-import { Card, CardContent } from "@/components/ui/card";
-import Autoplay from "embla-carousel-autoplay";
+import { Card } from "@/components/ui/card";
 import Image from "next/image";
+// Import Swiper and required modules
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Navigation } from "swiper/modules";
+
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/navigation";
 
 const TrendingProduct = () => {
-  const plugin = React.useRef(
-    Autoplay({ delay: 2000, stopOnInteraction: true })
-  );
+  const navigationPrevRef = useRef(null);
+  const navigationNextRef = useRef(null);
 
-  const trendingProduct = [
+  const trendingProducts = [
     {
       id: 1,
       name: "Adventure Ready Backpack",
@@ -80,67 +78,157 @@ const TrendingProduct = () => {
     <div className="w-full px-4 py-16 lg:px-32">
       {/* Header */}
       <div className="flex items-center justify-between pb-6">
-        <h2 className="text-2xl font-bold">Trending Produts</h2>
+        <h2 className="text-2xl font-bold">Popular Categories</h2>
         <button className="flex items-center text-gray-600 hover:text-gray-800 hover:underline transition">
           See all
           <IoArrowForward className="ml-2 rotate-[-45deg]" />
         </button>
       </div>
 
-      {/* Carousel */}
+      {/* Swiper Carousel */}
       <div className="relative group">
-        <Carousel
-          opts={{ align: "start", loop: true, direction: "ltr" }}
-          plugins={[plugin.current]}
-          className="w-full"
+        <Swiper
+          modules={[Autoplay, Navigation]}
+          spaceBetween={20}
+          slidesPerView={1}
+          direction="horizontal"
+          loop={true}
+          autoplay={{
+            delay: 2000,
+            disableOnInteraction: true,
+          }}
+          navigation={{
+            prevEl: navigationPrevRef.current,
+            nextEl: navigationNextRef.current,
+          }}
+          onBeforeInit={(swiper) => {
+            swiper.params.navigation.prevEl = navigationPrevRef.current;
+            swiper.params.navigation.nextEl = navigationNextRef.current;
+          }}
+          breakpoints={{
+            // Mobile
+            640: {
+              slidesPerView: 2,
+              spaceBetween: 16,
+            },
+            // Tablet
+            768: {
+              slidesPerView: 3,
+              spaceBetween: 16,
+            },
+            // Desktop
+            1024: {
+              slidesPerView: 4,
+              spaceBetween: 16,
+            },
+            // Large Desktop
+            1280: {
+              slidesPerView: 5,
+              spaceBetween: 16,
+            },
+          }}
+          className="w-full product-swiper"
         >
-          <CarouselContent>
-            {trendingProduct.map((product) => (
-              <CarouselItem
-                key={product.id}
-                className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 px-2"
-              >
-                <Card className="relative bg-white rounded-xl shadow-sm p-3">
-                  {/* Heart Icon */}
-                  <div className="absolute top-3 right-3 text-red-500 text-xl">
-                    ♥
-                  </div>
+          {trendingProducts.map((product) => (
+            <SwiperSlide key={product.id}>
+              <Card className="relative bg-white rounded-xl shadow-sm p-0 overflow-hidden h-80">
+                {/* Heart Icon */}
+                <div className="absolute top-3 right-3 text-red-500 text-xl cursor-pointer hover:scale-110 transition-transform">
+                  ♥
+                </div>
 
-                  {/* Product Image */}
-                  <div className="w-full h-40 flex justify-center items-center mb-4">
-                    <Image
-                      src={product.image}
-                      alt={product.name}
-                      width={120}
-                      height={120}
-                      className="object-contain max-h-full"
-                    />
-                  </div>
+                {/* Product Image */}
+                <div className="w-full h-52 flex justify-center items-center">
+                  <Image
+                    src={product.image}
+                    alt={product.name}
+                    width={1200}
+                    height={1200}
+                    className="object-contain max-h-full"
+                  />
+                </div>
 
-                  {/* Product Info */}
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-800 mb-2 line-clamp-2">
-                      {product.name}
-                    </h3>
-                    <div className="flex items-center gap-2">
-                      <span className="text-red-600 font-bold text-base">
-                        ${product.currentPrice.toFixed(2)}
-                      </span>
-                      <span className="text-gray-400 line-through text-sm">
-                        ${product.price.toFixed(2)}
-                      </span>
-                    </div>
+                {/* Product Info */}
+                <div className="px-3 text-wrap -mt-3.5">
+                  <h3 className="text-xl font-medium text-gray-800 mb-1.5 line-clamp-2">
+                    {product.name}
+                  </h3>
+                  <div className="flex items-center gap-2">
+                    <span className="text-red-600 font-bold text-base">
+                      ${product.currentPrice.toFixed(2)}
+                    </span>
+                    <span className="text-gray-400 line-through text-sm">
+                      ${product.price.toFixed(2)}
+                    </span>
                   </div>
-                </Card>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
+                </div>
+              </Card>
+            </SwiperSlide>
+          ))}
+        </Swiper>
 
-          {/* Carousel Controls */}
-          <CarouselPrevious className="absolute left-0 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-white p-2 rounded-full shadow-lg z-10" />
-          <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-white p-2 rounded-full shadow-lg z-10" />
-        </Carousel>
+        {/* Custom Navigation Buttons */}
+        <button
+          ref={navigationPrevRef}
+          className="absolute left-0 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-white p-3 rounded-full shadow-lg z-10"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="m15 18-6-6 6-6" />
+          </svg>
+        </button>
+        <button
+          ref={navigationNextRef}
+          className="absolute right-0 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-white p-3 rounded-full shadow-lg z-10"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="m9 18 6-6-6-6" />
+          </svg>
+        </button>
       </div>
+
+      {/* CSS for RTL styling */}
+      <style jsx global>{`
+        /* Ensure RTL works properly */
+        .product-swiper.swiper-rtl .swiper-wrapper {
+          flex-direction: row-reverse;
+        }
+
+        /* Custom navigation button styles */
+        .product-swiper .swiper-button-prev,
+        .product-swiper .swiper-button-next {
+          color: #333;
+          background: white;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-swiper .swiper-button-prev:after,
+        .product-swiper .swiper-button-next:after {
+          font-size: 18px;
+        }
+      `}</style>
     </div>
   );
 };
