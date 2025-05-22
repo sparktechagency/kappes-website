@@ -1,5 +1,6 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { Heart, Minus, Plus, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -7,28 +8,83 @@ import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 
 function ProductView() {
+  const searchParams = useSearchParams();
+  const [productData, setProductData] = useState(null);
   const [quantity, setQuantity] = useState(1);
-  const [selectedSize, setSelectedSize] = useState("S");
-  const [selectedColor, setSelectedColor] = useState("yellow");
+  const [selectedSize, setSelectedSize] = useState("");
+  const [selectedColor, setSelectedColor] = useState("");
   const [mainImage, setMainImage] = useState(0);
 
-  const productImages = [
-    "/assets/productPage/bag1.png",
-    "/assets/productPage/bag2.png",
-    "/assets/productPage/bag3.png",
-    "/assets/productPage/bag4.png",
-    "/assets/productPage/bag11.png",
-  ];
+  useEffect(() => {
+    // Get product data from URL params
+    const productDataParam = searchParams.get("productData");
 
-  const colors = [
-    { name: "yellow", class: "bg-yellow-500 border-2 border-black" },
-    { name: "gray", class: "bg-gray-400" },
-    { name: "green", class: "bg-green-700" },
-    { name: "red", class: "bg-red-600" },
-    { name: "maroon", class: "bg-red-800" },
-  ];
+    if (productDataParam) {
+      try {
+        const parsedData = JSON.parse(productDataParam);
+        setProductData(parsedData);
 
-  const sizes = ["S", "M", "L", "XL"];
+        // Set default selections
+        if (
+          parsedData.size &&
+          parsedData.size.length > 0 &&
+          parsedData.size[0] !== ""
+        ) {
+          setSelectedSize(parsedData.size[0].toUpperCase());
+        }
+        if (parsedData.color && parsedData.color.length > 0) {
+          setSelectedColor(parsedData.color[0]);
+        }
+      } catch (error) {
+        console.error("Error parsing product data:", error);
+      }
+    }
+  }, [searchParams]);
+
+  // Helper function to calculate discounted price
+  const getDiscountedPrice = (item) => {
+    if (!item || !item.discountPrice[0]) return item?.originalPrice || 0;
+
+    const [hasDiscount, discountType, discountValue] = item.discountPrice;
+    if (!hasDiscount) return item.originalPrice;
+
+    if (discountType === "percent") {
+      return item.originalPrice * (1 - discountValue / 100);
+    } else if (discountType === "price") {
+      return item.originalPrice - discountValue;
+    }
+    return item.originalPrice;
+  };
+
+  // Helper function to convert hex color to CSS class name
+  const getColorName = (hexColor) => {
+    const colorMap = {
+      "#f3b000": "yellow",
+      "#99a1ae": "gray",
+      "#008338": "green",
+      "#ea000b": "red",
+      "#9f0713": "maroon",
+    };
+    return colorMap[hexColor] || "gray";
+  };
+
+  // Helper function to get color CSS class
+  const getColorClass = (hexColor, isSelected = false) => {
+    const colorName = getColorName(hexColor);
+    const colorClasses = {
+      yellow: "bg-yellow-500",
+      gray: "bg-gray-400",
+      green: "bg-green-700",
+      red: "bg-red-600",
+      maroon: "bg-red-800",
+    };
+
+    let className = colorClasses[colorName] || "bg-gray-400";
+    if (isSelected && colorName === "yellow") {
+      className += " border-2 border-black";
+    }
+    return className;
+  };
 
   const decreaseQuantity = () => {
     if (quantity > 1) {
@@ -40,6 +96,26 @@ function ProductView() {
     setQuantity(quantity + 1);
   };
 
+  if (!productData) {
+    return (
+      <div className="max-w-6xl mx-auto p-4">
+        <div className="text-center py-12">
+          <h1 className="text-2xl">Loading product...</h1>
+        </div>
+      </div>
+    );
+  }
+
+  const discountedPrice = getDiscountedPrice(productData);
+  const hasDiscount = productData.discountPrice[0];
+  const productImages = productData.productImage || [
+    "/assets/productPage/bag1.png",
+  ];
+  const availableSizes = productData.size
+    .filter((size) => size !== "")
+    .map((size) => size.toUpperCase());
+  const availableColors = productData.color || [];
+
   return (
     <div className="max-w-6xl mx-auto p-4">
       <div className="flex flex-col md:flex-row gap-8">
@@ -49,27 +125,27 @@ function ProductView() {
             <Image
               width={500}
               height={500}
-              src={productImages[mainImage]}
-              alt="Hiking Traveler Backpack"
-              className="w-full h-auto object-contain"
+              src={productImages[mainImage] || "/assets/productPage/bag1.png"}
+              alt={productData.name}
+              className="w-full h-auto object-cover transition-transform duration-300 hover:scale-150"
               priority
             />
             <Button
               variant="ghost"
               size="icon"
-              className="absolute top-4 right-4 text-red-500 hover:bg-transparent"
+              className="absolute top-4 right-4  bg-white"
             >
-              <Heart fill="red" size={24} />
+              <Heart fill={productData.favourite ? "red" : "none"} size={25} />
             </Button>
           </div>
 
           {/* Thumbnails */}
-          <div className="flex gap-2 overflow-x-auto">
-            {[0, 1, 2, 3].map((index) => (
+          <div className="flex justify-between overflow-x-auto border-2 rounded-2xl p-3 h-30 ">
+            {productImages.slice(0, 4).map((image, index) => (
               <Button
                 key={index}
                 variant="ghost"
-                className={`p-0 rounded-md overflow-hidden ${
+                className={`p-0 rounded-md overflow-hidden w-auto h-full ${
                   mainImage === index
                     ? "ring-2 ring-red-600"
                     : "ring-1 ring-gray-200"
@@ -77,11 +153,11 @@ function ProductView() {
                 onClick={() => setMainImage(index)}
               >
                 <Image
-                  src={productImages[index + 1]}
+                  src={image}
                   alt={`Thumbnail ${index + 1}`}
-                  width={80}
-                  height={80}
-                  className="w-20 h-20 object-cover"
+                  width={500}
+                  height={500}
+                  className="w-auto h-full object-cover"
                 />
               </Button>
             ))}
@@ -90,59 +166,73 @@ function ProductView() {
 
         {/* Right side - Product Details */}
         <div className="w-full md:w-1/2">
-          <h1 className="text-3xl font-bold mb-2">Hiking Traveler Backpack</h1>
+          <h1 className="text-3xl font-bold mb-2">{productData.name}</h1>
 
           {/* Ratings */}
           <div className="flex items-center gap-2 mb-4">
             <div className="flex text-yellow-400">
               <span>★</span>
-              <span>4.9</span>
+              <span>{productData.rating}</span>
             </div>
-            <span className="text-gray-500">(320)</span>
+            <span className="text-gray-500">({productData.reviews})</span>
           </div>
 
           {/* Price */}
           <div className="flex items-center gap-2 mb-6">
-            <span className="text-2xl font-bold text-red-600">$149.99</span>
-            <span className="text-gray-500 line-through">$159.99</span>
+            <span className="text-2xl font-bold text-red-600">
+              ${discountedPrice.toFixed(2)}
+            </span>
+            {hasDiscount && (
+              <span className="text-gray-500 line-through">
+                ${productData.originalPrice}
+              </span>
+            )}
           </div>
 
           {/* Size Selection */}
-          <div className="mb-6">
-            <p className="font-semibold mb-2">Size:</p>
-            <div className="flex gap-2">
-              {sizes.map((size) => (
-                <Button
-                  key={size}
-                  variant={selectedSize === size ? "default" : "outline"}
-                  className={`w-10 h-10 p-0 ${
-                    selectedSize === size ? "bg-red-700 hover:bg-red-800" : ""
-                  }`}
-                  onClick={() => setSelectedSize(size)}
-                >
-                  {size}
-                </Button>
-              ))}
+          {availableSizes.length > 0 && (
+            <div className="mb-6">
+              <p className="font-semibold mb-2">Size:</p>
+              <div className="flex gap-2">
+                {availableSizes.map((size) => (
+                  <Button
+                    key={size}
+                    variant={selectedSize === size ? "default" : "outline"}
+                    className={`w-10 h-10 p-0 ${
+                      selectedSize === size ? "bg-red-700 hover:bg-red-800" : ""
+                    }`}
+                    onClick={() => setSelectedSize(size)}
+                  >
+                    {size}
+                  </Button>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Color Selection */}
-          <div className="mb-6">
-            <p className="font-semibold mb-2">Color:</p>
-            <div className="flex gap-2">
-              {colors.map((color) => (
-                <button
-                  key={color.name}
-                  className={`w-8 h-8 rounded-full ${color.class} ${
-                    selectedColor === color.name
-                      ? "ring-2 ring-offset-2 ring-black"
-                      : ""
-                  }`}
-                  onClick={() => setSelectedColor(color.name)}
-                />
-              ))}
+          {availableColors.length > 0 && (
+            <div className="mb-6">
+              <p className="font-semibold mb-2">Color:</p>
+              <div className="flex gap-2">
+                {availableColors.map((color) => (
+                  <button
+                    key={color}
+                    className={`w-8 h-8 rounded-full ${getColorClass(
+                      color,
+                      selectedColor === color
+                    )} ${
+                      selectedColor === color
+                        ? "ring-2 ring-offset-2 ring-black"
+                        : ""
+                    }`}
+                    onClick={() => setSelectedColor(color)}
+                    style={{ backgroundColor: color }}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Quantity */}
           <div className="mb-6">
@@ -185,20 +275,19 @@ function ProductView() {
             <div className="flex items-start gap-2 mb-2">
               <span className="font-bold">•</span>
               <div>
-                <span className="font-bold">Category:</span> Outdoor
+                <span className="font-bold">Category:</span>{" "}
+                {productData.category}
               </div>
             </div>
             <div className="flex items-start gap-2">
               <span className="font-bold">•</span>
               <div>
                 <span className="font-bold">Tags:</span>
-                <Badge variant="outline" className="ml-1 mr-1">
-                  Bag
-                </Badge>
-                <Badge variant="outline" className="mr-1">
-                  Outdoor
-                </Badge>
-                <Badge variant="outline">Travel</Badge>
+                {productData.tags.map((tag, index) => (
+                  <Badge key={index} variant="outline" className="ml-1 mr-1">
+                    {tag.charAt(0).toUpperCase() + tag.slice(1)}
+                  </Badge>
+                ))}
               </div>
             </div>
           </div>
