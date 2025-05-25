@@ -3,6 +3,7 @@ import { useState } from "react";
 import { MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import Link from "next/link";
 
 const StoreCover = () => {
   const [following, setFollowing] = useState(false);
@@ -57,13 +58,15 @@ const StoreCover = () => {
             </div>
 
             <div className="flex gap-2 mt-2 md:mt-0">
-              <Button
-                variant="outline"
-                className="flex-1 md:flex-none bg-green-500 hover:bg-green-600 text-white border-none"
-              >
-                <MessageSquare className="mr-2 h-4 w-4" />
-                Message
-              </Button>
+              <Link href="/chat/454">
+                <Button
+                  variant="outline"
+                  className="flex-1 md:flex-none bg-green-500 hover:bg-green-600 text-white border-none"
+                >
+                  <MessageSquare className="mr-2 h-4 w-4" />
+                  Message
+                </Button>
+              </Link>
 
               <Button
                 variant={following ? "outline" : "default"}

@@ -1,7 +1,7 @@
 import StoreLayout from "@/components/Store/storeLayout";
 import React from "react";
 
-function StorePage() {
+function Page() {
   return (
     <>
       <StoreLayout />
@@ -9,4 +9,4 @@ function StorePage() {
   );
 }
 
-export default StorePage;
+export default Page;

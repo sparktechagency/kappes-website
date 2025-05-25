@@ -21,7 +21,7 @@ import provideIcon from "@/common/components/provideIcon";
 function BottomNav() {
   return (
     <div>
-      <div className="flex items-center justify-between w-full py-4 border-b border-gray-300 bg-kappes lg:px-32 text-white">
+      <div className="flex items-center justify-between w-full py-4 border-b border-gray-300 bg-kappes lg:px-32 text-white font-comfortaa">
         <div className="flex items-center space-x-4">
           {/* Mobile Menu Drawer */}
           <div className="md:hidden block">
@@ -145,8 +145,13 @@ function BottomNav() {
                 <DropdownMenuItem>
                   {provideIcon({ name: "searchByTerritory" })} Shop By Territory
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  {provideIcon({ name: "shopByStore" })} Shop By Store
+                <DropdownMenuItem asChild>
+                  <Link
+                    href={"/shop-by-store"}
+                    className="flex items-center gap-2"
+                  >
+                    {provideIcon({ name: "shopByStore" })} Shop By Store
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link

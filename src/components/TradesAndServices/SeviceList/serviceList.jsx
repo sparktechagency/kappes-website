@@ -1,12 +1,13 @@
 "use client";
 import { useState } from "react";
-import { Search, MapPin, Phone, ArrowUpDown, Filter } from "lucide-react";
+import { MapPin, Phone, ArrowUpDown } from "lucide-react";
+import Image from "next/image";
 
-// Sample data
 const searchResults = [
   {
     id: 1,
     name: "Fresh Painting",
+    brandLogo: "/assets/tradesAndServies/freshPaint.png",
     rating: 5,
     reviews: 320,
     service: "Home Service",
@@ -16,6 +17,7 @@ const searchResults = [
   {
     id: 2,
     name: "Fresh Painting",
+    brandLogo: "/assets/tradesAndServies/freshPaint.png",
     rating: 5,
     reviews: 320,
     service: "Home Service",
@@ -25,6 +27,7 @@ const searchResults = [
   {
     id: 3,
     name: "Fresh Painting",
+    brandLogo: "/assets/tradesAndServies/freshPaint.png",
     rating: 5,
     reviews: 320,
     service: "Home Service",
@@ -34,7 +37,8 @@ const searchResults = [
   {
     id: 4,
     name: "Fresh Painting",
-    rating: 5,
+    brandLogo: "/assets/tradesAndServies/freshPaint.png",
+    rating: 2,
     reviews: 320,
     service: "Home Service",
     location: "Edmonton, Alberta, Canada",
@@ -42,8 +46,9 @@ const searchResults = [
   },
   {
     id: 5,
-    name: "Fresh Painting",
-    rating: 5,
+    name: "Fresh Painting ",
+    brandLogo: "/assets/tradesAndServies/freshPaint.png",
+    rating: 0,
     reviews: 320,
     service: "Home Service",
     location: "Edmonton, Alberta, Canada",
@@ -52,7 +57,8 @@ const searchResults = [
   {
     id: 6,
     name: "Fresh Painting",
-    rating: 5,
+    brandLogo: "/assets/tradesAndServies/freshPaint.png",
+    rating: 4,
     reviews: 320,
     service: "Home Service",
     location: "Edmonton, Alberta, Canada",
@@ -61,7 +67,8 @@ const searchResults = [
   {
     id: 7,
     name: "Fresh Painting",
-    rating: 5,
+    brandLogo: "/assets/tradesAndServies/freshPaint.png",
+    rating: 2,
     reviews: 320,
     service: "Home Service",
     location: "Edmonton, Alberta, Canada",
@@ -70,6 +77,7 @@ const searchResults = [
   {
     id: 8,
     name: "Fresh Painting",
+    brandLogo: "/assets/tradesAndServies/freshPaint.png",
     rating: 5,
     reviews: 320,
     service: "Home Service",
@@ -79,6 +87,7 @@ const searchResults = [
   {
     id: 9,
     name: "Fresh Painting",
+    brandLogo: "/assets/tradesAndServies/freshPaint.png",
     rating: 5,
     reviews: 320,
     service: "Home Service",
@@ -88,7 +97,8 @@ const searchResults = [
   {
     id: 10,
     name: "Fresh Painting",
-    rating: 5,
+    brandLogo: "/assets/tradesAndServies/freshPaint.png",
+    rating: 1,
     reviews: 320,
     service: "Home Service",
     location: "Edmonton, Alberta, Canada",
@@ -123,19 +133,14 @@ function BusinessCard({ business }) {
   return (
     <div className="border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow bg-white">
       <div className="flex gap-3">
-        <div className="h-12 w-12 bg-blue-100 rounded-md flex items-center justify-center">
-          <svg
-            className="h-8 w-8 text-blue-700"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-            <polyline points="9 22 9 12 15 12 15 22"></polyline>
-          </svg>
+        <div className="h-12 w-12 bg-blue-100 rounded-md flex items-center justify-center overflow-hidden">
+          <Image
+            src={business.brandLogo}
+            alt={business.name}
+            width={48}
+            height={48}
+            className="object-contain"
+          />
         </div>
         <div className="flex-1">
           <h3 className="font-semibold text-lg">{business.name}</h3>
@@ -145,7 +150,9 @@ function BusinessCard({ business }) {
               ({business.reviews} reviews)
             </span>
           </div>
-          <div className="text-sm text-gray-500 my-1">{business.service}</div>
+          <div className="bg-gray-300 inline-block px-2 py-1 rounded-md mt-1">
+            <div className="text-sm text-gray-500">{business.service}</div>
+          </div>
           <div className="flex flex-col gap-1 mt-2">
             <div className="flex items-center gap-1 text-sm">
               <MapPin className="h-4 w-4 text-gray-500" />
@@ -164,31 +171,43 @@ function BusinessCard({ business }) {
 
 export default function ServiceList() {
   const [searchTerm, setSearchTerm] = useState("Dentist in Toronto");
+  const [sortOrder, setSortOrder] = useState("desc"); // "desc" for highest first, "asc" for lowest first
+
+  // Sort the results based on rating
+  const sortedResults = [...searchResults].sort((a, b) => {
+    if (sortOrder === "desc") {
+      return b.rating - a.rating;
+    } else {
+      return a.rating - b.rating;
+    }
+  });
+
+  // Toggle sort order
+  const handleSortToggle = () => {
+    setSortOrder((prev) => (prev === "desc" ? "asc" : "desc"));
+  };
 
   return (
-    <div className="w-full  mx-auto px-4 py-6">
+    <div className="w-full mx-auto">
       {/* Search header */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold">{searchTerm}</h1>
 
-        <div className="flex justify-between mt-4">
-          <div className="flex-1"></div>
-          <div className="flex gap-3">
-            <button className="inline-flex items-center px-3 py-2 text-sm border rounded-md hover:bg-gray-50">
-              <Filter className="mr-2 h-4 w-4" />
-              Filter
-            </button>
-            <button className="inline-flex items-center px-3 py-2 text-sm border rounded-md hover:bg-gray-50">
-              <ArrowUpDown className="mr-2 h-4 w-4" />
-              Sort
-            </button>
-          </div>
+      <div className="flex justify-between mt-4 mb-6">
+        <div className="flex-1 text-2xl font-bold">{searchTerm}</div>
+        <div className="flex gap-3">
+          <button
+            onClick={handleSortToggle}
+            className="inline-flex items-center px-3 py-2 text-sm border rounded-md hover:bg-gray-50 cursor-pointer"
+          >
+            <ArrowUpDown className="mr-2 h-4 w-4" />
+            Sort by Rating (
+            {sortOrder === "desc" ? "High to Low" : "Low to High"})
+          </button>
         </div>
       </div>
 
       {/* Results grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {searchResults.map((business) => (
+        {sortedResults.map((business) => (
           <BusinessCard key={business.id} business={business} />
         ))}
       </div>

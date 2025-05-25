@@ -78,7 +78,9 @@ const TrendingProduct = () => {
     <div className="w-full px-4 py-16 lg:px-32">
       {/* Header */}
       <div className="flex items-center justify-between pb-6">
-        <h2 className="text-2xl font-bold">Popular Categories</h2>
+        <h2 className="text-3xl font-extrabold font-comfortaa">
+          Trending Products
+        </h2>
         <button className="flex items-center text-gray-600 hover:text-gray-800 hover:underline transition">
           See all
           <IoArrowForward className="ml-2 rotate-[-45deg]" />

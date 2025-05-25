@@ -72,7 +72,9 @@ function PopularCategories() {
   return (
     <div className="w-full px-5 lg:px-32 py-20">
       <div className="w-full flex items-center justify-between pb-6">
-        <h1 className="text-2xl font-bold ">Popular Categories</h1>
+        <h2 className="text-3xl font-extrabold font-comfortaa">
+          Popular Categories
+        </h2>
         <button className="flex items-start text-gray-600 hover:text-gray-800 hover:underline transition-colors">
           See all
           <IoArrowForward className="ml-2 rotate-[-45deg]" />
