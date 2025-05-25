@@ -29,7 +29,7 @@ function ProfileLayout() {
   };
 
   return (
-    <div className="w-full h-screen flex flex-col md:flex-row gap-10 p-5">
+    <div className="w-full h-screen flex flex-col lg:px-32 md:flex-row gap-10 p-5">
       {/* Mobile view tabs */}
       <div className="md:hidden w-full">
         <MobileTabs

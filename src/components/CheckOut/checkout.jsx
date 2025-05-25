@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import {
   Table,
@@ -13,77 +14,34 @@ import ControlButton from "@/common/components/controlButton";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { useSelector } from "react-redux";
+
 function Checkout() {
-  const checkoutList = [
-    {
-      id: 1,
-      image: "/assets/bag.png",
-      productName: "Hiking Traveler Backpack",
-      size: "M",
-      color: "Yellow",
-      totalAmount: "$250.00",
-      paymentMethod: "Credit Card",
-    },
-    {
-      id: 2,
-      image: "/assets/bag.png",
-      productName: "Hiking Traveler Backpack",
-      size: "M",
-      color: "Yellow",
-      totalAmount: "$150.00",
-      paymentMethod: "PayPal",
-    },
-    {
-      id: 3,
-      image: "/assets/bag.png",
-      productName: "Hiking Traveler Backpack",
-      size: "M",
-      color: "Yellow",
-      totalAmount: "$350.00",
-      paymentMethod: "Bank Transfer",
-    },
-    {
-      id: 4,
-      image: "/assets/bag.png",
-      productName: "Hiking Traveler Backpack",
-      size: "M",
-      color: "Yellow",
-      totalAmount: "$450.00",
-      paymentMethod: "Credit Card",
-    },
-    {
-      id: 5,
-      image: "/assets/bag.png",
-      productName: "Hiking Traveler Backpack",
-      size: "M",
-      color: "Yellow",
-      totalAmount: "$550.00",
-      paymentMethod: "PayPal",
-    },
-    {
-      id: 6,
-      image: "/assets/bag.png",
-      productName: "Hiking Traveler Backpack",
-      size: "M",
-      color: "Yellow",
-      totalAmount: "$200.00",
-      paymentMethod: "Bank Transfer",
-    },
-    {
-      id: 7,
-      image: "/assets/bag.png",
-      productName: "Hiking Traveler Backpack",
-      size: "M",
-      color: "Yellow",
-      totalAmount: "$300.00",
-      paymentMethod: "Credit Card",
-    },
-  ];
+  // Get cart items from Redux store
+  const cartItems = useSelector((state) => state.cart);
+
+  // Calculate total amount
+  const totalAmount = cartItems.reduce((total, item) => {
+    const itemPrice = parseFloat(item.price) || 0;
+    return total + itemPrice * item.quantity;
+  }, 0);
+
+  // Format currency
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    }).format(amount);
+  };
+
   return (
     <div className="w-full md:w-[90%] px-4 py-10 md:px-10 md:py-15 mx-auto">
-      {" "}
       <Table>
-        <TableCaption>A list of your recent invoices.</TableCaption>
+        <TableCaption>
+          {cartItems.length > 0
+            ? "Your shopping cart items"
+            : "Your cart is empty"}
+        </TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px]">Image</TableHead>
@@ -94,50 +52,82 @@ function Checkout() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {checkoutList.map((item) => (
-            <TableRow key={item.id}>
-              <TableCell className="font-medium">
-                <Image
-                  src={item.image}
-                  alt="Product Image"
-                  width={50}
-                  height={50}
-                  className="rounded-md"
-                />
+          {cartItems.length > 0 ? (
+            cartItems.map((item) => {
+              const itemPrice = parseFloat(item.price) || 0;
+              const subTotal = itemPrice * item.quantity;
+
+              return (
+                <TableRow key={item.id}>
+                  <TableCell className="font-medium">
+                    <Image
+                      src={item.productImage || "/assets/bag.png"}
+                      alt={item.name || "Product Image"}
+                      width={50}
+                      height={50}
+                      className="rounded-md"
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-medium">
+                        {item.name || item.productName || "Product Name"}
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        {item.size && `Size: ${item.size} `}
+                        {item.color && `Color: ${item.color}`}
+                        {item.description &&
+                          !item.size &&
+                          !item.color &&
+                          item.description}
+                      </span>
+                    </div>
+                  </TableCell>
+                  <TableCell>{formatCurrency(itemPrice)}</TableCell>
+                  <TableCell>
+                    <ControlButton itemId={item.id} />
+                  </TableCell>
+                  <TableCell className="text-right">
+                    {formatCurrency(subTotal)}
+                  </TableCell>
+                </TableRow>
+              );
+            })
+          ) : (
+            <TableRow>
+              <TableCell colSpan={5} className="text-center py-8 text-gray-500">
+                Your cart is empty.
+                <Link href="/" className="text-blue-500 hover:underline ml-1">
+                  Continue shopping
+                </Link>
               </TableCell>
-              <TableCell>
-                <div className="flex flex-col">
-                  <span className="text-sm font-medium">
-                    {item.productName}
-                  </span>
-                  <span className="text-xs text-gray-500 ">
-                    Size: {item.size} Color: {item.color}
-                  </span>
-                </div>
-              </TableCell>
-              <TableCell>{item.paymentMethod}</TableCell>
-              <TableCell>
-                <ControlButton />
-              </TableCell>
-              <TableCell className="text-right">{item.totalAmount}</TableCell>
             </TableRow>
-          ))}
+          )}
         </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TableCell colSpan={4}>Total</TableCell>
-            <TableCell className="text-right">$2,500.00</TableCell>
-          </TableRow>
-        </TableFooter>
+        {cartItems.length > 0 && (
+          <TableFooter>
+            <TableRow>
+              <TableCell colSpan={4} className="font-semibold">
+                Total
+              </TableCell>
+              <TableCell className="text-right font-semibold">
+                {formatCurrency(totalAmount)}
+              </TableCell>
+            </TableRow>
+          </TableFooter>
+        )}
       </Table>
-      <div className="flex justify-between mt-5">
-        <Link
-          href="check-out/billing-procedure"
-          className="w-full h-12 bg-kappes hover:bg-[#b01501] flex items-center justify-center cursor-pointer text-white px-4 py-2 rounded-md"
-        >
-          Proceed to Checkout : ${"2,500.00"}
-        </Link>
-      </div>
+
+      {cartItems.length > 0 && (
+        <div className="flex justify-between mt-5">
+          <Link
+            href="check-out/billing-procedure"
+            className="w-full h-12 bg-kappes hover:bg-[#b01501] flex items-center justify-center cursor-pointer text-white px-4 py-2 rounded-md transition-colors"
+          >
+            Proceed to Checkout: {formatCurrency(totalAmount)}
+          </Link>
+        </div>
+      )}
     </div>
   );
 }

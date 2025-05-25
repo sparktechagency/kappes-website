@@ -32,7 +32,7 @@ export default function RootLayout({ children }) {
       >
         <Providers>
           <NavBar />
-          <div className="my-10 lg:px-32">{children}</div>
+          <div className="">{children}</div>
           <Footer />
         </Providers>
       </body>

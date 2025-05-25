@@ -12,7 +12,10 @@
         "color": ["#f3b000","#99a1ae","#008338","#ea000b","#9f0713"],
         "category": "Outdoor",
         "tags": ["bag","outdoor","travel"],
-        "promoteBadge": ["new","sale"]
+        "promoteBadge": ["new","sale"],
+        "province": ["British Columbia", "Alberta", "Manitoba","Saskatchewan","Ontario","Quebec","New Brunswick","Nova Scotia","Prince Edward Island","Newfoundland"],
+        "territory": ["Yukon","Northwest Territories","Nunavut"],
+        "city": ["city1","city2","city3","city4"]
     },
     {
         "id": 2,
@@ -27,7 +30,10 @@
         "color": ["#f3b000","#99a1ae","#008338","#ea000b","#9f0713"],
         "category": "Bottle",
         "tags": ["bottle","plastic","stylish bottle"],
-        "promoteBadge": ["new"]
+        "promoteBadge": ["new"],
+        "province": ["British Columbia", "Alberta", "Manitoba","Ontario","New Brunswick","Nova Scotia","Newfoundland"],
+        "territory": ["Yukon","Nunavut"],
+        "city": ["city1","city4"]
     },
     {
         "id": 3,
@@ -42,7 +48,10 @@
         "color": ["#f3b000","#99a1ae","#008338","#ea000b","#9f0713"],
         "category": "Umbrella",
         "tags": ["umbrella","rain","colorful"],
-        "promoteBadge": ["new"]
+        "promoteBadge": ["new"],
+        "province": ["Prince Edward Island","Newfoundland"],
+        "territory": ["Yukon","Northwest Territories","Nunavut"],
+        "city": ["city1","city2","city3","city4"]
     },
     {
         "id": 4,
@@ -57,7 +66,10 @@
         "color": ["#f3b000","#99a1ae","#008338","#ea000b","#9f0713"],
         "category": "Cap",
         "tags": ["cap","head gear"],
-        "promoteBadge": ["new"]
+        "promoteBadge": ["new"],
+        "province": ["British Columbia", "Alberta", "Manitoba","Saskatchewan","Prince Edward Island","Newfoundland"],
+        "territory": ["Yukon","Northwest Territories"],
+        "city": ["city1","city4"]
     },
     {
         "id": 5,
@@ -72,7 +84,10 @@
         "color": ["#f3b000","#99a1ae","#ea000b"],
         "category": "Furniture",
         "tags": ["chair","lazy chair"],
-        "promoteBadge": ["new"]
+        "promoteBadge": ["new"],
+        "province": ["British Columbia", "Alberta", "Manitoba","Saskatchewan","Ontario","Quebec","New Brunswick"],
+        "territory": ["Yukon","Northwest Territories","Nunavut"],
+        "city": ["city1"]
     },
     {
         "id": 6,
@@ -87,6 +102,9 @@
         "color": [],
         "category": "Wellness",
         "tags": ["monstera","plant","indoor plant"],
-        "promoteBadge": ["new"]
+        "promoteBadge": ["new"],
+        "province": [ "Manitoba","Saskatchewan","Ontario","Quebec","New Brunswick","Nova Scotia","Newfoundland"],
+        "territory": ["Nunavut"],
+        "city": ["city4"]
     }
 ]

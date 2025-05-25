@@ -1,12 +1,15 @@
+import provideIcon from "@/common/components/provideIcon";
 import Image from "next/image";
 
 export default function AboutUs() {
   return (
-    <div className="px-4 py-12 max-w-full lg:px-32 mx-auto space-y-16">
+    <div className="  py-12  mx-auto space-y-16">
       {/* About Us Section */}
-      <h2 className="text-3xl font-bold text-center">About Us</h2>
-      <section className="flex flex-col-reverse md:flex md:flex-row items-start gap-8 text-justify">
-        <div className="flex-1 space-y-4 ">
+      <h2 className="text-3xl font-bold text-center font-comfortaa">
+        About Us
+      </h2>
+      <section className="flex flex-col-reverse md:flex-row items-start max-w-7xl mx-auto gap-10 text-justify px-4 lg:px-0">
+        <div className="w-full md:w-1/2 space-y-4">
           <p>
             Welcome to <strong>The Canuck Mall</strong>, Canada’s premier online
             marketplace, where quality meets convenience. We are dedicated to
@@ -28,59 +31,119 @@ export default function AboutUs() {
             high-quality products to meet the needs of every shopper.
           </p>
         </div>
-        <div className="flex-1">
+        <div className="w-full md:w-1/2">
           <Image
             src="/assets/aboutUs/aboutus1.png"
             alt="Shopping Woman"
             width={500}
             height={500}
-            className="rounded-lg object-cover w-full  md:w-full"
+            className="rounded-lg object-cover w-full h-auto"
           />
         </div>
       </section>
+      {/*Mission & Vision Section */}
+      <section className="flex flex-col md:flex-row items-start max-w-7xl mx-auto gap-10 px-4 lg:px-0">
+        <div className="w-full md:w-1/2">
+          <Image
+            src="/assets/aboutUs/mission&vision.png"
+            alt="Happy Shopper"
+            width={500}
+            height={500}
+            className="rounded-lg object-cover w-full h-auto"
+          />
+        </div>
+        <div className="w-full md:w-1/2 space-y-4 text-justify">
+          <h2 className="text-3xl font-bold font-comfortaa">
+            Mission & Vision
+          </h2>
+          <div className="">
+            <p>
+              At The Canuck, our mission is to connect Canadians with local
+              products, services, and businesses from coast to coast. We strive
+              to provide a seamless, engaging shopping experience that showcases
+              the best of Canada’s diverse regions, celebrating the
+              craftsmanship, culture, and creativity of Canadian vendors.
+            </p>
+            <br /> Our vision is to become the leading platform for supporting
+            local businesses, fostering community growth, and offering a unique,
+            personalized shopping experience. Through every purchase, we aim to
+            celebrate Canada’s rich heritage and diverse offerings, bringing
+            Canadians closer to what makes their country special.
+          </div>
+        </div>
+      </section>
 
+      <section className="flex flex-col md:flex-row items-start gap-10 ">
+        <div className="bg-kappes w-full h-[40%] px-10 py-10 ">
+          <Image
+            src="/assets/aboutUs/video.png"
+            alt="Happy Shopper"
+            width={5000}
+            height={5000}
+            className="rounded-md object-cover w-7xl  mx-auto h-auto  "
+          />
+        </div>
+      </section>
       {/* What Sets Us Apart Section */}
-      <section className="flex flex-col md:flex md:flex-row items-start gap-8">
-        <div className="flex-1">
+      <section className="flex flex-col md:flex-row items-start max-w-7xl mx-auto gap-10 px-4 lg:px-0">
+        <div className="w-full md:w-1/2">
           <Image
             src="/assets/aboutUs/aboutus2.png"
             alt="Happy Shopper"
             width={500}
             height={500}
-            className="rounded-lg object-cover w-full  md:w-full"
+            className="rounded-lg object-cover w-full h-auto"
           />
         </div>
-        <div className="flex-1 space-y-2 h-72 text-justify">
-          <h2 className="text-3xl font-bold">What Sets Us Apart?</h2>
-          <ul className="list-disc pl-5 space-y-2">
-            <li>
-              <strong>A Wide Selection:</strong> We curate products from
-              top-quality sellers across Canada, ensuring our customers always
-              have access to the best products on the market.
-            </li>
-            <li>
-              <strong>Free Seller Registration:</strong> At The Canuck Mall,
-              sellers can sign up and list their products at no cost, making it
-              easy to get started and grow their business.
-            </li>
-            <li>
-              <strong>Fast and Reliable Shipping:</strong> We work with trusted
-              logistics partners to offer quick and efficient delivery to your
-              doorstep, no matter where you are in Canada.
-            </li>
-            <li>
-              <strong>Secure Shopping Experience:</strong> Your safety is our
-              priority. Our platform is designed with industry-leading security
-              protocols to ensure that your personal and payment information is
-              always protected.
-            </li>
-            <li>
-              <strong>Customer Support:</strong> Our dedicated support team is
-              here to help with any questions or concerns you may have. We’re
-              committed to providing you with excellent customer service every
-              step of the way.
-            </li>
-          </ul>
+        <div className="w-full md:w-1/2 space-y-4 text-justify">
+          <h2 className="text-3xl font-bold font-comfortaa">
+            What Sets Us Apart?
+          </h2>
+          <div className="flex gap-5">
+            <div>
+              <div className="bg-kappes w-fit p-4 rounded-full">
+                {provideIcon({ name: "aboutus1" })}
+              </div>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-3">A Wide Selection</h3>
+              <p>
+                We curate products from top-quality sellers across Canada,
+                ensuring our customers always have access to the best products
+                on the market.
+              </p>
+            </div>
+          </div>
+          <div className="flex gap-5">
+            <div>
+              <div className="bg-kappes w-fit p-4 rounded-full">
+                {provideIcon({ name: "aboutus2" })}
+              </div>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-3">A Wide Selection</h3>
+              <p>
+                We curate products from top-quality sellers across Canada,
+                ensuring our customers always have access to the best products
+                on the market.
+              </p>
+            </div>
+          </div>
+          <div className="flex gap-5">
+            <div>
+              <div className="bg-kappes w-fit p-4 rounded-full">
+                {provideIcon({ name: "aboutus3" })}
+              </div>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-3">A Wide Selection</h3>
+              <p>
+                We curate products from top-quality sellers across Canada,
+                ensuring our customers always have access to the best products
+                on the market.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
     </div>

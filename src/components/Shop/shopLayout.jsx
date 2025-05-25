@@ -10,7 +10,7 @@ function ShopLayout() {
     setFilterVisible(!filterVisible);
   };
   return (
-    <div className="flex gap-5 py-5 px-5 md:px-24 lg:px-0 w-full ">
+    <div className="flex gap-5 py-5 px-5 md:px-24 lg:px-32 w-full ">
       <Filter filterVisible={filterVisible} />
       <ShopProductList
         filterVisible={filterVisible}

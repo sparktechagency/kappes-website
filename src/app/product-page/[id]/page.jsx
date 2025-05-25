@@ -3,9 +3,9 @@ import React from "react";
 
 function ProductDetilsPage() {
   return (
-    <div>
+    <>
       <ProductPgae />
-    </div>
+    </>
   );
 }
 
