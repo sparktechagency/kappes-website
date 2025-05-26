@@ -17,7 +17,7 @@
 "use client";
 import React from "react";
 import { useSelector } from "react-redux";
-import WishListCard from "./wishListCard";
+import WishListCard from "./WishListCard";
 
 function WishList({ selectedMenu }) {
   const favorites = useSelector((state) => state.product);
