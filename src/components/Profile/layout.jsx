@@ -3,10 +3,11 @@ import React, { useState } from "react";
 import Sidebar from "./sidebar";
 import PersonalInfo from "./PersonalInfo/personalInfo";
 import OrderHistory from "./OrderHistory/orderHistory";
-import WishList from "./WishList/wishList";
+
 import ChangePassword from "../Auth/changePassword";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import WishList from "./WishList/wishList";
 
 function ProfileLayout() {
   // Using number IDs to match the existing Sidebar component
