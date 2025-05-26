@@ -19,6 +19,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 
 const categories = [
   "Clothing",
@@ -92,7 +93,7 @@ function MultiSelect({ label, options, selected, setSelected }) {
   );
 }
 
-function Filter({ filterVisible = true }) {
+function FilterContent() {
   const dispatch = useDispatch();
   const { selectedCategory, priceRangeLow, priceRangeHigh, location } =
     useSelector((state) => state.filter);
@@ -136,95 +137,136 @@ function Filter({ filterVisible = true }) {
   };
 
   return (
-    filterVisible && (
-      <div className="w-60 max-w-md space-y-4">
-        <div className="flex justify-between items-center">
-          <h2 className="text-xl font-bold">Filter</h2>
-          <Button
-            variant="outline"
-            onClick={handleReset}
-            className="bg-gray-100 hover:bg-gray-200 rounded-full px-6"
-          >
-            Reset
-          </Button>
-        </div>
-
-        {/* Category Section */}
-        <Card className="border shadow-sm">
-          <CardContent className="pt-4">
-            <Label className="text-base font-medium">Category</Label>
-            <ScrollArea className="h-64 w-full mt-2 pr-4">
-              <div className="space-y-2">
-                {categories.map((category) => (
-                  <div key={category} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={`category-${category}`}
-                      checked={checkedCategories.includes(category)}
-                      onCheckedChange={() => handleCategoryChange(category)}
-                    />
-                    <label
-                      htmlFor={`category-${category}`}
-                      className="text-sm font-medium leading-none"
-                    >
-                      {category}
-                    </label>
-                  </div>
-                ))}
-              </div>
-            </ScrollArea>
-          </CardContent>
-        </Card>
-
-        {/* Price Range Section */}
-        <Card className="border shadow-sm">
-          <CardContent className="pt-4 pb-6">
-            <Label className="text-base font-medium">Price Range</Label>
-            <div className="mt-2 mb-4">
-              <div className="text-red-600 font-medium">
-                ${priceRange[0]} - ${priceRange[1]}
-              </div>
-            </div>
-            <Slider
-              value={priceRange}
-              onValueChange={setPriceRangeState}
-              min={0}
-              max={500}
-              step={10}
-              minStepsBetweenThumbs={1}
-              className="w-full"
-            />
-          </CardContent>
-        </Card>
-
-        {/* Location Section */}
-        <Card className="border shadow-sm">
-          <CardContent className="pt-4 space-y-3">
-            <Label className="text-base font-medium">Location</Label>
-
-            <MultiSelect
-              label="Territory"
-              options={territoryList}
-              selected={territory}
-              setSelected={setTerritory}
-            />
-
-            <MultiSelect
-              label="Province"
-              options={provinceList}
-              selected={province}
-              setSelected={setProvince}
-            />
-
-            <MultiSelect
-              label="City"
-              options={cityList}
-              selected={city}
-              setSelected={setCity}
-            />
-          </CardContent>
-        </Card>
+    <div className="w-full max-w-md space-y-4">
+      <div className="flex justify-between items-center">
+        <h2 className="text-xl font-bold">Filter</h2>
+        <Button
+          variant="outline"
+          onClick={handleReset}
+          className="bg-gray-100 hover:bg-gray-200 rounded-full px-6"
+        >
+          Reset
+        </Button>
       </div>
-    )
+      <ScrollArea className="h-screen w-full mt-2 pr-4 flex flex-col gap-4">
+        {/* Category Section */}
+        <div className="h-full flex flex-col gap-4">
+          <Card className="border shadow-sm">
+            <CardContent className="pt-4">
+              <Label className="text-base font-medium">Category</Label>
+              <ScrollArea className="h-64 w-full mt-2 pr-4">
+                <div className="space-y-2">
+                  {categories.map((category) => (
+                    <div key={category} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={`category-${category}`}
+                        checked={checkedCategories.includes(category)}
+                        onCheckedChange={() => handleCategoryChange(category)}
+                      />
+                      <label
+                        htmlFor={`category-${category}`}
+                        className="text-sm font-medium leading-none"
+                      >
+                        {category}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+            </CardContent>
+          </Card>
+
+          {/* Price Range Section */}
+          <Card className="border shadow-sm">
+            <CardContent className="pt-4 pb-6">
+              <Label className="text-base font-medium">Price Range</Label>
+              <div className="mt-2 mb-4">
+                <div className="text-red-600 font-medium">
+                  ${priceRange[0]} - ${priceRange[1]}
+                </div>
+              </div>
+              <Slider
+                value={priceRange}
+                onValueChange={setPriceRangeState}
+                min={0}
+                max={500}
+                step={10}
+                minStepsBetweenThumbs={1}
+                className="w-full"
+              />
+            </CardContent>
+          </Card>
+
+          {/* Location Section */}
+          <Card className="border shadow-sm">
+            <CardContent className="pt-4 space-y-3">
+              <Label className="text-base font-medium">Location</Label>
+
+              <MultiSelect
+                label="Territory"
+                options={territoryList}
+                selected={territory}
+                setSelected={setTerritory}
+              />
+
+              <MultiSelect
+                label="Province"
+                options={provinceList}
+                selected={province}
+                setSelected={setProvince}
+              />
+
+              <MultiSelect
+                label="City"
+                options={cityList}
+                selected={city}
+                setSelected={setCity}
+              />
+            </CardContent>
+          </Card>
+        </div>
+      </ScrollArea>
+    </div>
+  );
+}
+
+function Filter({ filterVisible = true }) {
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  useEffect(() => {
+    // Auto-open drawer on mobile when filterVisible becomes true
+    const isMobile = window.innerWidth < 1024;
+    if (isMobile && filterVisible) {
+      setDrawerOpen(true);
+    } else if (!filterVisible) {
+      setDrawerOpen(false);
+    }
+  }, [filterVisible]);
+
+  return (
+    <>
+      {/* Desktop View */}
+      {filterVisible && (
+        <div className="hidden lg:block w-60">
+          <FilterContent />
+        </div>
+      )}
+
+      {/* Mobile and Tablet View - Drawer only */}
+      <div className="lg:hidden ">
+        <Drawer direction="left" open={drawerOpen} onOpenChange={setDrawerOpen}>
+          <DrawerTrigger asChild>
+            <div style={{ display: "none" }} />
+          </DrawerTrigger>
+
+          <DrawerContent className="h-full w-80 fixed inset-y-0 left-0 mt-0 rounded-none">
+            <div className="p-4 overflow-y-auto max-h-full ">
+              <FilterContent />
+            </div>
+          </DrawerContent>
+        </Drawer>
+      </div>
+    </>
   );
 }
 
