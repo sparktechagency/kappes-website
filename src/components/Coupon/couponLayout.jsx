@@ -1,6 +1,6 @@
 import React from "react";
 import CouponListHead from "./couponListHead";
-import PromoCodeList from "./promocodeList";
+import PromoCodeList from "./promoList";
 
 function CouponLayout() {
   return (
