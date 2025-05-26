@@ -12,6 +12,50 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { toast } from "sonner";
+const PromoCodeList = () => {
+  const promos = [
+    {
+      id: 1,
+      title: "Peak Apparel",
+      image: "/assets/shopBrandCard/pawLogo.png",
+      expiry: "10 May, 2025",
+      discount: "25% Off promo code",
+      description:
+        "Shop a Wide Range of Products Across All Categories at Peak aparel – and Save Up to 80%! From fashion and electronics to home essentials and more — the deals are unbeatable!",
+      code: "PEAK25",
+    },
+    {
+      id: 2,
+      title: "Peak Apparel",
+      image: "/assets/shopBrandCard/pawLogo.png",
+      expiry: "10 May, 2025",
+      discount: "25% Off promo code",
+      description:
+        "Shop a Wide Range of Products Across All Categories at Peak aparel – and Save Up to 80%! From fashion and electronics to home essentials and more — the deals are unbeatable!",
+      code: "PEAK25",
+    },
+    {
+      id: 3,
+      title: "Peak Apparel",
+      image: "/assets/shopBrandCard/pawLogo.png",
+      expiry: "10 May, 2025",
+      discount: "25% Off promo code",
+      description:
+        "Shop a Wide Range of Products Across All Categories at Peak aparel – and Save Up to 80%! From fashion and electronics to home essentials and more — the deals are unbeatable!",
+      code: "PEAK25",
+    },
+  ];
+
+  return (
+    <div className="container mx-auto p-4  w-full">
+      {promos.map((promo) => (
+        <PromoCodeCard key={promo.id} promo={promo} />
+      ))}
+    </div>
+  );
+};
+
+export default PromoCodeList;
 
 const PromoCodeCard = ({ promo }) => {
   const [showCode, setShowCode] = useState(false);
@@ -106,48 +150,3 @@ const PromoCodeCard = ({ promo }) => {
     </Card>
   );
 };
-
-const PromoCodeList = () => {
-  const promos = [
-    {
-      id: 1,
-      title: "Peak Apparel",
-      image: "/assets/shopBrandCard/pawLogo.png",
-      expiry: "10 May, 2025",
-      discount: "25% Off promo code",
-      description:
-        "Shop a Wide Range of Products Across All Categories at Peak aparel – and Save Up to 80%! From fashion and electronics to home essentials and more — the deals are unbeatable!",
-      code: "PEAK25",
-    },
-    {
-      id: 2,
-      title: "Peak Apparel",
-      image: "/assets/shopBrandCard/pawLogo.png",
-      expiry: "10 May, 2025",
-      discount: "25% Off promo code",
-      description:
-        "Shop a Wide Range of Products Across All Categories at Peak aparel – and Save Up to 80%! From fashion and electronics to home essentials and more — the deals are unbeatable!",
-      code: "PEAK25",
-    },
-    {
-      id: 3,
-      title: "Peak Apparel",
-      image: "/assets/shopBrandCard/pawLogo.png",
-      expiry: "10 May, 2025",
-      discount: "25% Off promo code",
-      description:
-        "Shop a Wide Range of Products Across All Categories at Peak aparel – and Save Up to 80%! From fashion and electronics to home essentials and more — the deals are unbeatable!",
-      code: "PEAK25",
-    },
-  ];
-
-  return (
-    <div className="container mx-auto p-4  w-full">
-      {promos.map((promo) => (
-        <PromoCodeCard key={promo.id} promo={promo} />
-      ))}
-    </div>
-  );
-};
-
-export default PromoCodeList;
