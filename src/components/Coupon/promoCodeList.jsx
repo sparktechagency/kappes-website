@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import { Calendar, Copy, ShoppingBag } from "lucide-react";
 import { Card } from "@/components/ui/card";
@@ -12,6 +11,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { toast } from "sonner";
+
 const PromoCodeList = () => {
   const promos = [
     {
@@ -47,7 +47,7 @@ const PromoCodeList = () => {
   ];
 
   return (
-    <div className="container mx-auto p-4  w-full">
+    <div className="container mx-auto p-4 w-full">
       {promos.map((promo) => (
         <PromoCodeCard key={promo.id} promo={promo} />
       ))}
@@ -55,18 +55,34 @@ const PromoCodeList = () => {
   );
 };
 
-export default PromoCodeList;
-
 const PromoCodeCard = ({ promo }) => {
   const [showCode, setShowCode] = useState(false);
 
-  const handleCopyCode = () => {
-    navigator.clipboard.writeText(promo.code);
-    toast({
-      title: "Promo code copied!",
-      description: `${promo.code} has been copied to your clipboard.`,
-      duration: 3000,
-    });
+  const handleCopyCode = async () => {
+    try {
+      await navigator.clipboard.writeText(promo.code);
+      toast.success("Promo code copied!", {
+        description: `${promo.code} has been copied to your clipboard.`,
+        duration: 3000,
+      });
+    } catch (err) {
+      // Fallback for older browsers or if clipboard API fails
+      const textArea = document.createElement("textarea");
+      textArea.value = promo.code;
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        document.execCommand("copy");
+        toast.success("Promo code copied!", {
+          description: `${promo.code} has been copied to your clipboard.`,
+          duration: 3000,
+        });
+      } catch (fallbackErr) {
+        toast.error("Failed to copy promo code");
+      }
+      document.body.removeChild(textArea);
+    }
   };
 
   return (
@@ -150,3 +166,5 @@ const PromoCodeCard = ({ promo }) => {
     </Card>
   );
 };
+
+export default PromoCodeList;
