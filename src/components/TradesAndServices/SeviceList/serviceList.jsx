@@ -188,7 +188,7 @@ export default function ServiceList() {
   };
 
   return (
-    <div className="w-full mx-auto">
+    <div className="w-full mx-auto px-4 lg:px-32">
       {/* Search header */}
 
       <div className="flex justify-between mt-4 mb-6">

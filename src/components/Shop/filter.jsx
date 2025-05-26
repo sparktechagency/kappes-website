@@ -78,6 +78,7 @@ function MultiSelect({ label, options, selected, setSelected }) {
                 id={`${label}-${option}`}
                 checked={selected.includes(option)}
                 onCheckedChange={() => toggleOption(option)}
+                className="data-[state=checked]:bg-red-700 data-[state=checked]:border-none"
               />
               <label
                 htmlFor={`${label}-${option}`}
@@ -159,6 +160,7 @@ function FilterContent() {
                   {categories.map((category) => (
                     <div key={category} className="flex items-center space-x-2">
                       <Checkbox
+                        className="data-[state=checked]:bg-red-700 data-[state=checked]:border-none"
                         id={`category-${category}`}
                         checked={checkedCategories.includes(category)}
                         onCheckedChange={() => handleCategoryChange(category)}
@@ -192,7 +194,7 @@ function FilterContent() {
                 max={500}
                 step={10}
                 minStepsBetweenThumbs={1}
-                className="w-full"
+                className="w-full "
               />
             </CardContent>
           </Card>

@@ -13,39 +13,38 @@ import {
   SelectLabel,
   SelectValue,
 } from "@/components/ui/select";
-import { toast } from "sonner";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import product from "../../../Data/product.json";
+
+// Redux
+import { useDispatch, useSelector } from "react-redux";
+import { addFav, removeFav } from "../../features/productSlice";
 
 export default function ShopProductList({
   habdleFilterVisbile,
   filterVisible,
 }) {
   const [products, setProducts] = useState([]);
-  const [favorites, setFavorites] = useState({});
   const [sortOption, setSortOption] = useState("featured");
 
-  useEffect(() => {
-    // Initialize products with the imported data
-    setProducts(product);
+  const dispatch = useDispatch();
+  const favorites = useSelector((state) => state.product);
 
-    // Initialize favorites based on the favourite field in data
-    const initialFavorites = {};
-    product.forEach((item) => {
-      initialFavorites[item.id] = item.favourite;
-    });
-    setFavorites(initialFavorites);
+  const favoritesMap = favorites.reduce((acc, curr) => {
+    acc[curr.id] = true;
+    return acc;
+  }, {});
+
+  useEffect(() => {
+    setProducts(product);
   }, []);
 
-  // Calculate discount price helper function
   const getDiscountedPrice = (item) => {
     if (!item.discountPrice[0]) return item.originalPrice;
-
     const [hasDiscount, discountType, discountValue] = item.discountPrice;
     if (!hasDiscount) return item.originalPrice;
-
     if (discountType === "percent") {
       return item.originalPrice * (1 - discountValue / 100);
     } else if (discountType === "price") {
@@ -54,36 +53,12 @@ export default function ShopProductList({
     return item.originalPrice;
   };
 
-  const handleAddCart = (productItem, e) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    console.log("Adding to cart:", productItem.name);
-
-    const finalPrice = getDiscountedPrice(productItem);
-
-    toast.success(`${productItem.name} added to cart`, {
-      description: `Price: $${finalPrice.toFixed(2)}`,
-      duration: 4000,
-      action: {
-        label: "Undo",
-        onClick: () => console.log("Undo add to cart"),
-      },
-    });
-  };
-
   const ITEM_HEIGHT = 300;
   const COLUMN_COUNT = 4;
   const OVERSCAN = 5;
 
-  const {
-    containerRef,
-    visibleItems,
-    totalHeight,
-    offsetY,
-    startIndex,
-    columnCount,
-  } = useVirtualizedList(products, ITEM_HEIGHT, OVERSCAN, COLUMN_COUNT);
+  const { containerRef, visibleItems, totalHeight, offsetY } =
+    useVirtualizedList(products, ITEM_HEIGHT, OVERSCAN, COLUMN_COUNT);
 
   const StarRating = ({ rating }) => (
     <div className="flex text-yellow-400">
@@ -102,13 +77,15 @@ export default function ShopProductList({
     </div>
   );
 
-  const toggleFavorite = (id, e) => {
+  const toggleFavorite = (productItem, e) => {
     e.stopPropagation();
     e.preventDefault();
-    setFavorites((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
+
+    if (favoritesMap[productItem.id]) {
+      dispatch(removeFav(productItem.id));
+    } else {
+      dispatch(addFav({ ...productItem, favourite: true }));
+    }
   };
 
   return (
@@ -211,16 +188,16 @@ export default function ShopProductList({
 
                             <button
                               className="absolute top-2 right-2 p-1 bg-white/80 rounded-full hover:bg-white transition-colors"
-                              onClick={(e) => toggleFavorite(productItem.id, e)}
+                              onClick={(e) => toggleFavorite(productItem, e)}
                               aria-label={
-                                favorites[productItem.id]
+                                favoritesMap[productItem.id]
                                   ? "Remove from favorites"
                                   : "Add to favorites"
                               }
                             >
                               <svg
                                 className={`w-6 h-6 ${
-                                  favorites[productItem.id]
+                                  favoritesMap[productItem.id]
                                     ? "text-red-500 fill-red-500"
                                     : "text-gray-100"
                                 }`}
@@ -266,17 +243,6 @@ export default function ShopProductList({
                           </CardContent>
                         </div>
                       </Link>
-
-                      {/* Add to Cart button outside of Link */}
-                      <div className="px-6 pb-6">
-                        <Button
-                          onClick={(e) => handleAddCart(productItem, e)}
-                          variant="outline"
-                          className="w-full border-red-600 text-red-600 hover:bg-red-50"
-                        >
-                          Add to Cart
-                        </Button>
-                      </div>
                     </Card>
                   </div>
                 );

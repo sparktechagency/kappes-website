@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,8 +18,84 @@ import {
 } from "@/components/ui/drawer";
 import Link from "next/link";
 import provideIcon from "@/common/components/provideIcon";
+import { usePathname } from "next/navigation";
 
 function BottomNav() {
+  const currentPath = usePathname();
+
+  // Helper function to check if a path is active
+  const isActive = (href) => {
+    if (!currentPath) return false;
+    // Normalize paths to handle trailing slashes
+    const normalizedCurrentPath = currentPath.split("?")[0].replace(/\/$/, "");
+    const normalizedHref = href.replace(/\/$/, "");
+    // Exact match for home page, partial match for other routes
+    return (
+      normalizedCurrentPath === normalizedHref ||
+      (normalizedHref !== "/" &&
+        normalizedCurrentPath.startsWith(normalizedHref))
+    );
+  };
+
+  // Helper function to get link classes based on active state
+  const getLinkClasses = (href, baseClasses = "") => {
+    const active = isActive(href);
+    return `${baseClasses} ${
+      active ? "text-yellow-300 font-semibold" : "hover:text-yellow-200"
+    }`;
+  };
+
+  const links = [
+    { id: 1, link: "Home", href: "/" },
+    { id: 2, link: "Shop", href: "/shop" },
+    { id: 3, link: "About Us", href: "/about-us" },
+    { id: 4, link: "Contact Us", href: "/contact" },
+    { id: 5, link: "Become a Seller", href: "/auth/become-seller-login" },
+    {
+      id: 6,
+      link: "More",
+      href: "/",
+      subLinks: [
+        { id: 1, link: "FAQs", href: "/faq" },
+        { id: 2, link: "T&C", href: "/terms-&-condition" },
+        { id: 3, link: "Privacy Policy", href: "/privacy-policy" },
+        { id: 4, link: "About Us", href: "/about-us" },
+      ],
+    },
+    {
+      id: 7,
+      link: "Categories",
+      href: "/",
+      subLinks: [
+        { id: 1, link: "Shop By Province", href: "/shop-by-province" },
+        { id: 2, link: "Shop By Territory", href: "/shop-by-territory" },
+        { id: 3, link: "Shop By Store", href: "/shop-by-store" },
+        { id: 4, link: "Trades & Services", href: "/trades-&-services" },
+        { id: 5, link: "Deals & Offers", href: "/deals-&-offers" },
+      ],
+    },
+  ];
+
+  // Check if any category is active
+  const isCategoryActive = () => {
+    if (!currentPath) return false;
+    const categoryPaths = [
+      "/shop-by-province",
+      "/shop-by-territory",
+      "/shop-by-store",
+      "/trades-&-services",
+      "/deals-&-offers",
+    ];
+    return categoryPaths.some((path) => isActive(path));
+  };
+
+  // Check if any "More" item is active
+  const isMoreActive = () => {
+    if (!currentPath) return false;
+    const morePaths = ["/faq", "/terms-&-condition", "/privacy-policy"];
+    return morePaths.some((path) => isActive(path));
+  };
+
   return (
     <div>
       <div className="flex items-center justify-between w-full py-4 border-b border-gray-300 bg-kappes lg:px-32 text-white font-comfortaa">
@@ -64,12 +141,21 @@ function BottomNav() {
                   <DrawerTitle>Menu</DrawerTitle>
                 </DrawerHeader>
                 <div className="p-4 space-y-4">
-                  <Link href="/" className="block py-2 hover:text-kappes">
+                  <Link
+                    href="/"
+                    className={getLinkClasses(
+                      "/",
+                      "block py-2 hover:text-kappes"
+                    )}
+                  >
                     Home
                   </Link>
                   <Link
                     href="/shop"
-                    className="block py-2 hover:text-kappes flex gap-2 items-center"
+                    className={getLinkClasses(
+                      "/shop",
+                      "block py-2 hover:text-kappes flex gap-2 items-center"
+                    )}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -85,35 +171,65 @@ function BottomNav() {
                     </svg>
                     <span>Shop</span>
                   </Link>
-                  <Link href="/" className="block py-2 hover:text-kappes">
+                  <Link
+                    href="/about-us"
+                    className={getLinkClasses(
+                      "/about-us",
+                      "block py-2 hover:text-kappes"
+                    )}
+                  >
                     About Us
                   </Link>
-                  <Link href="/" className="block py-2 hover:text-kappes">
+                  <Link
+                    href="/contact"
+                    className={getLinkClasses(
+                      "/contact",
+                      "block py-2 hover:text-kappes"
+                    )}
+                  >
                     Contact Us
                   </Link>
                   <div className="space-y-2">
-                    <p className="font-medium">More</p>
+                    <p
+                      className={`font-medium ${
+                        isMoreActive() ? "text-yellow-300" : ""
+                      }`}
+                    >
+                      More
+                    </p>
                     <Link
                       href="/faq"
-                      className="block py-1 pl-4 hover:text-kappes"
+                      className={getLinkClasses(
+                        "/faq",
+                        "block py-1 pl-4 hover:text-kappes "
+                      )}
                     >
                       FAQs
                     </Link>
                     <Link
                       href="/terms-&-condition"
-                      className="block py-1 pl-4 hover:text-kappes"
+                      className={getLinkClasses(
+                        "/terms-&-condition",
+                        "block py-1 pl-4 hover:text-kappes"
+                      )}
                     >
                       T&C
                     </Link>
                     <Link
                       href="/privacy-policy"
-                      className="block py-1 pl-4 hover:text-kappes"
+                      className={getLinkClasses(
+                        "/privacy-policy",
+                        "block py-1 pl-4 hover:text-kappes"
+                      )}
                     >
                       Privacy Policy
                     </Link>
                     <Link
                       href="/about-us"
-                      className="block py-1 pl-4 hover:text-kappes"
+                      className={getLinkClasses(
+                        "/about-us",
+                        "block py-1 pl-4 hover:text-kappes"
+                      )}
                     >
                       About Us
                     </Link>
@@ -133,22 +249,49 @@ function BottomNav() {
           {/* Categories Dropdown - visible on all screens */}
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
-              <Button className="bg-transparent shadow-none border-none px-2">
+              <Button
+                className={`bg-transparent shadow-none border-none px-2 ${
+                  isCategoryActive() ? "text-yellow-300 font-semibold" : ""
+                }`}
+              >
                 Categories
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
               <DropdownMenuGroup>
-                <DropdownMenuItem>
-                  {provideIcon({ name: "searchByProvince" })} Shop By Province
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  {provideIcon({ name: "searchByTerritory" })} Shop By Territory
+                <DropdownMenuItem asChild>
+                  <Link
+                    href="/shop-by-province"
+                    className={`flex items-center gap-2 ${
+                      isActive("/shop-by-province")
+                        ? "bg-kappes text-white font-semibold"
+                        : ""
+                    }`}
+                  >
+                    {provideIcon({ name: "searchByProvince" })} Shop By Province
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link
-                    href={"/shop-by-store"}
-                    className="flex items-center gap-2"
+                    href="/shop-by-territory"
+                    className={`flex items-center gap-2 ${
+                      isActive("/shop-by-territory")
+                        ? "bg-kappes text-white font-semibold"
+                        : ""
+                    }`}
+                  >
+                    {provideIcon({ name: "searchByTerritory" })} Shop By
+                    Territory
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link
+                    href="/shop-by-store"
+                    className={`flex items-center gap-2 ${
+                      isActive("/shop-by-store")
+                        ? "bg-kappes text-white font-semibold"
+                        : ""
+                    }`}
                   >
                     {provideIcon({ name: "shopByStore" })} Shop By Store
                   </Link>
@@ -156,14 +299,27 @@ function BottomNav() {
                 <DropdownMenuItem asChild>
                   <Link
                     href="/trades-&-services"
-                    className="flex items-center gap-2"
+                    className={`flex items-center gap-2 ${
+                      isActive("/trades-&-services")
+                        ? "bg-kappes text-whitefont-semibold"
+                        : ""
+                    }`}
                   >
                     {provideIcon({ name: "tradesAndService" })} Trades &
                     Services
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  {provideIcon({ name: "dealsAndOffer" })} Deals & Offers
+                <DropdownMenuItem asChild>
+                  <Link
+                    href="/deals-&-offers"
+                    className={`flex items-center gap-2 ${
+                      isActive("/deals-&-offers")
+                        ? "bg-kappes text-white font-semibold"
+                        : ""
+                    }`}
+                  >
+                    {provideIcon({ name: "dealsAndOffer" })} Deals & Offers
+                  </Link>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
             </DropdownMenuContent>
@@ -172,10 +328,15 @@ function BottomNav() {
 
         {/* Desktop Navigation - hidden on mobile */}
         <div className="md:flex items-center gap-4 hidden">
-          <Link href="/">Home</Link>
+          <Link href="/" className={getLinkClasses("/")}>
+            Home
+          </Link>
           <Link
             href="/shop"
-            className="hover:text-kappes flex gap-2 items-center"
+            className={getLinkClasses(
+              "/shop",
+              "hover:text-yellow-200 flex gap-2 items-center"
+            )}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -191,27 +352,71 @@ function BottomNav() {
             </svg>
             <span>Shop</span>
           </Link>
-          <Link href="/about-us">About Us</Link>
-          <Link href="/">Contact Us</Link>
+          <Link href="/about-us" className={getLinkClasses("/about-us")}>
+            About Us
+          </Link>
+          <Link href="/contact" className={getLinkClasses("/contact")}>
+            Contact Us
+          </Link>
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
-              <Button className="bg-transparent shadow-none border-none px-2">
+              <Button
+                className={`bg-transparent shadow-none border-none px-2 ${
+                  isMoreActive() ? "text-yellow-300 font-semibold" : ""
+                }`}
+              >
                 More
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-44">
               <DropdownMenuGroup>
                 <DropdownMenuItem asChild>
-                  <Link href="/faq">FAQs</Link>
+                  <Link
+                    href="/faq"
+                    className={
+                      isActive("/faq")
+                        ? "bg-kappes text-white font-semibold"
+                        : ""
+                    }
+                  >
+                    FAQs
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/terms-&-condition">T&C</Link>
+                  <Link
+                    href="/terms-&-condition"
+                    className={
+                      isActive("/terms-&-condition")
+                        ? "bg-kappes text-white font-semibold"
+                        : ""
+                    }
+                  >
+                    T&C
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/privacy-policy">Privacy Policy</Link>
+                  <Link
+                    href="/privacy-policy"
+                    className={
+                      isActive("/privacy-policy")
+                        ? "bg-kappes text-white font-semibold"
+                        : ""
+                    }
+                  >
+                    Privacy Policy
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/about-us">About Us</Link>
+                  <Link
+                    href="/about-us"
+                    className={
+                      isActive("/about-us")
+                        ? "bg-kappes text-white font-semibold"
+                        : ""
+                    }
+                  >
+                    About Us
+                  </Link>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
             </DropdownMenuContent>
@@ -220,7 +425,13 @@ function BottomNav() {
 
         {/* Become a Seller - visible on all screens */}
         <div className="flex items-center space-x-4">
-          <Link href="/auth/become-seller-login" className="hover:text-kappes">
+          <Link
+            href="/auth/become-seller-login"
+            className={getLinkClasses(
+              "/auth/become-seller-login",
+              "hover:text-yellow-200"
+            )}
+          >
             Become a Seller
           </Link>
         </div>

@@ -27,7 +27,7 @@ const PromoCodeCard = ({ promo }) => {
 
   return (
     <Card className="overflow-hidden mb-4 rounded-2xl shadow-sm border p-0">
-      <div className="flex flex-col md:flex-row">
+      <div className="flex flex-col-reverse md:flex-row">
         {/* Left section */}
         <div className="flex flex-col md:flex-row flex-1 p-4 gap-4">
           {/* Logo */}
@@ -112,7 +112,7 @@ const PromoCodeList = () => {
     {
       id: 1,
       title: "Peak Apparel",
-      image: "/api/placeholder/64/64",
+      image: "/assets/shopBrandCard/pawLogo.png",
       expiry: "10 May, 2025",
       discount: "25% Off promo code",
       description:
@@ -122,7 +122,7 @@ const PromoCodeList = () => {
     {
       id: 2,
       title: "Peak Apparel",
-      image: "/api/placeholder/64/64",
+      image: "/assets/shopBrandCard/pawLogo.png",
       expiry: "10 May, 2025",
       discount: "25% Off promo code",
       description:
@@ -132,7 +132,7 @@ const PromoCodeList = () => {
     {
       id: 3,
       title: "Peak Apparel",
-      image: "/api/placeholder/64/64",
+      image: "/assets/shopBrandCard/pawLogo.png",
       expiry: "10 May, 2025",
       discount: "25% Off promo code",
       description:
@@ -142,7 +142,7 @@ const PromoCodeList = () => {
   ];
 
   return (
-    <div className="container mx-auto p-4 max-w-4xl">
+    <div className="container mx-auto p-4  w-full">
       {promos.map((promo) => (
         <PromoCodeCard key={promo.id} promo={promo} />
       ))}
