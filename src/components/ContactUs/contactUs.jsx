@@ -8,13 +8,14 @@ import Image from "next/image";
 
 export default function ContactUs() {
   return (
-    <div className="relative w-full h-screen py-20 px-4 overflow-hidden">
+    <div className="relative w-full h-screen  py-20 px-4 overflow-hidden">
       {/* Background Image */}
       <Image
         src="/assets/worldmap.png"
         alt="World map background"
-        fill
-        className="object-cover opacity-30"
+        height={5000}
+        width={5000}
+        className="object-scale-down opacity-30 h-[100%] w-[100%] absolute inset-0 "
         priority
       />
 
