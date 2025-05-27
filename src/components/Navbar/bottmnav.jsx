@@ -406,18 +406,6 @@ function BottomNav() {
                     Privacy Policy
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link
-                    href="/about-us"
-                    className={
-                      isActive("/about-us")
-                        ? "bg-kappes text-white font-semibold"
-                        : ""
-                    }
-                  >
-                    About Us
-                  </Link>
-                </DropdownMenuItem>
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>

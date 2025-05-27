@@ -91,7 +91,7 @@ const MessagingApp = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row border w-full overflow-y-auto bg-gray-50">
+    <div className="flex flex-col md:flex-row border w-full overflow-y-auto bg-gray-50 lg:px-32 py-10 ">
       {/* Mobile Sidebar (Horizontal on top) */}
       <div className="md:hidden w-full border-b">
         <Sidebar orientation="horizontal" />
