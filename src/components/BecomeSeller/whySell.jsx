@@ -56,7 +56,7 @@ export default function WhySellOnCanuckMall() {
 
   return (
     <div className="w-full  mx-auto px-4 py-12 md:py-16 lg:px-32">
-      <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-center mb-10 md:mb-16">
+      <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-center mb-10 md:mb-16 font-comfortaa ">
         Why Sell on The Canuck Mall ?
       </h2>
 
@@ -69,7 +69,7 @@ export default function WhySellOnCanuckMall() {
               </div>
 
               <div className="flex-1">
-                <h3 className="text-lg md:text-xl font-semibold mb-2">
+                <h3 className="text-lg md:text-xl  font-bold mb-2 font-comfortaa">
                   {benefit.title}
                 </h3>
               </div>

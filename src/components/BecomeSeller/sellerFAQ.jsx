@@ -52,9 +52,9 @@ export default function SellerFAQ() {
 
   return (
     <div className="w-full max-w-4xl mx-auto px-4 py-12 md:py-16">
-      <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-center mb-10">
+      <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-center mb-10 ">
         Seller Frequently Asked
-        <br className="hidden sm:block" /> Questions (FAQs)
+        <br className="hidden sm:block " /> Questions (FAQs)
       </h2>
 
       <div className="space-y-4">
