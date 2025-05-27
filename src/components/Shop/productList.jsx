@@ -215,7 +215,7 @@ export default function ShopProductList({
                           </div>
 
                           <CardContent>
-                            <h3 className="font-medium text-lg truncate">
+                            <h3 className="font-medium text-lg truncate font-comfortaa my-1">
                               {productItem.name}
                             </h3>
                             <div className="flex items-center mt-0">
