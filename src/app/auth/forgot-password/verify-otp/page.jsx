@@ -4,7 +4,7 @@ import React from "react";
 
 function VerifyOTP() {
   return (
-    <div className="bg-amber-600">
+    <div className="h-[100vh] flex items-center justify-center bg-gray-50">
       <OTPverification />
 
       <VerificationSuccess Content={<Content />} />

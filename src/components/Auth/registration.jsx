@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff } from "lucide-react";
+import Link from "next/link";
 
 export default function RegistrationForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -135,18 +136,19 @@ export default function RegistrationForm() {
           </div>
         </div>
 
-        <Button
-          className="w-full bg-red-700 hover:bg-red-800 text-white"
-          size="lg"
-        >
-          Sign Up
-        </Button>
-
+        <Link href="/auth/login">
+          <Button
+            className="w-full bg-red-700 hover:bg-red-800 text-white cursor-pointer"
+            size="lg"
+          >
+            Sign Up
+          </Button>
+        </Link>
         <div className="flex items-center justify-center">
           <span className="text-sm text-gray-500">or</span>
         </div>
 
-        <Button variant="outline" className="w-full">
+        <Button variant="outline" className="w-full cursor-pointer">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="25"
@@ -198,9 +200,12 @@ export default function RegistrationForm() {
       <CardFooter className="flex justify-center">
         <p className="text-sm text-gray-600">
           Already have an account?{" "}
-          <a href="#" className="text-red-700 font-medium hover:underline">
+          <Link
+            href="/auth/login"
+            className="text-red-700 font-medium hover:underline cursor-pointer"
+          >
             Sign In
-          </a>
+          </Link>
         </p>
       </CardFooter>
     </Card>

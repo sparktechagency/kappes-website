@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import Link from "next/link";
 
 export default function ForgotPasswordForm() {
   return (
@@ -30,13 +31,14 @@ export default function ForgotPasswordForm() {
             required
           />
         </div>
-
-        <Button
-          className="w-full bg-red-700 hover:bg-red-800 text-white"
-          size="lg"
-        >
-          Confirm
-        </Button>
+        <Link href="/auth/forgot-password/verify-otp">
+          <Button
+            className="w-full bg-red-700 hover:bg-red-800 text-white cursor-pointer"
+            size="lg"
+          >
+            Confirm
+          </Button>
+        </Link>
       </CardContent>
     </Card>
   );

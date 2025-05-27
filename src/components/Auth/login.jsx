@@ -11,6 +11,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff } from "lucide-react";
+import Link from "next/link";
+import { Select } from "../ui/select";
+import { Checkbox } from "../ui/checkbox";
 
 export default function LogIn() {
   const [showPassword, setShowPassword] = useState(false);
@@ -27,7 +30,7 @@ export default function LogIn() {
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold text-center text-red-700">
+        <CardTitle className="text-2xl font-bold text-center text-red-700 font-comfortaa">
           Welcome Back
         </CardTitle>
         <p className="text-center text-gray-600 text-sm px-6">
@@ -74,19 +77,42 @@ export default function LogIn() {
             </Button>
           </div>
         </div>
+        <div className="flex items-center justify-between space-x-2">
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="terms"
+              className=" data-[state=checked]:bg-red-700 data-[state=checked]:border-none"
+            />
+            <label
+              htmlFor="terms"
+              className="text-sm font-light leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Remember me
+            </label>
+          </div>
 
-        <Button
-          className="w-full bg-red-700 hover:bg-red-800 text-white"
-          size="lg"
-        >
-          Sign Up
-        </Button>
+          <Link
+            href="/auth/forgot-password"
+            className="text-sm font-medium text-red-700"
+          >
+            Forgot Password?
+          </Link>
+        </div>
+
+        <Link href="/">
+          <Button
+            className="w-full bg-red-700 hover:bg-red-800 text-white cursor-pointer"
+            size="lg"
+          >
+            Sign In
+          </Button>
+        </Link>
 
         <div className="flex items-center justify-center">
           <span className="text-sm text-gray-500">or</span>
         </div>
 
-        <Button variant="outline" className="w-full">
+        <Button variant="outline" className="w-full cursor-pointer">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="25"
@@ -138,9 +164,12 @@ export default function LogIn() {
       <CardFooter className="flex justify-center">
         <p className="text-sm text-gray-600">
           Don’t have an account?{" "}
-          <a href="#" className="text-red-700 font-medium hover:underline">
+          <Link
+            href="/auth/signup"
+            className="text-red-700 font-medium hover:underline cursor-pointer"
+          >
             Create Account
-          </a>
+          </Link>
         </p>
       </CardFooter>
     </Card>
