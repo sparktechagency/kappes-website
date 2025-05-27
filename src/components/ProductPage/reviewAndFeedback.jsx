@@ -108,7 +108,7 @@ function ReviewAndFeedback() {
                   <Star size={16} className="text-yellow-400 fill-yellow-400" />
                   <Progress
                     value={(item.count / reviewSummary.total) * 100}
-                    className="h-2 flex-1"
+                    className="h-2 flex-1 inset-shadow-sm inset-shadow-white"
                   />
                   <span className="text-sm text-gray-500 w-8">
                     {item.count}
