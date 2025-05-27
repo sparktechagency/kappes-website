@@ -355,7 +355,7 @@ function BottomNav() {
           <Link href="/about-us" className={getLinkClasses("/about-us")}>
             About Us
           </Link>
-          <Link href="/contact" className={getLinkClasses("/contact")}>
+          <Link href="/contact-us" className={getLinkClasses("/contact")}>
             Contact Us
           </Link>
           <DropdownMenu modal={false}>
