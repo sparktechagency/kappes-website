@@ -244,7 +244,7 @@ function TopNav() {
                   </Button>
                 </Link>
               </div>
-
+              {/* 
               <div className="mt-6 space-y-2 px-4 bg-red-400">
                 <Button variant="ghost" className="w-full justify-start gap-2">
                   <MapPin className="h-4 w-4" />
@@ -275,18 +275,23 @@ function TopNav() {
                   <span>Deals & Offers</span>
                   <ChevronRight className="h-4 w-4 ml-auto" />
                 </Button>
-              </div>
+              </div> */}
 
               <div className="mt-6 space-y-2 px-4 h-full flex items-end">
-                <Button variant="ghost" className="w-fit justify-start gap-2">
-                  <MdLogout
-                    size={40}
-                    className="w-10 h-10 text-lg font-semibold text-red-800"
-                  />
-                  <span className="text-lg font-comfortaa font-semibold text-red-800">
-                    Log Out
-                  </span>
-                </Button>
+                <Link href="/auth/login">
+                  <Button
+                    variant="ghost"
+                    className="w-fit justify-start gap-2 cursor-pointer border"
+                  >
+                    <MdLogout
+                      size={40}
+                      className="w-10 h-10 text-lg font-semibold text-red-800"
+                    />
+                    <span className="text-lg font-comfortaa font-semibold text-red-800">
+                      Log Out
+                    </span>
+                  </Button>
+                </Link>
               </div>
             </DrawerContent>
           </Drawer>
