@@ -1,4 +1,4 @@
-import ShopByProvinceLayout from "@/components/ShopByProvince/shopByProvinceLayout";
+import ShopByProvinceLayout from "@/components/Shop By/shopByProvinceLayout";
 import React from "react";
 
 function page() {

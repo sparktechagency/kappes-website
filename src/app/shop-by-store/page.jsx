@@ -1,4 +1,4 @@
-import ShopBrandLayout from "@/components/ShopBy/shopBrandLayout";
+import ShopBrandLayout from "@/components/ShopByStore/shopBrandLayout";
 import React from "react";
 
 function page() {
