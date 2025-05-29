@@ -5,26 +5,26 @@ import React from "react";
 
 function Cover() {
   const searchServices = [
-    "Fresh Painting",
-    "Dentist",
-    "Car Wash",
-    "GC Bakery",
-    "Cake Storys",
-    "Sharlan PhotoStudio",
-    "Abby Clothing",
-    "Strawberry",
-    "Smith Rent a Car",
-    "Fire Safety Store",
-    "Fishing Acceesories",
+    { id: 1, serviceName: "Fresh Painting" },
+    { id: 2, serviceName: "Dentist" },
+    { id: 3, serviceName: "Car Wash" },
+    { id: 4, serviceName: "GC Bakery" },
+    { id: 5, serviceName: "Cake Storys" },
+    { id: 6, serviceName: "Sharlan PhotoStudio" },
+    { id: 7, serviceName: "Abby Clothing" },
+    { id: 8, serviceName: "Strawberry" },
+    { id: 9, serviceName: "Smith Rent a Car" },
+    { id: 10, serviceName: "Fire Safety Store" },
+    { id: 11, serviceName: "Fishing Accessories" },
   ];
 
   const handleSearch = (searchTerm) => {
     const found = searchServices.some(
-      (service) => service.toLowerCase() === searchTerm.toLowerCase()
+      (service) =>
+        service.serviceName.toLowerCase() === searchTerm.toLowerCase()
     );
     console.log("Search found:", found);
   };
-
   return (
     <div>
       <div className="relative">

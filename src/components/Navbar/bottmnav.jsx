@@ -136,7 +136,7 @@ function BottomNav() {
                   </svg>
                 </Button>
               </DrawerTrigger>
-              <DrawerContent className="max-w-xs">
+              <DrawerContent className="max-w-full">
                 <DrawerHeader>
                   <DrawerTitle>Menu</DrawerTitle>
                 </DrawerHeader>

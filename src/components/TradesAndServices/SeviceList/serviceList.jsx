@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { MapPin, Phone, ArrowUpDown } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 const searchResults = [
   {
@@ -206,9 +207,14 @@ export default function ServiceList() {
       </div>
 
       {/* Results grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
         {sortedResults.map((business) => (
-          <BusinessCard key={business.id} business={business} />
+          <Link
+            href={`/trades-&-services/services/${business.id}`}
+            key={business.id}
+          >
+            <BusinessCard business={business} />
+          </Link>
         ))}
       </div>
     </div>

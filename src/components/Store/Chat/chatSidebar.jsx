@@ -1,54 +1,22 @@
+"use client";
 import { useState } from "react";
 import { Search } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-const Sidebar = ({ orientation = "vertical" }) => {
+const Sidebar = ({
+  users,
+  selectedChat,
+  onUserSelect,
+  orientation = "vertical",
+}) => {
   const [searchTerm, setSearchTerm] = useState("");
 
-  const conversations = [
-    {
-      id: 1,
-      name: "Fresh Painting",
-      avatar: "/assets/chat/man1.png",
-      lastMessage: "Hello, How are you?",
-      isOnline: true,
-      unread: false,
-    },
-    {
-      id: 2,
-      name: "Peak",
-      avatar: "/assets/chat/man2.jpg",
-      lastMessage: "Here are some of very cute ill...",
-      isOnline: true,
-      unread: false,
-    },
-    {
-      id: 3,
-      name: "Peak",
-      avatar: "/assets/chat/woman1.png",
-      lastMessage: "Use tools like Trello, Asana...",
-      isOnline: true,
-      unread: false,
-    },
-    {
-      id: 4,
-      name: "Peak",
-      avatar: "/assets/chat/woman2.png",
-      lastMessage: "Regularly review and improve ...",
-      isOnline: true,
-      unread: false,
-    },
-    {
-      id: 5,
-      name: "Peak",
-      avatar: "/api/placeholder/40/40",
-      lastMessage: "Sure, I can help with that. L...",
-      isOnline: true,
-      unread: false,
-    },
-  ];
+  // Filter users based on search
+  const filteredUsers = users.filter((user) =>
+    user.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div
@@ -58,7 +26,7 @@ const Sidebar = ({ orientation = "vertical" }) => {
     >
       {/* Search Bar */}
       <div
-        className={`p-4 ${
+        className={`p-4 flex-shrink-0 ${
           orientation === "horizontal" ? "min-w-[260px]" : "w-full"
         }`}
       >
@@ -73,68 +41,66 @@ const Sidebar = ({ orientation = "vertical" }) => {
         </div>
       </div>
 
-      {/* Conversation List */}
+      {/* Conversation List with Max Height and Scroll */}
       {orientation === "horizontal" ? (
-        <div className="flex overflow-x-auto px-2 space-x-4 pb-4">
-          {conversations.map((chat) => (
+        <div className="flex overflow-x-auto px-2 space-x-4 pb-4 max-h-32 ">
+          {filteredUsers.map((user) => (
             <div
-              key={chat.id}
-              className="flex flex-col items-center min-w-[80px] cursor-pointer"
+              key={user.id}
+              className={`flex flex-col items-center min-w-[80px] cursor-pointer p-2 rounded-lg transition-colors ${
+                selectedChat?.id === user.id
+                  ? "bg-red-50 border border-red-200"
+                  : "hover:bg-gray-50"
+              }`}
+              onClick={() => onUserSelect(user)}
             >
               <div className="relative">
-                {chat.initials ? (
-                  <Avatar className="h-12 w-12 mb-1 bg-gray-200">
-                    <span className="text-sm font-medium">{chat.initials}</span>
-                  </Avatar>
-                ) : (
-                  <Avatar className="h-12 w-12 mb-1">
-                    <img src={chat.avatar} alt={chat.name} />
-                  </Avatar>
-                )}
-                {chat.isOnline && (
+                <Avatar className="h-12 w-12 mb-1">
+                  <img src={user.avatar} alt={user.name} />
+                </Avatar>
+                {user.isOnline && (
                   <span className="absolute bottom-1 right-0 h-3 w-3 bg-green-500 rounded-full border-2 border-white"></span>
                 )}
               </div>
               <span className="text-xs font-medium truncate w-full text-center">
-                {chat.name}
+                {user.name}
               </span>
             </div>
           ))}
         </div>
       ) : (
-        <ScrollArea className="flex-1">
-          <div className="space-y-1 p-2">
-            {conversations.map((chat) => (
-              <div
-                key={chat.id}
-                className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 cursor-pointer"
-              >
-                <div className="relative flex-shrink-0">
-                  {chat.initials ? (
-                    <Avatar className="h-10 w-10 bg-gray-200">
-                      <span className="text-sm font-medium">
-                        {chat.initials}
-                      </span>
-                    </Avatar>
-                  ) : (
+        <div className="flex-1 overflow-auto bg-red-200 ">
+          <ScrollArea className="h-[calc(100vh-200px)] max-h-[900px]">
+            <div className="space-y-1 p-2">
+              {filteredUsers.map((user) => (
+                <div
+                  key={user.id}
+                  className={`flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-colors ${
+                    selectedChat?.id === user.id
+                      ? "bg-red-50 border border-red-200"
+                      : "hover:bg-gray-100"
+                  }`}
+                  onClick={() => onUserSelect(user)}
+                >
+                  <div className="relative flex-shrink-0">
                     <Avatar className="h-10 w-10">
-                      <img src={chat.avatar} alt={chat.name} />
+                      <img src={user.avatar} alt={user.name} />
                     </Avatar>
-                  )}
-                  {chat.isOnline && (
-                    <span className="absolute bottom-0 right-0 h-2.5 w-2.5 bg-green-500 rounded-full border-2 border-white"></span>
-                  )}
+                    {user.isOnline && (
+                      <span className="absolute bottom-0 right-0 h-2.5 w-2.5 bg-green-500 rounded-full border-2 border-white"></span>
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="text-sm font-medium">{user.name}</h4>
+                    <p className="text-xs text-gray-500 truncate">
+                      {user.lastMessage}
+                    </p>
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h4 className="text-sm font-medium">{chat.name}</h4>
-                  <p className="text-xs text-gray-500 truncate">
-                    {chat.lastMessage}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </ScrollArea>
+              ))}
+            </div>
+          </ScrollArea>
+        </div>
       )}
     </div>
   );

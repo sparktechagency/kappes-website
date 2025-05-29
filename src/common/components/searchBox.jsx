@@ -15,15 +15,15 @@ function SearchBox({
     setInputValue(value);
 
     const filteredSuggestions = searchServices.filter((service) =>
-      service.toLowerCase().includes(value.toLowerCase())
+      service.serviceName.toLowerCase().includes(value.toLowerCase())
     );
     setSuggestions(value ? filteredSuggestions : []);
   };
 
   const handleSelectSuggestion = (suggestion) => {
-    setInputValue(suggestion);
+    setInputValue(suggestion.serviceName);
     setSuggestions([]);
-    handleSearch?.(suggestion);
+    handleSearch?.(suggestion.serviceName);
   };
 
   const onSearchClick = () => {
@@ -32,7 +32,7 @@ function SearchBox({
   };
 
   return (
-    <div className="relative  flex items-center justify-center   sm:px-10 md:px-28">
+    <div className="relative flex items-center justify-center sm:px-10 md:px-28">
       <input
         type="text"
         value={inputValue}
@@ -49,15 +49,15 @@ function SearchBox({
 
       {/* Suggestions dropdown */}
       {suggestions.length > 0 && (
-        <ul className="absolute top-full mt-1 left-0 right-0 bg-white border border-gray-300 rounded max-w-4xl mx-auto  shadow-lg z-10 max-h-48 overflow-y-auto">
-          {suggestions.map((suggestion, idx) => (
-            <Link href={`/${suggestion}`} key={idx}>
-              <li
-                key={idx}
-                onClick={() => handleSelectSuggestion(suggestion)}
-                className="px-4 py-2 cursor-pointer hover:bg-gray-100"
-              >
-                {suggestion}
+        <ul className="absolute top-full mt-1 left-0 right-0 bg-white border border-gray-300 rounded max-w-4xl mx-auto shadow-lg z-10 max-h-48 overflow-y-auto">
+          {suggestions.map((suggestion) => (
+            <Link
+              href={`/trades-&-services/${suggestion.id}`}
+              key={suggestion.id}
+              onClick={() => handleSelectSuggestion(suggestion)}
+            >
+              <li className="px-4 py-2 cursor-pointer hover:bg-gray-100">
+                {suggestion.serviceName}
               </li>
             </Link>
           ))}
