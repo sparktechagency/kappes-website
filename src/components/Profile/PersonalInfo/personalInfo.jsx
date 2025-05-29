@@ -274,7 +274,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
-
+import { TbHome } from "react-icons/tb";
 export default function PersonalInfo({ selectedMenu }) {
   if (selectedMenu !== 1) return null;
 
@@ -495,37 +495,9 @@ const ShippingAddressCard = () => {
         <div className="bg-kappes px-4 flex items-center justify-between">
           <div className="flex items-center gap-4 text-white">
             <span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="25"
-                viewBox="0 0 24 25"
-                fill="none"
-              >
-                <path
-                  d="M2 21.4999C1.99986 20.2061 2.31352 18.9316 2.91408 17.7856C3.51464 16.6396 4.38419 15.6564 5.44815 14.9202C6.51212 14.1841 7.73876 13.7169 9.02288 13.5589C10.307 13.4009 11.6103 13.5567 12.821 14.0129"
-                  stroke="white"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M21.378 17.1261C21.7763 16.7278 22.0001 16.1875 22.0001 15.6241C22.0001 15.0608 21.7763 14.5205 21.378 14.1221C20.9796 13.7238 20.4393 13.5 19.876 13.5C19.3126 13.5 18.7723 13.7238 18.374 14.1221L14.364 18.1341C14.1262 18.3718 13.9522 18.6655 13.858 18.9881L13.021 21.8581C12.9959 21.9442 12.9944 22.0354 13.0166 22.1222C13.0389 22.2091 13.084 22.2883 13.1474 22.3517C13.2108 22.4151 13.2901 22.4603 13.3769 22.4825C13.4637 22.5048 13.5549 22.5032 13.641 22.4781L16.511 21.6411C16.8336 21.5469 17.1274 21.3729 17.365 21.1351L21.378 17.1261Z"
-                  stroke="white"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M10 13.5C12.7614 13.5 15 11.2614 15 8.5C15 5.73858 12.7614 3.5 10 3.5C7.23858 3.5 5 5.73858 5 8.5C5 11.2614 7.23858 13.5 10 13.5Z"
-                  stroke="white"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <TbHome size={25} />
             </span>
-            <p>Personal Information</p>
+            <p>Shipping Address</p>
           </div>
           <Button
             className="bg-transparent hover:bg-transparent cursor-pointer"

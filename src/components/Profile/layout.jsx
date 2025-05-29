@@ -50,32 +50,29 @@ function ProfileLayout() {
 
 // MobileTabs component to handle mobile navigation
 const MobileTabs = ({ setSelectedMenu, selectedMenu }) => {
-  // Map tab values to menu IDs
   const handleTabChange = (value) => {
-    // Convert string tab value to number ID
     setSelectedMenu(parseInt(value));
   };
 
-  // Get the current tab value based on selectedMenu
-  const getCurrentTabValue = () => {
-    return selectedMenu.toString();
-  };
-
   return (
-    <ScrollArea orientation="horizontal">
-      <Tabs
-        value={getCurrentTabValue()}
-        onValueChange={handleTabChange}
-        className="w-full"
-      >
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="1">My Profile</TabsTrigger>
-          <TabsTrigger value="2">Order History</TabsTrigger>
-          <TabsTrigger value="3">Wish List</TabsTrigger>
-          <TabsTrigger value="4">Change Password</TabsTrigger>
+    <div className="w-full overflow-x-auto rounded-lg">
+      <Tabs value={selectedMenu.toString()} onValueChange={handleTabChange}>
+        <TabsList className="flex w-max gap-2 px-2">
+          <TabsTrigger value="1" className="whitespace-nowrap">
+            My Profile
+          </TabsTrigger>
+          <TabsTrigger value="2" className="whitespace-nowrap">
+            Order History
+          </TabsTrigger>
+          <TabsTrigger value="3" className="whitespace-nowrap">
+            Wish List
+          </TabsTrigger>
+          <TabsTrigger value="4" className="whitespace-nowrap">
+            Change Password
+          </TabsTrigger>
         </TabsList>
       </Tabs>
-    </ScrollArea>
+    </div>
   );
 };
 
