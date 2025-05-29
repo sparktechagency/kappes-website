@@ -1,8 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 
-import ChatBox from "./ChatBox";
 import Sidebar from "./chatSidebar";
+import ChatBox from "./chatBox";
 
 const MessagingApp = () => {
   const [selectedChat, setSelectedChat] = useState(null);
