@@ -29,11 +29,20 @@ function BottomNav() {
     // Normalize paths to handle trailing slashes
     const normalizedCurrentPath = currentPath.split("?")[0].replace(/\/$/, "");
     const normalizedHref = href.replace(/\/$/, "");
-    // Exact match for home page, partial match for other routes
+
+    // For home page, only match exactly
+    if (normalizedHref === "" || normalizedHref === "/") {
+      return normalizedCurrentPath === "" || normalizedCurrentPath === "/";
+    }
+
+    // For other routes, check if current path starts with the href and either:
+    // 1. They are exactly equal, or
+    // 2. The next character after href in currentPath is "/" (to avoid partial matches)
     return (
       normalizedCurrentPath === normalizedHref ||
-      (normalizedHref !== "/" &&
-        normalizedCurrentPath.startsWith(normalizedHref))
+      (normalizedCurrentPath.startsWith(normalizedHref) &&
+        (normalizedCurrentPath.charAt(normalizedHref.length) === "/" ||
+          normalizedCurrentPath.charAt(normalizedHref.length) === ""))
     );
   };
 
@@ -49,7 +58,7 @@ function BottomNav() {
     { id: 1, link: "Home", href: "/" },
     { id: 2, link: "Shop", href: "/shop" },
     { id: 3, link: "About Us", href: "/about-us" },
-    { id: 4, link: "Contact Us", href: "/contact" },
+    { id: 4, link: "Contact Us", href: "/contact-us" },
     { id: 5, link: "Become a Seller", href: "/auth/become-seller-login" },
     {
       id: 6,
@@ -181,9 +190,9 @@ function BottomNav() {
                     About Us
                   </Link>
                   <Link
-                    href="/contact"
+                    href="/contact-us"
                     className={getLinkClasses(
-                      "/contact",
+                      "/contact-us",
                       "block py-2 hover:text-kappes"
                     )}
                   >
@@ -301,7 +310,7 @@ function BottomNav() {
                     href="/trades-&-services"
                     className={`flex items-center gap-2 ${
                       isActive("/trades-&-services")
-                        ? "bg-kappes text-whitefont-semibold"
+                        ? "bg-kappes text-white font-semibold"
                         : ""
                     }`}
                   >
@@ -355,7 +364,7 @@ function BottomNav() {
           <Link href="/about-us" className={getLinkClasses("/about-us")}>
             About Us
           </Link>
-          <Link href="/contact-us" className={getLinkClasses("/contact")}>
+          <Link href="/contact-us" className={getLinkClasses("/contact-us")}>
             Contact Us
           </Link>
           <DropdownMenu modal={false}>
