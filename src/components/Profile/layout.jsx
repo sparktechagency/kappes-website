@@ -55,19 +55,19 @@ const MobileTabs = ({ setSelectedMenu, selectedMenu }) => {
   };
 
   return (
-    <div className="w-full overflow-x-auto rounded-lg">
+    <div className="w-full overflow-x-auto rounded-lg ">
       <Tabs value={selectedMenu.toString()} onValueChange={handleTabChange}>
-        <TabsList className="flex w-max gap-2 px-2">
-          <TabsTrigger value="1" className="whitespace-nowrap">
+        <TabsList className="flex w-max gap-2 px-2 bg-kappes">
+          <TabsTrigger value="1" className="whitespace-nowrap cursor-pointer">
             My Profile
           </TabsTrigger>
-          <TabsTrigger value="2" className="whitespace-nowrap">
+          <TabsTrigger value="2" className="whitespace-nowrap cursor-pointer">
             Order History
           </TabsTrigger>
-          <TabsTrigger value="3" className="whitespace-nowrap">
+          <TabsTrigger value="3" className="whitespace-nowrap cursor-pointer">
             Wish List
           </TabsTrigger>
-          <TabsTrigger value="4" className="whitespace-nowrap">
+          <TabsTrigger value="4" className="whitespace-nowrap cursor-pointer">
             Change Password
           </TabsTrigger>
         </TabsList>

@@ -1,5 +1,4 @@
-"use client";
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { HiOutlineUser } from "react-icons/hi";
@@ -58,22 +57,26 @@ const Sidebar = ({ setSelectedMenu, selectedMenu }) => {
               <li key={item.id} onClick={() => setSelectedMenu(item.id)}>
                 <Link
                   href="#"
-                  className={`flex items-center gap-2 p-2 rounded-md group transition-colors duration-200   ${
+                  className={`flex items-center gap-2 p-2 rounded-md group transition-colors duration-200 ${
                     selectedMenu === item.id
                       ? "bg-[#AF1500]"
-                      : "hover:bg-[#AF1500] "
+                      : "hover:bg-[#AF1500]"
                   }`}
                 >
                   <span
                     className={`${
-                      selectedMenu === item.id ? "text-white" : "text-[#AF1500]"
+                      selectedMenu === item.id
+                        ? "text-white"
+                        : "text-[#AF1500] group-hover:text-white"
                     }`}
                   >
                     {item.icon}
                   </span>
                   <span
                     className={`text-sm ${
-                      selectedMenu === item.id ? "text-white" : "text-[#AF1500]"
+                      selectedMenu === item.id
+                        ? "text-white"
+                        : "text-[#AF1500] group-hover:text-white"
                     }`}
                   >
                     {item.label}
