@@ -797,18 +797,18 @@ function provideIcon({ name }) {
           <path
             d="M10.4004 11.85L7.10037 12.55C6.60037 12.65 6.10037 12.25 6.20037 11.65L6.90037 8.35C7.00037 8.05 7.10037 7.85 7.30037 7.65L13.5004 1.45C14.1004 0.85 15.0004 0.85 15.6004 1.45L17.3004 3.15C17.9004 3.75 17.9004 4.65 17.3004 5.25L11.2004 11.45C10.9004 11.65 10.7004 11.75 10.4004 11.85Z"
             stroke="white"
-            stroke-width="1.3"
-            stroke-miterlimit="10"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="1.3"
+            strokeMiterlimit="10"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M15.3 10.2502V15.1502C15.3 16.5502 14.2 17.6502 12.8 17.6502H3.5C2.1 17.6502 1 16.5502 1 15.1502V5.9502C1 4.5502 2.1 3.4502 3.5 3.4502H8.4"
             stroke="white"
-            stroke-width="1.3"
-            stroke-miterlimit="10"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="1.3"
+            strokeMiterlimit="10"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
         </svg>
       ),
