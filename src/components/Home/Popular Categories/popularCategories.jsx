@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
+import Link from "next/link";
 
 function PopularCategories() {
   const popularCategories = [
@@ -75,10 +76,12 @@ function PopularCategories() {
         <h2 className="text-3xl font-extrabold font-comfortaa">
           Popular Categories
         </h2>
-        <button className="flex items-start text-gray-600 hover:text-gray-800 hover:underline transition-colors">
-          See all
-          <IoArrowForward className="ml-2 rotate-[-45deg]" />
-        </button>
+        <Link href={"/categories"} className="">
+          <button className="flex items-center text-gray-600 hover:text-gray-800 hover:underline transition-colors cursor-pointer">
+            See all
+            <IoArrowForward className="ml-2 rotate-[-45deg]" />
+          </button>
+        </Link>
       </div>
 
       <div className="relative group">

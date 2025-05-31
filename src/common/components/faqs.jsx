@@ -69,7 +69,7 @@ export default function FAQSection() {
               aria-expanded={openFAQ === faq.id}
               aria-controls={`faq-answer-${faq.id}`}
             >
-              <span className="text-base md:text-lg font-medium">
+              <span className="text-base md:text-lg font-bold font-comfortaa">
                 {faq.question}
               </span>
               <motion.span
@@ -122,7 +122,7 @@ export default function FAQSection() {
                   id={`faq-answer-${faq.id}`}
                   className="overflow-hidden"
                 >
-                  <div className="p-4 md:p-5 pt-2 text-sm md:text-base text-gray-600 border-t border-gray-100">
+                  <div className="p-4 md:p-5 pt-2 text-sm md:text-base text-gray-600 border-t border-gray-100 font-comfortaa">
                     {faq.answer}
                   </div>
                 </motion.div>
