@@ -140,7 +140,7 @@ function ProductView() {
               height={500}
               src={productImages[mainImage]}
               alt={productData.name}
-              className="w-full h-[40rem] object-fill transition-transform duration-300 hover:scale-150"
+              className="w-full h-[40rem] object-cover transition-transform duration-300 hover:scale-150"
               priority
             />
             <Button

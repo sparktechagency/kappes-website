@@ -3,7 +3,7 @@ import React from "react";
 
 function page() {
   return (
-    <div className="h-screen lg:px-32 py-10">
+    <div className="h-screen lg:px-32 py-10 mb-48">
       <ShopBrandLayout />
     </div>
   );

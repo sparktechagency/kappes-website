@@ -31,9 +31,23 @@ function ShopBrandLayout() {
       logo: "/assets/shopBrandCard/hangerLogo.jpg",
       cover: "/assets/shopBrandCard/hangerCover.png",
     },
+    {
+      id: 5,
+      name: "Peak",
+      location: "Victoria British Columbia",
+      logo: "/assets/shopBrandCard/hangerLogo.jpg",
+      cover: "/assets/shopBrandCard/hangerCover.png",
+    },
+    {
+      id: 6,
+      name: "Peak",
+      location: "Victoria British Columbia",
+      logo: "/assets/shopBrandCard/hangerLogo.jpg",
+      cover: "/assets/shopBrandCard/hangerCover.png",
+    },
   ];
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4 ">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
       {brandList.map((item) => (
         <ShopBrandCard brandInfo={item} key={item.id} />
       ))}

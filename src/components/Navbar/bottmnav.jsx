@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -19,8 +19,10 @@ import {
 import Link from "next/link";
 import provideIcon from "@/common/components/provideIcon";
 import { usePathname } from "next/navigation";
-
+import { motion, AnimatePresence } from "framer-motion";
 function BottomNav() {
+  const rotatingWords = ["Province", "Territory", "City"];
+  const [currentIndex, setCurrentIndex] = useState(0);
   const currentPath = usePathname();
 
   // Helper function to check if a path is active
@@ -105,6 +107,32 @@ function BottomNav() {
     return morePaths.some((path) => isActive(path));
   };
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % rotatingWords.length);
+    }, 1250); // 1s display + 0.5s animation in/out
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const containerVariants = {
+    initial: {},
+    animate: {
+      transition: {
+        staggerChildren: 0.25, // delay between each drop
+      },
+    },
+  };
+
+  // Each word drops in from the top
+  const itemVariants = {
+    initial: { opacity: 0, y: -30 },
+    animate: {
+      opacity: 1,
+      y: 0,
+      transition: { type: "spring", stiffness: 300 },
+    },
+  };
   return (
     <div>
       <div className="flex items-center justify-between w-full py-4 border-b border-gray-300 bg-kappes lg:px-32 text-white font-comfortaa">
@@ -266,22 +294,27 @@ function BottomNav() {
                         : ""
                     }`}
                   >
-                    {provideIcon({ name: "searchByProvince" })} Shop By Province
+                    {provideIcon({ name: "searchByProvince" })} Shop By{" "}
+                    <div className="h-6 overflow-hidden relative w-[90px]">
+                      <AnimatePresence mode="wait">
+                        <motion.span
+                          key={rotatingWords[currentIndex]}
+                          initial={{ y: -30, opacity: 0 }}
+                          animate={{ y: 2, opacity: 1 }}
+                          exit={{ y: 30, opacity: 0 }}
+                          transition={{
+                            duration: 0.25, // fast drop in and out
+                            ease: "easeOut",
+                          }}
+                          className="absolute font-bold"
+                        >
+                          {rotatingWords[currentIndex]}
+                        </motion.span>
+                      </AnimatePresence>
+                    </div>
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link
-                    href="/shop-by-territory"
-                    className={`flex items-center gap-2 ${
-                      isActive("/shop-by-territory")
-                        ? "bg-kappes text-white font-semibold"
-                        : ""
-                    }`}
-                  >
-                    {provideIcon({ name: "searchByTerritory" })} Shop By
-                    Territory
-                  </Link>
-                </DropdownMenuItem>
+
                 <DropdownMenuItem asChild>
                   <Link
                     href="/shop-by-store"

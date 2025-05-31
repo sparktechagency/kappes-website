@@ -167,19 +167,29 @@ import { useSelector } from "react-redux";
 function TopNav() {
   const user = { name: "John Doe", image: null };
 
-  // Get unique cart items count from Redux (not total quantity)
-  const cartItemCount = useSelector((state) => state.cart.length);
+  const cartItemCount = useSelector((state) =>
+    state.cart.reduce((total, item) => total + item.quantity, 0)
+  );
 
   return (
     <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 px-4 py-2 flex sm:flex-row items-center justify-center sm:justify-between gap-3 lg:px-32">
       {/* Logo */}
       <Link href="/" className="flex-shrink-0">
+        {/* Desktop Logo */}
         <Image
           src="/assets/topnavimg.png"
           alt="Website Logo"
           width={100}
           height={100}
-          className="object-contain"
+          className="object-contain hidden sm:block"
+        />
+        {/* Mobile Logo */}
+        <Image
+          src="/assets/footer/footericon.png"
+          alt="Website Logo"
+          width={100}
+          height={100}
+          className="object-contain block sm:hidden w-10 h-10"
         />
       </Link>
 
@@ -189,9 +199,9 @@ function TopNav() {
       </div>
 
       {/* Right Section */}
-      <div className="flex items-center gap-4 mt-2 sm:mt-0">
-        {/* Cart Icon with Count */}
-        <Link href="/check-out" className="relative">
+      <div className="flex items-center justify-center gap-4 mt-2 sm:mt-0">
+        {/* Cart Icon - Desktop only */}
+        <Link href="/check-out" className="relative hidden sm:block">
           <Button className="text-gray-500 hover:text-gray-700 focus:outline-none bg-white shadow-none w-10 h-10 rounded-full hover:bg-gray-300 cursor-pointer">
             <HiOutlineShoppingCart size={24} />
           </Button>
@@ -214,15 +224,13 @@ function TopNav() {
         ) : (
           <Drawer direction="right">
             <DrawerTrigger asChild>
-              <button>
-                <Avatar className="cursor-pointer">
-                  <AvatarImage
-                    src={user.image || "/default-avatar.png"}
-                    alt={user.name}
-                  />
-                  <AvatarFallback>{user.name[0]}</AvatarFallback>
-                </Avatar>
-              </button>
+              <Avatar className="cursor-pointer w-10 h-10 mb-1.5">
+                <AvatarImage
+                  src={user.image || "/default-avatar.png"}
+                  alt={user.name}
+                />
+                <AvatarFallback>{user.name[0]}</AvatarFallback>
+              </Avatar>
             </DrawerTrigger>
             <DrawerContent className="p-4">
               <div className="ml-4 mt-4">
@@ -244,8 +252,24 @@ function TopNav() {
                   </Button>
                 </Link>
               </div>
-              {/* 
-              <div className="mt-6 space-y-2 px-4 bg-red-400">
+
+              {/* Cart icon - Mobile only */}
+              <div className="mt-6 px-4 block sm:hidden">
+                <Link href="/check-out" className="relative">
+                  <Button className="w-full justify-start gap-3 bg-kappes hover:bg-kappes">
+                    <HiOutlineShoppingCart size={20} />
+                    <span>Cart</span>
+                    {cartItemCount > 0 && (
+                      <span className="ml-auto bg-white text-red-700 text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                        {cartItemCount}
+                      </span>
+                    )}
+                  </Button>
+                </Link>
+              </div>
+
+              {/* Navigation Buttons */}
+              <div className="mt-6 space-y-2 px-4">
                 <Button variant="ghost" className="w-full justify-start gap-2">
                   <MapPin className="h-4 w-4" />
                   <span>Shop By Province</span>
@@ -275,23 +299,19 @@ function TopNav() {
                   <span>Deals & Offers</span>
                   <ChevronRight className="h-4 w-4 ml-auto" />
                 </Button>
-              </div> */}
+              </div>
 
+              {/* Logout */}
               <div className="mt-6 space-y-2 px-4 h-full flex items-end">
-                <Link href="/auth/login">
-                  <Button
-                    variant="ghost"
-                    className="w-fit justify-start gap-2 cursor-pointer border"
-                  >
-                    <MdLogout
-                      size={40}
-                      className="w-10 h-10 text-lg font-semibold text-red-800"
-                    />
-                    <span className="text-lg font-comfortaa font-semibold text-red-800">
-                      Log Out
-                    </span>
-                  </Button>
-                </Link>
+                <Button variant="ghost" className="w-fit justify-start gap-2">
+                  <MdLogout
+                    size={40}
+                    className="w-10 h-10 text-lg font-semibold text-red-800"
+                  />
+                  <span className="text-lg font-comfortaa font-semibold text-red-800">
+                    Log Out
+                  </span>
+                </Button>
               </div>
             </DrawerContent>
           </Drawer>
