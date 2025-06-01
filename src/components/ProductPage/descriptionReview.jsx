@@ -3,7 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ReviewAndFeedback from "./reviewAndFeedback";
 function DescriptionReview() {
   return (
-    <div className="lg:px-32">
+    <div className=" px-4 lg:px-32">
       <Tabs defaultValue="description" className="w-full">
         <TabsList className="grid w-full grid-cols-2 bg-red-700">
           <TabsTrigger

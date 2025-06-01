@@ -52,7 +52,9 @@ function BottomNav() {
   const getLinkClasses = (href, baseClasses = "") => {
     const active = isActive(href);
     return `${baseClasses} ${
-      active ? "text-yellow-300 font-semibold" : "hover:text-yellow-200"
+      active
+        ? "text-red-800 md:text-yellow-300 font-semibold"
+        : "hover:text-red-800 md:hover-text-yellow-200"
     }`;
   };
 
@@ -135,42 +137,14 @@ function BottomNav() {
   };
   return (
     <div>
-      <div className="flex items-center justify-between w-full py-4 border-b border-gray-300 bg-kappes lg:px-32 text-white font-comfortaa">
+      <div className="flex items-center justify-between w-full py-4 border-b border-gray-300 bg-kappes  lg:px-32 text-white font-comfortaa">
         <div className="flex items-center space-x-4">
           {/* Mobile Menu Drawer */}
-          <div className="md:hidden block">
+          <div className="md:hidden block ">
             <Drawer>
               <DrawerTrigger asChild>
-                <Button variant="ghost" className="p-0 h-auto w-auto">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                  >
-                    <path
-                      d="M4 12H20"
-                      stroke="white"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M4 6H20"
-                      stroke="white"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M4 18H20"
-                      stroke="white"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
+                <Button variant="ghost" className="p-0 h-auto w-auto mt-1">
+                  {provideIcon({ name: "menu" })}
                 </Button>
               </DrawerTrigger>
               <DrawerContent className="max-w-full">
@@ -276,7 +250,7 @@ function BottomNav() {
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <Button
-                className={`bg-transparent shadow-none border-none px-2 ${
+                className={`bg-transparent shadow-none border-none px-2  ${
                   isCategoryActive() ? "text-yellow-300 font-semibold" : ""
                 }`}
               >
@@ -432,7 +406,7 @@ function BottomNav() {
         </div>
 
         {/* Become a Seller - visible on all screens */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-4 ">
           <Link
             href="/auth/become-seller-login"
             className={getLinkClasses(
