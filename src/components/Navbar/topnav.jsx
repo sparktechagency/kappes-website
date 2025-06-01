@@ -3,7 +3,7 @@
 import SearchBox from "@/common/components/searchBox";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { HiOutlineShoppingCart } from "react-icons/hi";
 import { FaRegUser } from "react-icons/fa";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -14,6 +14,8 @@ import { ChevronRight, MapPin, Store, HandCoins, Tag } from "lucide-react";
 import { useSelector } from "react-redux";
 
 function TopNav() {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
   const user = { name: "John Doe", image: null };
 
   const cartItemCount = useSelector((state) =>
@@ -24,7 +26,6 @@ function TopNav() {
     <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 px-4 py-2 flex sm:flex-row items-center justify-center sm:justify-between gap-3 lg:px-32">
       {/* Logo */}
       <Link href="/" className="flex-shrink-0">
-        {/* Desktop Logo */}
         <Image
           src="/assets/topnavimg.png"
           alt="Website Logo"
@@ -32,7 +33,6 @@ function TopNav() {
           height={100}
           className="object-contain hidden sm:block"
         />
-        {/* Mobile Logo */}
         <Image
           src="/assets/footer/footericon.png"
           alt="Website Logo"
@@ -71,9 +71,16 @@ function TopNav() {
             <span className="hidden md:inline">Sign In</span>
           </Link>
         ) : (
-          <Drawer direction="right">
+          <Drawer
+            open={isDrawerOpen}
+            onOpenChange={setIsDrawerOpen}
+            direction="right"
+          >
             <DrawerTrigger asChild>
-              <Avatar className="cursor-pointer w-10 h-10 mb-1.5">
+              <Avatar
+                onClick={() => setIsDrawerOpen(true)}
+                className="cursor-pointer w-10 h-10 mb-1.5"
+              >
                 <AvatarImage
                   src={user.image || "/default-avatar.png"}
                   alt={user.name}
@@ -95,7 +102,10 @@ function TopNav() {
                 <h3 className="my-2 text-xl font-comfortaa font-bold">
                   Sarah Jones
                 </h3>
-                <Link href="/profile/4545">
+                <Link
+                  href="/profile/4545"
+                  onClick={() => setIsDrawerOpen(false)}
+                >
                   <Button variant="outline" className="cursor-pointer">
                     View Profile
                   </Button>
@@ -104,7 +114,11 @@ function TopNav() {
 
               {/* Cart icon - Mobile only */}
               <div className="mt-6 px-4 block sm:hidden">
-                <Link href="/check-out" className="relative">
+                <Link
+                  href="/check-out"
+                  className="relative"
+                  onClick={() => setIsDrawerOpen(false)}
+                >
                   <Button className="w-full justify-start gap-3 bg-kappes hover:bg-kappes">
                     <HiOutlineShoppingCart size={20} />
                     <span>Cart</span>
@@ -119,31 +133,51 @@ function TopNav() {
 
               {/* Navigation Buttons */}
               <div className="mt-6 space-y-2 px-4">
-                <Button variant="ghost" className="w-full justify-start gap-2">
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start gap-2"
+                  onClick={() => setIsDrawerOpen(false)}
+                >
                   <MapPin className="h-4 w-4" />
                   <span>Shop By Province</span>
                   <ChevronRight className="h-4 w-4 ml-auto" />
                 </Button>
 
-                <Button variant="ghost" className="w-full justify-start gap-2">
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start gap-2"
+                  onClick={() => setIsDrawerOpen(false)}
+                >
                   <MapPin className="h-4 w-4" />
                   <span>Shop By Territory</span>
                   <ChevronRight className="h-4 w-4 ml-auto" />
                 </Button>
 
-                <Button variant="ghost" className="w-full justify-start gap-2">
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start gap-2"
+                  onClick={() => setIsDrawerOpen(false)}
+                >
                   <Store className="h-4 w-4" />
                   <span>Shop By Store</span>
                   <ChevronRight className="h-4 w-4 ml-auto" />
                 </Button>
 
-                <Button variant="ghost" className="w-full justify-start gap-2">
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start gap-2"
+                  onClick={() => setIsDrawerOpen(false)}
+                >
                   <HandCoins className="h-4 w-4" />
                   <span>Trades & Services</span>
                   <ChevronRight className="h-4 w-4 ml-auto" />
                 </Button>
 
-                <Button variant="ghost" className="w-full justify-start gap-2">
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start gap-2"
+                  onClick={() => setIsDrawerOpen(false)}
+                >
                   <Tag className="h-4 w-4" />
                   <span>Deals & Offers</span>
                   <ChevronRight className="h-4 w-4 ml-auto" />
@@ -151,7 +185,11 @@ function TopNav() {
               </div>
 
               {/* Logout */}
-              <div className="mt-6 space-y-2 px-4 h-full flex items-end">
+              <Link
+                href="/auth/login"
+                className="mt-6 space-y-2 px-4 h-full flex items-end"
+                onClick={() => setIsDrawerOpen(false)}
+              >
                 <Button variant="ghost" className="w-fit justify-start gap-2">
                   <MdLogout
                     size={40}
@@ -161,7 +199,7 @@ function TopNav() {
                     Log Out
                   </span>
                 </Button>
-              </div>
+              </Link>
             </DrawerContent>
           </Drawer>
         )}
