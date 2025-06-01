@@ -1,12 +1,18 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { MoreVertical, Send, Image, Smile } from "lucide-react";
-import { Avatar } from "@/components/ui/avatar";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { useSelector, useDispatch } from "react-redux";
+import { MoreVertical, Send, Image, Smile, Minimize2, X } from "lucide-react";
+import {
+  sendMessage,
+  closeChat,
+  minimizeChat,
+  markAllAsRead,
+} from "../../../features/chatSlice";
 
-const ChatBox = ({ selectedChat, messages, onSendMessage }) => {
+const ChatBox = ({ selectedChat }) => {
+  const dispatch = useDispatch();
+  const { messages, isTyping, isChatOpen, isMinimized, unreadCount } =
+    useSelector((state) => state.chat);
   const [inputMessage, setInputMessage] = useState("");
   const messagesEndRef = useRef(null);
 
@@ -17,24 +23,19 @@ const ChatBox = ({ selectedChat, messages, onSendMessage }) => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages, selectedChat]);
+  }, [messages]);
+
+  useEffect(() => {
+    // Mark messages as read when chat is visible and not minimized
+    if (isChatOpen && !isMinimized && unreadCount > 0) {
+      dispatch(markAllAsRead());
+    }
+  }, [isChatOpen, isMinimized, unreadCount, dispatch]);
 
   const handleSendMessage = () => {
     if (inputMessage.trim() === "" || !selectedChat) return;
 
-    const newMessage = {
-      id: Date.now(),
-      sender: "You",
-      content: inputMessage,
-      avatar: "/api/placeholder/30/30",
-      isUser: true,
-      timestamp: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    };
-
-    onSendMessage(selectedChat.id, newMessage);
+    dispatch(sendMessage(inputMessage.trim()));
     setInputMessage("");
   };
 
@@ -43,6 +44,14 @@ const ChatBox = ({ selectedChat, messages, onSendMessage }) => {
       e.preventDefault();
       handleSendMessage();
     }
+  };
+
+  const handleCloseChat = () => {
+    dispatch(closeChat());
+  };
+
+  const handleMinimizeChat = () => {
+    dispatch(minimizeChat());
   };
 
   if (!selectedChat) {
@@ -61,40 +70,69 @@ const ChatBox = ({ selectedChat, messages, onSendMessage }) => {
   }
 
   return (
-    <div className="flex-1 flex flex-col h-full overflow-hidden ">
+    <div className="flex-1 flex flex-col h-full overflow-hidden">
       {/* Chat Header */}
       <div className="flex items-center justify-between p-4 border-b bg-white flex-shrink-0">
         <div className="flex items-center">
-          <Avatar className="h-10 w-10 mr-3">
-            <img src={selectedChat.avatar} alt={selectedChat.name} />
-          </Avatar>
+          <div className="relative flex-shrink-0">
+            <img
+              src={selectedChat.avatar}
+              alt={selectedChat.name}
+              className="h-10 w-10 rounded-full mr-3"
+            />
+            {selectedChat.isOnline && (
+              <span className="absolute bottom-0 right-2 h-3 w-3 bg-green-500 rounded-full border-2 border-white"></span>
+            )}
+          </div>
           <div>
             <h3 className="font-medium">{selectedChat.name}</h3>
             <p className="text-xs text-gray-500">
-              {selectedChat.isOnline
-                ? "Online"
-                : `Last seen ${selectedChat.lastSeen}`}
+              {isTyping ? (
+                <span className="text-blue-500">Typing...</span>
+              ) : selectedChat.isOnline ? (
+                "Online"
+              ) : (
+                `Last seen ${selectedChat.lastSeen}`
+              )}
             </p>
           </div>
         </div>
+
+        {/* Header Actions */}
+        {/* <div className="flex items-center space-x-2">
+          <button
+            onClick={handleMinimizeChat}
+            className="p-1 hover:bg-gray-100 rounded"
+          >
+            <Minimize2 className="h-4 w-4 text-gray-500" />
+          </button>
+          <button
+            onClick={handleCloseChat}
+            className="p-1 hover:bg-gray-100 rounded"
+          >
+            <X className="h-4 w-4 text-gray-500" />
+          </button>
+        </div> */}
       </div>
 
       {/* Chat Messages */}
-      <ScrollArea className="flex-1 p-4">
+      <div className="flex-1 p-4 overflow-y-auto">
         <div className="space-y-6">
           {messages.map((msg) => (
             <div key={msg.id} className="space-y-2">
               <div
                 className={`flex ${
-                  msg.isUser ? "justify-end" : "justify-start"
+                  msg.sender === "user" ? "justify-end" : "justify-start"
                 }`}
               >
                 <div className="max-w-[75%]">
-                  {!msg.isUser && (
+                  {msg.sender !== "user" && (
                     <div className="flex items-center mb-1 space-x-2">
-                      <Avatar className="h-6 w-6">
-                        <img src={msg.avatar} alt={msg.sender} />
-                      </Avatar>
+                      <img
+                        src={selectedChat.avatar}
+                        alt={selectedChat.name}
+                        className="h-6 w-6 rounded-full"
+                      />
                       <span className="text-xs text-gray-500">
                         {msg.timestamp}
                       </span>
@@ -104,14 +142,14 @@ const ChatBox = ({ selectedChat, messages, onSendMessage }) => {
                   <div className="relative group">
                     <div
                       className={`p-3 rounded-lg ${
-                        msg.isUser
+                        msg.sender === "user"
                           ? "bg-red-700 text-white"
                           : "bg-gray-100 text-gray-800"
                       }`}
                     >
-                      <p>{msg.content}</p>
+                      <p>{msg.text}</p>
 
-                      {/* Images */}
+                      {/* Images (if any) */}
                       {msg.images && (
                         <div className="mt-2 flex space-x-2">
                           {msg.images.map((img, i) => (
@@ -139,47 +177,81 @@ const ChatBox = ({ selectedChat, messages, onSendMessage }) => {
                     </button>
                   </div>
 
-                  {msg.isUser && (
+                  {msg.sender === "user" && (
                     <div className="flex justify-end items-center mt-1">
                       <span className="text-xs text-gray-500 mr-2">
                         {msg.timestamp}
                       </span>
-                      <span className="bg-green-500 h-2 w-2 rounded-full"></span>
+                      <span
+                        className={`h-2 w-2 rounded-full ${
+                          msg.isRead ? "bg-green-500" : "bg-gray-400"
+                        }`}
+                      ></span>
                     </div>
                   )}
                 </div>
               </div>
             </div>
           ))}
+
+          {/* Typing Indicator */}
+          {isTyping && (
+            <div className="flex justify-start">
+              <div className="max-w-[75%]">
+                <div className="flex items-center mb-1 space-x-2">
+                  <img
+                    src={selectedChat.avatar}
+                    alt={selectedChat.name}
+                    className="h-6 w-6 rounded-full"
+                  />
+                  <span className="text-xs text-gray-500">Typing...</span>
+                </div>
+                <div className="bg-gray-100 p-3 rounded-lg">
+                  <div className="flex space-x-1">
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                    <div
+                      className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                      style={{ animationDelay: "0.1s" }}
+                    ></div>
+                    <div
+                      className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                      style={{ animationDelay: "0.2s" }}
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div ref={messagesEndRef} />
         </div>
-      </ScrollArea>
+      </div>
 
       {/* Message Input */}
       <div className="p-4 border-t bg-white flex-shrink-0">
         <div className="flex items-center space-x-2">
-          <Button variant="ghost" size="icon">
+          <button className="p-2 hover:bg-gray-100 rounded-full">
             <Image className="h-5 w-5 text-gray-500" />
-          </Button>
+          </button>
 
-          <Input
+          <input
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
             placeholder="Type something ..."
-            className="flex-1"
+            className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
             onKeyDown={handleKeyDown}
           />
 
-          <Button variant="ghost" size="icon">
+          <button className="p-2 hover:bg-gray-100 rounded-full">
             <Smile className="h-5 w-5 text-gray-500" />
-          </Button>
+          </button>
 
-          <Button
+          <button
             onClick={handleSendMessage}
-            className="bg-red-600 hover:bg-red-700 text-white rounded-full h-9 w-9 flex items-center justify-center p-0"
+            className="bg-red-600 hover:bg-red-700 text-white rounded-full h-9 w-9 flex items-center justify-center p-0 transition-colors"
           >
-            <Send className="h-5 w-5" />
-          </Button>
+            <Send className="h-4 w-4" />
+          </button>
         </div>
       </div>
     </div>

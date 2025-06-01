@@ -349,26 +349,29 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { Heart, Minus, Plus, MessageCircle } from "lucide-react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { addCart } from "@/features/cartSlice";
+import { openChat } from "@/features/chatSlice"; // Add this import
 import provideIcon from "@/common/components/provideIcon";
 import Link from "next/link";
-import Chat from "./chatComponent";
 
 function ProductView() {
   const searchParams = useSearchParams();
-  const dispatch = useDispatch(); // ✅ Redux dispatch
+  const dispatch = useDispatch();
+
+  // Get chat state from Redux
+  const { unreadCount } = useSelector((state) => state.chat);
+
   const [productData, setProductData] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
   const [mainImage, setMainImage] = useState(0);
-  const [isChatOpen, setIsChatOpen] = useState(false); // Chat state
 
   useEffect(() => {
     const productDataParam = searchParams.get("productData");
@@ -460,7 +463,12 @@ function ProductView() {
   };
 
   const handleOpenChat = () => {
-    setIsChatOpen(true);
+    const sellerInfo = {
+      name: "Peak",
+      location: "Canada",
+      id: "4545",
+    };
+    dispatch(openChat(sellerInfo));
   };
 
   const handleCloseChat = () => {
@@ -700,24 +708,26 @@ function ProductView() {
               </CardContent>
             </Card>
 
-            <Button
-              variant="outline"
-              className="w-full border-red-700 text-red-700 hover:bg-red-50"
-              onClick={handleOpenChat}
-            >
-              <MessageCircle size={20} className="mr-2" />
-              <span>Send Message to Seller</span>
-            </Button>
+            <div className="relative">
+              <Button
+                variant="outline"
+                className="w-full border-red-700 text-red-700 hover:bg-red-50"
+                onClick={handleOpenChat}
+              >
+                <MessageCircle size={20} className="mr-2" />
+                <span>Send Message to Seller</span>
+              </Button>
+
+              {/* Show notification dot if there are unread messages
+              {unreadCount > 0 && (
+                <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center animate-pulse">
+                  {unreadCount > 9 ? "9+" : unreadCount}
+                </div>
+              )} */}
+            </div>
           </div>
         </div>
       </div>
-
-      {/* Chat Component */}
-      <Chat
-        isOpen={isChatOpen}
-        onClose={handleCloseChat}
-        sellerInfo={sellerInfo}
-      />
     </>
   );
 }

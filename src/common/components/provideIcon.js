@@ -900,7 +900,7 @@ function provideIcon({ name }) {
     },
   ];
 
-  console.log("name", name);
+  // console.log("name", name);
   // Find the icon that matches the provided name
   const foundIcon = icons.find((icon) => icon.name === name);
 

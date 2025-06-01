@@ -1,13 +1,17 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { openChat, closeChat } from "../../../features/chatSlice";
 
 import Sidebar from "./chatSidebar";
 import ChatBox from "./chatBox";
 
 const MessagingApp = () => {
+  const dispatch = useDispatch();
+  const { currentSeller, isChatOpen } = useSelector((state) => state.chat);
   const [selectedChat, setSelectedChat] = useState(null);
 
-  // Sample users/conversations
+  // Sample users/conversations - in a real app, this would come from an API
   const [users] = useState([
     {
       id: 1,
@@ -43,84 +47,31 @@ const MessagingApp = () => {
     },
   ]);
 
-  // Chat messages for each user
-  const [chatMessages, setChatMessages] = useState({
-    1: [
-      {
-        id: 1,
-        sender: "You",
-        content:
-          "Hi can you add the new search feature by Friday? Details are in the #features channel. Thanks!",
-        avatar: "/api/placeholder/30/30",
-        isUser: true,
-        timestamp: "10:11 AM",
-      },
-      {
-        id: 2,
-        sender: "Dawn Teague",
-        content: "Sure, starting on it today. Will update you on the progress",
-        avatar: "/assets/chat/woman1.png",
-        isUser: false,
-        timestamp: "10:12 AM",
-      },
-      {
-        id: 3,
-        sender: "Dawn Teague",
-        content: "Got it. I'll investigate and update you shortly.",
-        avatar: "/assets/chat/woman1.png",
-        isUser: false,
-        timestamp: "10:15 AM",
-      },
-    ],
-    2: [
-      {
-        id: 1,
-        sender: "Fresh Painting",
-        content: "Hello, How are you?",
-        avatar: "/assets/chat/man1.png",
-        isUser: false,
-        timestamp: "9:30 AM",
-      },
-    ],
-    3: [
-      {
-        id: 1,
-        sender: "Peak Designer",
-        content:
-          "Here are some of very cute illustrations I've been working on",
-        avatar: "/assets/chat/man2.jpg",
-        isUser: false,
-        timestamp: "8:45 AM",
-        images: ["/api/placeholder/150/100", "/api/placeholder/150/100"],
-        moreImages: 2,
-      },
-    ],
-  });
-
-  // Select first user by default
+  // Sync selectedChat with Redux currentSeller
   useEffect(() => {
-    if (!selectedChat && users.length > 0) {
+    if (currentSeller) {
+      setSelectedChat(currentSeller);
+    } else if (!selectedChat && users.length > 0) {
       setSelectedChat(users[0]);
     }
-  }, [users, selectedChat]);
+  }, [currentSeller, users, selectedChat]);
 
   const handleUserSelect = (user) => {
     setSelectedChat(user);
+    // Open chat with selected user in Redux
+    dispatch(
+      openChat({
+        id: user.id,
+        name: user.name,
+        avatar: user.avatar,
+        isOnline: user.isOnline,
+        lastSeen: user.lastSeen,
+      })
+    );
   };
-
-  const handleSendMessage = (chatId, message) => {
-    setChatMessages((prev) => ({
-      ...prev,
-      [chatId]: [...(prev[chatId] || []), message],
-    }));
-  };
-
-  const currentMessages = selectedChat
-    ? chatMessages[selectedChat.id] || []
-    : [];
 
   return (
-    <div className="flex flex-col md:flex-row border w-full h-[100vh] bg-gray-50 lg:px-32 ">
+    <div className="flex flex-col md:flex-row border w-full h-[85vh] bg-gray-50 lg:px-32">
       {/* Mobile Sidebar (Horizontal on top) */}
       <div className="md:hidden w-full border-b max-h-48">
         <Sidebar
@@ -142,11 +93,7 @@ const MessagingApp = () => {
       </div>
 
       {/* Chat Area */}
-      <ChatBox
-        selectedChat={selectedChat}
-        messages={currentMessages}
-        onSendMessage={handleSendMessage}
-      />
+      <ChatBox selectedChat={selectedChat} />
     </div>
   );
 };
