@@ -79,7 +79,7 @@ function TopNav() {
             <DrawerTrigger asChild>
               <Avatar
                 onClick={() => setIsDrawerOpen(true)}
-                className="cursor-pointer w-10 h-10 mb-1.5"
+                className="cursor-pointer w-10 h-10 "
               >
                 <AvatarImage
                   src={user.image || "/default-avatar.png"}
