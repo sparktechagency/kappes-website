@@ -7,7 +7,7 @@ import {
   closeChat,
   minimizeChat,
   markAllAsRead,
-} from "../../../features/chatSlice";
+} from "../../features/chatSlice";
 
 const ChatBox = ({ selectedChat }) => {
   const dispatch = useDispatch();

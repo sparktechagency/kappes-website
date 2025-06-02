@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { openChat, closeChat } from "../../../features/chatSlice";
+import { openChat, closeChat } from "../../features/chatSlice";
 
 import Sidebar from "./chatSidebar";
 import ChatBox from "./chatBox";

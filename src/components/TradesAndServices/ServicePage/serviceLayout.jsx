@@ -7,7 +7,7 @@ function ServiceLayout() {
   return (
     <div className="px-4 lg:px-32">
       <FrontCover />
-      <div className="flex flex-col  md:flex md:flex-row md:gap-10 lg:gap-5 md:px-5 lg:px-0 md:justify-between justify-between ">
+      <div className="flex flex-col  md:flex md:flex-row md:gap-10 lg:gap-5  lg:px-0 md:justify-between justify-between ">
         <ServicePromotion />
         <RightAside />
       </div>

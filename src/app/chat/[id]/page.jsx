@@ -1,4 +1,4 @@
-import MessagingApp from "@/components/Store/Chat/messagingApp";
+import MessagingApp from "@/components/Chat/messagingApp";
 import React from "react";
 
 function Page() {

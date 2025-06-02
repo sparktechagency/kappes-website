@@ -44,7 +44,7 @@ function ServicePromotion() {
     },
   ];
   return (
-    <div className="w-full md:w-[70%] lg:w-[80%] px-4 md:p-0">
+    <div className="w-full md:w-[70%] lg:w-[80%]  md:p-0">
       <CarouselPlay slideItem={servicePromotionImage} />
 
       <div className="ml-5">
