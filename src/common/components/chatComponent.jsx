@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { X, Send, Minimize2, Maximize2, MessageCircle } from "lucide-react";
+import { BsAppIndicator } from "react-icons/bs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -11,6 +12,7 @@ import {
   sendMessage,
   markAllAsRead,
   openChat,
+  pinChat,
 } from "@/features/chatSlice";
 
 function Chat() {
@@ -22,6 +24,7 @@ function Chat() {
     unreadCount,
     currentSeller,
     isTyping,
+    isPinned,
   } = useSelector((state) => state.chat);
 
   const [newMessage, setNewMessage] = useState("");
@@ -74,6 +77,10 @@ function Chat() {
 
   const handleClose = () => {
     dispatch(closeChat());
+  };
+
+  const handlePinChat = () => {
+    dispatch(pinChat(!isPinned)); // toggle pin state
   };
 
   // Floating chat bubble when closed but has messages
@@ -136,6 +143,19 @@ function Chat() {
                 {unreadCount > 9 ? "9+" : unreadCount}
               </div>
             )}
+
+            <Button
+              variant="ghost"
+              size="sm"
+              className="p-1 h-auto w-auto text-white hover:bg-red-600"
+              onClick={handlePinChat}
+            >
+              {isPinned ? (
+                <BsAppIndicator size={14} className="text-white" />
+              ) : (
+                <BsAppIndicator size={14} className="text-gray-400" />
+              )}
+            </Button>
             <Button
               variant="ghost"
               size="sm"

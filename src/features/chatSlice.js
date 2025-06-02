@@ -8,6 +8,7 @@ const initialState = {
   unreadCount: 0,
   currentSeller: null,
   isTyping: false,
+  isPinned: false,
 };
 
 const chatSlice = createSlice({
@@ -19,6 +20,7 @@ const chatSlice = createSlice({
       state.currentSeller = sellerInfo;
       state.isChatOpen = true;
       state.isMinimized = false;
+      state.isPinned = true;
 
       // Initialize with welcome message if no messages exist
       if (state.messages.length === 0) {
@@ -64,6 +66,10 @@ const chatSlice = createSlice({
         }
       });
       state.unreadCount = 0;
+    },
+
+    pinChat: (state, action) => {
+      state.isPinned = action.payload;
     },
 
     sendMessage: (state, action) => {
@@ -132,6 +138,7 @@ export const {
   setTyping,
   clearChat,
   markAllAsRead,
+  pinChat,
 } = chatSlice.actions;
 
 export default chatSlice.reducer;
