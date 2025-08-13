@@ -5,6 +5,7 @@ import cartSlice from "./features/cartSlice";
 import productSlice from "./features/productSlice";
 import chatSlice from "./features/chatSlice";
 import { chatMiddleware } from "./middleware/chatMiddleWare";
+import { api } from "./redux/baseApi";
 export const store = configureStore({
   reducer: {
     some: someSlice,
@@ -12,6 +13,7 @@ export const store = configureStore({
     cart: cartSlice,
     product: productSlice,
     chat: chatSlice,
+    [api.reducerPath]: api.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -19,5 +21,7 @@ export const store = configureStore({
         // Ignore these action types for serializable check
         ignoredActions: ["chat/receiveMessage", "chat/sendMessage"],
       },
-    }).concat(chatMiddleware), // add chat middleware
+    })
+      .concat(chatMiddleware)
+      .concat(api.middleware), // add chat middleware
 });
