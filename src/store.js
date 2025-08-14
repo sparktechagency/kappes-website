@@ -7,6 +7,7 @@ import chatSlice from "./features/chatSlice";
 import { chatMiddleware } from "./middleware/chatMiddleWare";
 import { api } from "./redux/baseApi";
 import authSlice from "./features/authSlice/authSlice";
+import userSlice from "./features/userSlice/userSlice";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
@@ -16,7 +17,14 @@ const persistConfig = {
   whitelist: ["auth"], // only auth will be persisted
 };
 
+const userPersistConfig = {
+  key: "user",
+  storage,
+  whitelist: ["user"], // only user will be persisted
+};
+
 const persistedAuthReducer = persistReducer(persistConfig, authSlice);
+const persistedUserReducer = persistReducer(userPersistConfig, userSlice);
 
 export const store = configureStore({
   reducer: {
@@ -27,6 +35,7 @@ export const store = configureStore({
     chat: chatSlice,
     [api.reducerPath]: api.reducer,
     auth: persistedAuthReducer,
+    user: persistedUserReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

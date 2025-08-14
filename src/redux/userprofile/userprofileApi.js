@@ -11,11 +11,11 @@ const userprofileApi = api.injectEndpoints({
       },
     }),
     updateUserProfile: builder.mutation({
-      query: (updateData) => {
+      query: ({ data }) => {
         return {
           url: "/users/profile",
           method: "PATCH",
-          body: updateData,
+          body: data,
         };
       },
     }),
