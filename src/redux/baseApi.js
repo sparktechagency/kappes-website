@@ -7,6 +7,10 @@ export const api = createApi({
     baseUrl: getBaseUrl(),
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("accessToken");
+      const verifyToken = localStorage.getItem("verifyToken");
+      if (verifyToken) {
+        headers.set("resettoken", verifyToken);
+      }
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
       }

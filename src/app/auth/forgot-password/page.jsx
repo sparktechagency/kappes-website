@@ -3,7 +3,7 @@ import React from "react";
 
 function ForgotPassword() {
   return (
-    <div className="w-screen h-[100vh] flex items-center justify-center">
+    <div className="w-screen my-6 md:my-20 px-2   md:h-[100vh] flex items-start justify-start">
       <ForgotPasswordForm />
     </div>
   );

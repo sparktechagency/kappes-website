@@ -1,7 +1,8 @@
 "use client";
 
 import { Provider, useSelector } from "react-redux";
-import { store } from "../../store";
+import { store, persistor } from "../../store";
+import { PersistGate } from "redux-persist/integration/react";
 import Chat from "@/common/components/chatComponent";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
@@ -29,8 +30,10 @@ function ChatWrapper({ children }) {
 export default function Providers({ children }) {
   return (
     <Provider store={store}>
-      <Toaster richColors />
-      <ChatWrapper>{children}</ChatWrapper>
+      <PersistGate loading={null} persistor={persistor}>
+        <Toaster richColors />
+        <ChatWrapper>{children}</ChatWrapper>
+      </PersistGate>
     </Provider>
   );
 }

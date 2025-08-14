@@ -27,11 +27,60 @@ const authApi = api.injectEndpoints({
       },
     }),
     verifyEmail: builder.mutation({
-      query: (verifyEmailData) => {
+      query: ({ oneTimeCode, email }) => {
         return {
           url: "/auth/verify-email",
           method: "POST",
-          body: verifyEmailData,
+          body: { oneTimeCode, email },
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+      },
+    }),
+    resendOtp: builder.mutation({
+      query: ({ email }) => {
+        return {
+          url: "/auth/resend-otp",
+          method: "POST",
+          body: { email },
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+      },
+    }),
+    forgotPassword: builder.mutation({
+      query: ({ email }) => {
+        return {
+          url: "/auth/forget-password",
+          method: "POST",
+          body: { email },
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+      },
+    }),
+    resetPassword: builder.mutation({
+      query: ({ newPassword, confirmPassword, verifyToken }) => {
+        return {
+          url: "/auth/reset-password",
+          method: "POST",
+          body: { newPassword, confirmPassword },
+          headers: {
+            "Content-Type": "application/json",
+            resettoken: verifyToken,
+          },
+        };
+      },
+    }),
+    changePassword: builder.mutation({
+      query: ({ oldPassword, newPassword }) => {
+        return {
+          url: "/auth/change-password",
+          method: "POST",
+          body: { oldPassword, newPassword },
           headers: {
             "Content-Type": "application/json",
           },
@@ -41,5 +90,12 @@ const authApi = api.injectEndpoints({
   }),
 });
 
-export const { useLoginMutation, useRegisterMutation, useVerifyEmailMutation } =
-  authApi;
+export const {
+  useLoginMutation,
+  useRegisterMutation,
+  useVerifyEmailMutation,
+  useResendOtpMutation,
+  useChangePasswordMutation,
+  useForgotPasswordMutation,
+  useResetPasswordMutation,
+} = authApi;

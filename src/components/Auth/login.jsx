@@ -149,15 +149,25 @@ import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { Checkbox } from "../ui/checkbox";
 import provideIcon from "@/common/components/provideIcon";
-import useToast from "@/hooks/ShowToast";
+import useToast from "@/hooks/useShowToast";
 import { useLoginMutation } from "@/redux/auth/authApi";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import useAuth from "@/hooks/useAuth";
+import { useEffect } from "react";
 
 export default function LogIn() {
   const [showPassword, setShowPassword] = useState(false);
   const [loginUser, { isLoading }] = useLoginMutation();
   const { showSuccess, showError } = useToast();
+  const router = useRouter();
+  const { isLoggedIn, login: authLogin } = useAuth();
 
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.push("/");
+    }
+  }, [isLoggedIn, router]);
   const {
     register,
     handleSubmit,
@@ -185,10 +195,16 @@ export default function LogIn() {
 
     try {
       const response = await loginUser(loginCredentials).unwrap();
-      if (response?.status === "success") {
+      if (response?.success === true) {
         showSuccess("Login successful!", {
           description: "You are now logged in.",
         });
+        authLogin({
+          role: response?.data?.role,
+          accessToken: response?.data?.accessToken,
+          refreshToken: response?.data?.refreshToken,
+        });
+        router.push(`/`);
       } else {
         showError("Login failed", {
           description:

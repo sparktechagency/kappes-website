@@ -14,7 +14,7 @@ function VerifyOTP() {
 
 export default VerifyOTP;
 
-const Content = () => {
+export const Content = () => {
   return (
     <div className="flex flex-col items-center text-center p-4 sm:p-6">
       {/* Checkmark Icon */}

@@ -21,12 +21,13 @@ import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { AiOutlineMessage } from "react-icons/ai";
 import { BiMessageSquareDots } from "react-icons/bi";
 import { openChat } from "@/features/chatSlice";
+import useAuth from "@/hooks/useAuth";
 
 function TopNav() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const dispatch = useDispatch();
-
-  const user = { name: "John Doe", image: null };
+  const { role, isLoggedIn, logout: handleLogout } = useAuth();
+  console.log("isLoggedIn", isLoggedIn);
 
   const cartItemCount = useSelector((state) =>
     state.cart.reduce((total, item) => total + item.quantity, 0)
@@ -109,7 +110,7 @@ function TopNav() {
         </Link>
 
         {/* Conditional: Sign In or Avatar */}
-        {user ? (
+        {!isLoggedIn ? (
           <Link
             href="/auth/login"
             className="flex items-center gap-2 text-gray-500 hover:text-gray-700"
@@ -129,10 +130,10 @@ function TopNav() {
                 className="cursor-pointer w-10 h-10 "
               >
                 <AvatarImage
-                  src={user.image || "/default-avatar.png"}
-                  alt={user.name}
+                  src={role?.image || "/default-avatar.png"}
+                  alt={role?.name}
                 />
-                <AvatarFallback>{user.name[0]}</AvatarFallback>
+                <AvatarFallback>{role?.name}</AvatarFallback>
               </Avatar>
             </DrawerTrigger>
             <DrawerContent className="p-4">
@@ -257,17 +258,21 @@ function TopNav() {
                 className="mt-6 space-y-2 px-4 h-full flex items-end"
                 onClick={() => setIsDrawerOpen(false)}
               >
-                <Link href="/auth/login">
-                  <Button variant="ghost" className="w-fit justify-start gap-2">
-                    <MdLogout
-                      size={40}
-                      className="w-10 h-10 text-lg font-semibold text-red-800"
-                    />
-                    <span className="text-lg font-comfortaa font-semibold text-red-800">
-                      Log Out
-                    </span>
-                  </Button>
-                </Link>
+                {/* <Link href="/auth/login" > */}
+                <Button
+                  variant="ghost"
+                  className="w-fit justify-start gap-2"
+                  onClick={handleLogout}
+                >
+                  <MdLogout
+                    size={40}
+                    className="w-10 h-10 text-lg font-semibold text-red-800"
+                  />
+                  <span className="text-lg font-comfortaa font-semibold text-red-800">
+                    Log Out
+                  </span>
+                </Button>
+                {/* </Link> */}
               </div>
             </DrawerContent>
           </Drawer>

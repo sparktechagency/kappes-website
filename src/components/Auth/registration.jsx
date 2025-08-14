@@ -15,9 +15,11 @@ import Link from "next/link";
 import { useRegisterMutation } from "@/redux/auth/authApi";
 import provideIcon from "@/common/components/provideIcon";
 import { useForm } from "react-hook-form";
-import useToast from "@/hooks/ShowToast";
+import useToast from "@/hooks/useShowToast";
+import { useRouter } from "next/navigation";
 
 export default function RegistrationForm() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [registerUser, { isLoading }] = useRegisterMutation();
@@ -51,12 +53,13 @@ export default function RegistrationForm() {
       const response = await registerUser(registerData).unwrap();
       console.log("Registration response:", response);
 
-      if (response?.status === "success") {
+      if (response?.success) {
         showSuccess("Registration Successful!", {
-          description: "Your account has been created successfully.",
+          description: response?.message,
         });
         // Reset form after successful registration
         reset();
+        router.push(`/auth/user-verification?email=${data.email}`);
         // Reset password visibility states
         setShowPassword(false);
         setShowConfirmPassword(false);
