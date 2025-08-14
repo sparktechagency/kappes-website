@@ -1,0 +1,26 @@
+import { api } from "../baseApi";
+
+const userprofileApi = api.injectEndpoints({
+  endpoints: (builder) => ({
+    getUserProfile: builder.query({
+      query: () => {
+        return {
+          url: `/users/profile`,
+          method: "GET",
+        };
+      },
+    }),
+    updateUserProfile: builder.mutation({
+      query: (updateData) => {
+        return {
+          url: "/users/profile",
+          method: "PATCH",
+          body: updateData,
+        };
+      },
+    }),
+  }),
+});
+
+export const { useGetUserProfileQuery, useUpdateUserProfileMutation } =
+  userprofileApi;
