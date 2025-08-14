@@ -84,6 +84,7 @@ const authApi = api.injectEndpoints({
       },
     }),
   }),
+  overrideExisting: true,
 });
 
 export const {

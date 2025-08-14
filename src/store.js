@@ -3,6 +3,7 @@ import someSlice from "./features/someSlice";
 import filterSlice from "./features/filterSlice";
 import cartSlice from "./features/cartSlice";
 import productSlice from "./features/productSlice";
+import productsSlice from "./features/productSlice/productsSlice";
 import chatSlice from "./features/chatSlice";
 import { chatMiddleware } from "./middleware/chatMiddleWare";
 import { api } from "./redux/baseApi";
@@ -32,6 +33,7 @@ export const store = configureStore({
     filter: filterSlice,
     cart: cartSlice,
     product: productSlice,
+    products: productsSlice,
     chat: chatSlice,
     [api.reducerPath]: api.reducer,
     auth: persistedAuthReducer,

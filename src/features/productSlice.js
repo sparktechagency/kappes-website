@@ -25,8 +25,11 @@ const productSlice = createSlice({
       return newState;
     },
     showFav: (state) => state, // fixed here
+    isFav: (state, action) => {
+      return state.some((item) => item.id === action.payload);
+    },
   },
 });
 
-export const { addFav, removeFav, showFav } = productSlice.actions;
+export const { addFav, removeFav, showFav, isFav } = productSlice.actions;
 export default productSlice.reducer;

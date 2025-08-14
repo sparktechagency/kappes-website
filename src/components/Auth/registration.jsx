@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
-import { useRegisterMutation } from "@/redux/auth/authApi";
+import { useRegisterMutation } from "@/redux/authApi/authApi";
 import provideIcon from "@/common/components/provideIcon";
 import { useForm } from "react-hook-form";
 import useToast from "@/hooks/useShowToast";

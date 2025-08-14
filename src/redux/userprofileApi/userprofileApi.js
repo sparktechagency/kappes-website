@@ -20,6 +20,7 @@ const userprofileApi = api.injectEndpoints({
       },
     }),
   }),
+  overrideExisting: true,
 });
 
 export const { useGetUserProfileQuery, useUpdateUserProfileMutation } =

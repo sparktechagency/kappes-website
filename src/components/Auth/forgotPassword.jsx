@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 
-import { useForgotPasswordMutation } from "@/redux/auth/authApi";
+import { useForgotPasswordMutation } from "@/redux/authApi/authApi";
 import useToast from "@/hooks/useShowToast";
 import { useRouter } from "next/navigation";
 

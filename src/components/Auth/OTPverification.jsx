@@ -12,7 +12,7 @@ import {
 import {
   useResendOtpMutation,
   useVerifyEmailMutation,
-} from "@/redux/auth/authApi";
+} from "@/redux/authApi/authApi";
 import useToast from "@/hooks/useShowToast";
 import { useSearchParams, useRouter } from "next/navigation";
 import VerificationSuccess from "@/common/components/verificationSuccess";

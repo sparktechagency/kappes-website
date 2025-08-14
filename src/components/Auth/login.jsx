@@ -150,7 +150,7 @@ import Link from "next/link";
 import { Checkbox } from "../ui/checkbox";
 import provideIcon from "@/common/components/provideIcon";
 import useToast from "@/hooks/useShowToast";
-import { useLoginMutation } from "@/redux/auth/authApi";
+import { useLoginMutation } from "@/redux/authApi/authApi";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import useAuth from "@/hooks/useAuth";

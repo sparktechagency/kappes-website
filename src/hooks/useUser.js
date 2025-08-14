@@ -9,7 +9,7 @@ import {
   setUser,
   clearUser,
 } from "@/features/userSlice/userSlice";
-import { useGetUserProfileQuery } from "@/redux/userprofile/userprofileApi";
+import { useGetUserProfileQuery } from "@/redux/userprofileApi/userprofileApi";
 
 const useUser = () => {
   const dispatch = useDispatch();

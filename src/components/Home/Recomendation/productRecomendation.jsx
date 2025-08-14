@@ -10,69 +10,98 @@ import { Autoplay, Navigation } from "swiper/modules";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
+import useRecommendedProducts from "@/hooks/useRecommendedProducts";
+import { incrementViewCount } from "@/features/productSlice/productsSlice";
+import { useDispatch } from "react-redux";
+import { getImageUrl } from "@/redux/baseUrl";
+import provideIcon from "@/common/components/provideIcon";
+import { addFav, removeFav, isFav } from "@/features/productSlice";
 
 const ProductRecomendation = () => {
   const navigationPrevRef = useRef(null);
   const navigationNextRef = useRef(null);
+  const dispatch = useDispatch();
 
-  const productRecomendation = [
-    {
-      id: 1,
-      name: "Adventure Ready Backpack",
-      currentPrice: 49.99,
-      price: 59.99,
-      image: "/assets/recomendationProduct/bag.png",
-    },
-    {
-      id: 2,
-      name: "Adventure Ready Backpack",
-      currentPrice: 49.99,
-      price: 59.99,
-      image: "/assets/recomendationProduct/bag.png",
-    },
-    {
-      id: 3,
-      name: "Adventure Ready Backpack",
-      currentPrice: 49.99,
-      price: 59.99,
-      image: "/assets/recomendationProduct/bag.png",
-    },
-    {
-      id: 4,
-      name: "Adventure Ready Backpack",
-      currentPrice: 49.99,
-      price: 59.99,
-      image: "/assets/recomendationProduct/bag.png",
-    },
-    {
-      id: 5,
-      name: "Adventure Ready Backpack",
-      currentPrice: 49.99,
-      price: 59.99,
-      image: "/assets/recomendationProduct/bag.png",
-    },
-    {
-      id: 6,
-      name: "Adventure Ready Backpack",
-      currentPrice: 49.99,
-      price: 59.99,
-      image: "/assets/recomendationProduct/bag.png",
-    },
-    {
-      id: 7,
-      name: "Adventure Ready Backpack",
-      currentPrice: 49.99,
-      price: 59.99,
-      image: "/assets/recomendationProduct/bag.png",
-    },
-    {
-      id: 8,
-      name: "Adventure Ready Backpack",
-      currentPrice: 49.99,
-      price: 59.99,
-      image: "/assets/recomendationProduct/bag.png",
-    },
-  ];
+  const { recommendedProducts, isLoading, error, hasProducts } =
+    useRecommendedProducts();
+
+  // Debug logs (remove in production)
+  // console.log("🔍 ProductRecommendation Debug:");
+  // console.log("recommendedProducts:", recommendedProducts);
+
+  // Handle product click/view
+  const handleProductView = (productId) => {
+    dispatch(incrementViewCount(productId));
+  };
+
+  const handleHeartClick = (productId) => {
+    if (isFav(productId)) {
+      dispatch(removeFav(productId));
+    } else {
+      dispatch(addFav(productId));
+    }
+  };
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="w-full px-4 py-16 lg:px-32">
+        <div className="flex items-center justify-between pb-6">
+          <h2 className="text-3xl font-extrabold font-comfortaa">
+            Recommended for you
+          </h2>
+        </div>
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="w-full px-4 py-16 lg:px-32">
+        <div className="flex items-center justify-between pb-6">
+          <h2 className="text-3xl font-extrabold font-comfortaa">
+            Recommended for you
+          </h2>
+        </div>
+        <div className="flex justify-center items-center h-64">
+          <div className="text-center">
+            <p className="text-red-600 mb-4">
+              Failed to load recommended products
+            </p>
+            <p className="text-gray-500 text-sm">{error}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show empty state
+  if (!hasProducts) {
+    return (
+      <div className="w-full px-4 py-16 lg:px-32">
+        <div className="flex items-center justify-between pb-6">
+          <h2 className="text-3xl font-extrabold font-comfortaa">
+            Recommended for you
+          </h2>
+        </div>
+        <div className="flex justify-center items-center h-64">
+          <div className="text-center">
+            <p className="text-gray-500">No recommended products available</p>
+            <p className="text-xs text-gray-400 mt-2">
+              Array length: {recommendedProducts?.length || 0}
+            </p>
+            <p className="text-xs text-gray-400">
+              Check console for debug info
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full px-4 py-16 lg:px-32">
@@ -132,37 +161,71 @@ const ProductRecomendation = () => {
           }}
           className="w-full product-swiper"
         >
-          {productRecomendation.map((product) => (
-            <SwiperSlide key={product.id}>
-              <Card className="relative bg-white rounded-xl shadow-sm p-0 overflow-hidden h-80">
+          {recommendedProducts.map((product) => (
+            <SwiperSlide key={product._id || product.id}>
+              <Card
+                className="relative bg-white rounded-xl shadow-sm p-0 overflow-hidden h-80 cursor-pointer hover:shadow-lg transition-shadow"
+                onClick={() => handleProductView(product._id)}
+              >
                 {/* Heart Icon */}
-                <div className="absolute top-3 right-3 text-red-500 text-xl cursor-pointer hover:scale-110 transition-transform">
-                  ♥
+                <div
+                  className="absolute top-3 right-3 text-red-500 text-xl cursor-pointer hover:scale-110 transition-transform z-10"
+                  onClick={() => handleHeartClick(product._id)}
+                >
+                  {isFav(product._id)
+                    ? provideIcon({ name: "heart_black" })
+                    : provideIcon({ name: "heart" })}
                 </div>
 
                 {/* Product Image */}
                 <div className="w-full h-52 flex justify-center items-center">
                   <Image
-                    src={product.image}
-                    alt={product.name}
+                    src={`${getImageUrl}/${product.images?.[0]}`}
+                    alt={product.name || "Product"}
                     width={1200}
                     height={1200}
                     className="object-contain max-h-full"
+                    // onError={(e) => {
+                    //   e.target.src = "/assets/recomendationProduct/bag.png";
+                    // }}
                   />
                 </div>
 
                 {/* Product Info */}
                 <div className="px-3 text-wrap -mt-3.5">
                   <h3 className="text-xl font-medium text-gray-800 mb-1.5 line-clamp-2">
-                    {product.name}
+                    {product.name || "Product Name"}
                   </h3>
                   <div className="flex items-center gap-2">
                     <span className="text-red-600 font-bold text-base">
-                      ${product.currentPrice.toFixed(2)}
+                      ${(product.basePrice || 0).toFixed(2)}
                     </span>
-                    <span className="text-gray-400 line-through text-sm">
-                      ${product.price.toFixed(2)}
-                    </span>
+                    {product.product_variant_Details?.[0]?.variantPrice &&
+                      product.product_variant_Details[0].variantPrice >
+                        product.basePrice && (
+                        <span className="text-gray-400 line-through text-sm">
+                          $
+                          {product.product_variant_Details[0].variantPrice.toFixed(
+                            2
+                          )}
+                        </span>
+                      )}
+                  </div>
+                  {/* Rating and additional info */}
+                  <div className="flex items-center gap-2 mt-1">
+                    {product.avg_rating > 0 && (
+                      <div className="flex items-center">
+                        <span className="text-yellow-400">★</span>
+                        <span className="text-sm text-gray-600 ml-1">
+                          {product.avg_rating.toFixed(1)}
+                        </span>
+                      </div>
+                    )}
+                    {product.totalReviews > 0 && (
+                      <span className="text-xs text-gray-500">
+                        ({product.totalReviews} reviews)
+                      </span>
+                    )}
                   </div>
                 </div>
               </Card>

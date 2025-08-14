@@ -16,7 +16,7 @@ import useUser from "@/hooks/useUser";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
-import { useUpdateUserProfileMutation } from "@/redux/userprofile/userprofileApi";
+import { useUpdateUserProfileMutation } from "@/redux/userprofileApi/userprofileApi";
 import useToast from "@/hooks/useShowToast";
 
 export default function PersonalInfo({ selectedMenu }) {
