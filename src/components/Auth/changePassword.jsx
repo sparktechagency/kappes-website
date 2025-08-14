@@ -4,11 +4,52 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { useChangePasswordMutation } from "@/redux/auth/authApi";
+import { useForm } from "react-hook-form";
+import useToast from "@/hooks/useShowToast";
 
 export default function ChangePassword({ selectedMenu }) {
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [changePassword, { isLoading }] = useChangePasswordMutation();
+  const { showSuccess, showError } = useToast();
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm({
+    mode: "onChange",
+  });
+
+  const newPassword = watch("newPassword");
+
+  const onSubmit = async (data) => {
+    try {
+      const response = await changePassword({
+        currentPassword: data.oldPassword,
+        newPassword: data.newPassword,
+        confirmPassword: data.confirmPassword,
+      });
+
+      if (response?.data?.success) {
+        showSuccess(response?.data?.message || "Password changed successfully");
+        reset();
+      } else {
+        const errorMessage =
+          response?.error?.data?.message ||
+          response?.error?.data?.error?.[0]?.message ||
+          "Failed to change password";
+        showError(errorMessage);
+      }
+    } catch (error) {
+      console.error("Change password error:", error);
+      showError("An error occurred while changing password");
+    }
+  };
 
   const toggleOldPassword = () => setShowOldPassword(!showOldPassword);
   const toggleNewPassword = () => setShowNewPassword(!showNewPassword);
@@ -16,17 +57,28 @@ export default function ChangePassword({ selectedMenu }) {
     setShowConfirmPassword(!showConfirmPassword);
   if (selectedMenu !== 4) return null;
   return (
-    <Card className="w-full h-fit  max-w-md  shadow-sm">
+    <Card className="w-full h-fit max-w-md shadow-sm">
       <CardContent className="pt-6">
-        <div className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="old-password">Old Password</Label>
+            <Label htmlFor="oldPassword">
+              Old Password<span className="text-red-600">*</span>
+            </Label>
             <div className="relative">
               <Input
-                id="old-password"
+                id="oldPassword"
                 type={showOldPassword ? "text" : "password"}
-                defaultValue="**********"
-                className="pr-10"
+                placeholder="Enter your current password"
+                {...register("oldPassword", {
+                  required: "Old password is required",
+                  minLength: {
+                    value: 6,
+                    message: "Password must be at least 6 characters",
+                  },
+                })}
+                className={`pr-10 ${
+                  errors.oldPassword ? "border-red-500" : ""
+                }`}
               />
               <Button
                 type="button"
@@ -40,21 +92,39 @@ export default function ChangePassword({ selectedMenu }) {
                 ) : (
                   <Eye className="h-4 w-4 text-gray-500" />
                 )}
-                <span className="sr-only">
-                  {showOldPassword ? "Hide password" : "Show password"}
-                </span>
               </Button>
             </div>
+            {errors.oldPassword && (
+              <p className="text-sm text-red-500">
+                {errors.oldPassword.message}
+              </p>
+            )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="new-password">New Password</Label>
+            <Label htmlFor="newPassword">
+              New Password<span className="text-red-600">*</span>
+            </Label>
             <div className="relative">
               <Input
-                id="new-password"
+                id="newPassword"
                 type={showNewPassword ? "text" : "password"}
-                defaultValue="**********"
-                className="pr-10"
+                placeholder="Enter new password"
+                {...register("newPassword", {
+                  required: "New password is required",
+                  minLength: {
+                    value: 6,
+                    message: "Password must be at least 6 characters",
+                  },
+                  pattern: {
+                    value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/,
+                    message:
+                      "Password must contain at least one letter and one number",
+                  },
+                })}
+                className={`pr-10 ${
+                  errors.newPassword ? "border-red-500" : ""
+                }`}
               />
               <Button
                 type="button"
@@ -68,21 +138,32 @@ export default function ChangePassword({ selectedMenu }) {
                 ) : (
                   <Eye className="h-4 w-4 text-gray-500" />
                 )}
-                <span className="sr-only">
-                  {showNewPassword ? "Hide password" : "Show password"}
-                </span>
               </Button>
             </div>
+            {errors.newPassword && (
+              <p className="text-sm text-red-500">
+                {errors.newPassword.message}
+              </p>
+            )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="confirm-password">Confirm Password</Label>
+            <Label htmlFor="confirmPassword">
+              Confirm Password<span className="text-red-600">*</span>
+            </Label>
             <div className="relative">
               <Input
-                id="confirm-password"
+                id="confirmPassword"
                 type={showConfirmPassword ? "text" : "password"}
-                defaultValue="**********"
-                className="pr-10"
+                placeholder="Confirm new password"
+                {...register("confirmPassword", {
+                  required: "Please confirm your password",
+                  validate: (value) =>
+                    value === newPassword || "Passwords do not match",
+                })}
+                className={`pr-10 ${
+                  errors.confirmPassword ? "border-red-500" : ""
+                }`}
               />
               <Button
                 type="button"
@@ -96,17 +177,23 @@ export default function ChangePassword({ selectedMenu }) {
                 ) : (
                   <Eye className="h-4 w-4 text-gray-500" />
                 )}
-                <span className="sr-only">
-                  {showConfirmPassword ? "Hide password" : "Show password"}
-                </span>
               </Button>
             </div>
+            {errors.confirmPassword && (
+              <p className="text-sm text-red-500">
+                {errors.confirmPassword.message}
+              </p>
+            )}
           </div>
 
-          <Button type="button" className="w-full bg-red-700 hover:bg-red-800">
-            Update Password
+          <Button
+            type="submit"
+            className="w-full bg-red-700 hover:bg-red-800"
+            disabled={isLoading}
+          >
+            {isLoading ? "Updating..." : "Update Password"}
           </Button>
-        </div>
+        </form>
       </CardContent>
     </Card>
   );

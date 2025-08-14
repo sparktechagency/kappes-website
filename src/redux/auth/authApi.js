@@ -68,19 +68,15 @@ const authApi = api.injectEndpoints({
           url: "/auth/reset-password",
           method: "POST",
           body: { newPassword, confirmPassword },
-          headers: {
-            "Content-Type": "application/json",
-            resettoken: verifyToken,
-          },
         };
       },
     }),
     changePassword: builder.mutation({
-      query: ({ oldPassword, newPassword }) => {
+      query: ({ currentPassword, newPassword, confirmPassword }) => {
         return {
           url: "/auth/change-password",
           method: "POST",
-          body: { oldPassword, newPassword },
+          body: { currentPassword, newPassword, confirmPassword },
           headers: {
             "Content-Type": "application/json",
           },
