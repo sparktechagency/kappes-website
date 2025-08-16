@@ -10,69 +10,81 @@ import { Autoplay, Navigation } from "swiper/modules";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
+import useTrendingProducts from "@/hooks/useTrendingProducts";
+import { getImageUrl } from "@/redux/baseUrl";
 
 const TrendingProduct = () => {
+  const { trendingProducts, isLoading, error } = useTrendingProducts();
   const navigationPrevRef = useRef(null);
   const navigationNextRef = useRef(null);
 
-  const trendingProducts = [
-    {
-      id: 1,
-      name: "Adventure Ready Backpack",
-      currentPrice: 49.99,
-      price: 59.99,
-      image: "/assets/recomendationProduct/bag.png",
-    },
-    {
-      id: 2,
-      name: "Adventure Ready Backpack",
-      currentPrice: 49.99,
-      price: 59.99,
-      image: "/assets/recomendationProduct/bag.png",
-    },
-    {
-      id: 3,
-      name: "Adventure Ready Backpack",
-      currentPrice: 49.99,
-      price: 59.99,
-      image: "/assets/recomendationProduct/bag.png",
-    },
-    {
-      id: 4,
-      name: "Adventure Ready Backpack",
-      currentPrice: 49.99,
-      price: 59.99,
-      image: "/assets/recomendationProduct/bag.png",
-    },
-    {
-      id: 5,
-      name: "Adventure Ready Backpack",
-      currentPrice: 49.99,
-      price: 59.99,
-      image: "/assets/recomendationProduct/bag.png",
-    },
-    {
-      id: 6,
-      name: "Adventure Ready Backpack",
-      currentPrice: 49.99,
-      price: 59.99,
-      image: "/assets/recomendationProduct/bag.png",
-    },
-    {
-      id: 7,
-      name: "Adventure Ready Backpack",
-      currentPrice: 49.99,
-      price: 59.99,
-      image: "/assets/recomendationProduct/bag.png",
-    },
-    {
-      id: 8,
-      name: "Adventure Ready Backpack",
-      currentPrice: 49.99,
-      price: 59.99,
-      image: "/assets/recomendationProduct/bag.png",
-    },
-  ];
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  console.log(trendingProducts);
+  // const trendingProducts = [
+  //   {
+  //     id: 1,
+  //     name: "Adventure Ready Backpack",
+  //     currentPrice: 49.99,
+  //     price: 59.99,
+  //     image: "/assets/recomendationProduct/bag.png",
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Adventure Ready Backpack",
+  //     currentPrice: 49.99,
+  //     price: 59.99,
+  //     image: "/assets/recomendationProduct/bag.png",
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "Adventure Ready Backpack",
+  //     currentPrice: 49.99,
+  //     price: 59.99,
+  //     image: "/assets/recomendationProduct/bag.png",
+  //   },
+  //   {
+  //     id: 4,
+  //     name: "Adventure Ready Backpack",
+  //     currentPrice: 49.99,
+  //     price: 59.99,
+  //     image: "/assets/recomendationProduct/bag.png",
+  //   },
+  //   {
+  //     id: 5,
+  //     name: "Adventure Ready Backpack",
+  //     currentPrice: 49.99,
+  //     price: 59.99,
+  //     image: "/assets/recomendationProduct/bag.png",
+  //   },
+  //   {
+  //     id: 6,
+  //     name: "Adventure Ready Backpack",
+  //     currentPrice: 49.99,
+  //     price: 59.99,
+  //     image: "/assets/recomendationProduct/bag.png",
+  //   },
+  //   {
+  //     id: 7,
+  //     name: "Adventure Ready Backpack",
+  //     currentPrice: 49.99,
+  //     price: 59.99,
+  //     image: "/assets/recomendationProduct/bag.png",
+  //   },
+  //   {
+  //     id: 8,
+  //     name: "Adventure Ready Backpack",
+  //     currentPrice: 49.99,
+  //     price: 59.99,
+  //     image: "/assets/recomendationProduct/bag.png",
+  //   },
+  // ];
 
   return (
     <div className="w-full px-4 py-16 lg:px-32">
@@ -142,7 +154,7 @@ const TrendingProduct = () => {
                 {/* Product Image */}
                 <div className="w-full h-52 flex justify-center items-center">
                   <Image
-                    src={product.image}
+                    src={`${getImageUrl}/${product.images?.[0]}`}
                     alt={product.name}
                     width={1200}
                     height={1200}
@@ -157,10 +169,10 @@ const TrendingProduct = () => {
                   </h3>
                   <div className="flex items-center gap-2">
                     <span className="text-red-600 font-bold text-base">
-                      ${product.currentPrice.toFixed(2)}
+                      ${product.basePrice.toFixed(2)}
                     </span>
                     <span className="text-gray-400 line-through text-sm">
-                      ${product.price.toFixed(2)}
+                      ${product.basePrice.toFixed(2)}
                     </span>
                   </div>
                 </div>

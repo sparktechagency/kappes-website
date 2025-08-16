@@ -10,6 +10,14 @@ const productApi = api.injectEndpoints({
         };
       },
     }),
+    getTrendingProducts: builder.query({
+      query: () => {
+        return {
+          url: `/product/?sort=-purchaseCount`,
+          method: "GET",
+        };
+      },
+    }),
     updateProduct: builder.mutation({
       query: ({ data }) => {
         return {
@@ -23,5 +31,8 @@ const productApi = api.injectEndpoints({
   overrideExisting: true,
 });
 
-export const { useGetRecommendedProductsQuery, useUpdateProductMutation } =
-  productApi;
+export const {
+  useGetRecommendedProductsQuery,
+  useGetTrendingProductsQuery,
+  useUpdateProductMutation,
+} = productApi;

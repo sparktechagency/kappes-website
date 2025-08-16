@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   recommendedProducts: [],
+  trendingProducts: [],
   allProducts: [],
   featuredProducts: [],
   isLoading: false,
@@ -21,6 +22,11 @@ const productSlice = createSlice({
     },
     clearRecommendedProducts: (state) => {
       state.recommendedProducts = [];
+    },
+
+    // Trending Products Actions
+    setTrendingProducts: (state, action) => {
+      state.trendingProducts = action.payload || [];
     },
 
     // All Products Actions
@@ -106,6 +112,8 @@ const productSlice = createSlice({
 export const selectRecommendedProducts = (state) =>
   state.products.recommendedProducts;
 export const selectAllProducts = (state) => state.products.allProducts;
+export const selectTrendingProducts = (state) =>
+  state.products.trendingProducts;
 export const selectFeaturedProducts = (state) =>
   state.products.featuredProducts;
 export const selectProductsLoading = (state) => state.products.isLoading;
@@ -132,6 +140,7 @@ export const {
   setRecommendedProducts,
   addRecommendedProduct,
   clearRecommendedProducts,
+  setTrendingProducts,
   setAllProducts,
   addProduct,
   updateProduct,
