@@ -26,65 +26,7 @@ const TrendingProduct = () => {
     return <div>Error: {error.message}</div>;
   }
 
-  console.log(trendingProducts);
-  // const trendingProducts = [
-  //   {
-  //     id: 1,
-  //     name: "Adventure Ready Backpack",
-  //     currentPrice: 49.99,
-  //     price: 59.99,
-  //     image: "/assets/recomendationProduct/bag.png",
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Adventure Ready Backpack",
-  //     currentPrice: 49.99,
-  //     price: 59.99,
-  //     image: "/assets/recomendationProduct/bag.png",
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "Adventure Ready Backpack",
-  //     currentPrice: 49.99,
-  //     price: 59.99,
-  //     image: "/assets/recomendationProduct/bag.png",
-  //   },
-  //   {
-  //     id: 4,
-  //     name: "Adventure Ready Backpack",
-  //     currentPrice: 49.99,
-  //     price: 59.99,
-  //     image: "/assets/recomendationProduct/bag.png",
-  //   },
-  //   {
-  //     id: 5,
-  //     name: "Adventure Ready Backpack",
-  //     currentPrice: 49.99,
-  //     price: 59.99,
-  //     image: "/assets/recomendationProduct/bag.png",
-  //   },
-  //   {
-  //     id: 6,
-  //     name: "Adventure Ready Backpack",
-  //     currentPrice: 49.99,
-  //     price: 59.99,
-  //     image: "/assets/recomendationProduct/bag.png",
-  //   },
-  //   {
-  //     id: 7,
-  //     name: "Adventure Ready Backpack",
-  //     currentPrice: 49.99,
-  //     price: 59.99,
-  //     image: "/assets/recomendationProduct/bag.png",
-  //   },
-  //   {
-  //     id: 8,
-  //     name: "Adventure Ready Backpack",
-  //     currentPrice: 49.99,
-  //     price: 59.99,
-  //     image: "/assets/recomendationProduct/bag.png",
-  //   },
-  // ];
+  console.log("trendingProducts", trendingProducts);
 
   return (
     <div className="w-full px-4 py-16 lg:px-32">

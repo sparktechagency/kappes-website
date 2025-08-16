@@ -2,6 +2,14 @@ import { api } from "../baseApi";
 
 const productApi = api.injectEndpoints({
   endpoints: (builder) => ({
+    getPopularCategory: builder.query({
+      query: () => {
+        return {
+          url: `/category?sort=-ctgViewCount`,
+          method: "GET",
+        };
+      },
+    }),
     getRecommendedProducts: builder.query({
       query: () => {
         return {
@@ -32,6 +40,7 @@ const productApi = api.injectEndpoints({
 });
 
 export const {
+  useGetPopularCategoryQuery,
   useGetRecommendedProductsQuery,
   useGetTrendingProductsQuery,
   useUpdateProductMutation,
