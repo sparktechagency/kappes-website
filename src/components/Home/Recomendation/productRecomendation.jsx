@@ -16,22 +16,20 @@ import { useDispatch } from "react-redux";
 import { getImageUrl } from "@/redux/baseUrl";
 import provideIcon from "@/common/components/provideIcon";
 import { addFav, removeFav, isFav } from "@/features/productSlice";
+import { useRouter } from "next/navigation";
 
 const ProductRecomendation = () => {
   const navigationPrevRef = useRef(null);
   const navigationNextRef = useRef(null);
   const dispatch = useDispatch();
-
+  const router = useRouter();
   const { recommendedProducts, isLoading, error, hasProducts } =
     useRecommendedProducts();
-
-  // Debug logs (remove in production)
-  // console.log("🔍 ProductRecommendation Debug:");
-  // console.log("recommendedProducts:", recommendedProducts);
 
   // Handle product click/view
   const handleProductView = (productId) => {
     dispatch(incrementViewCount(productId));
+    router.push(`/product-page/${productId}`);
   };
 
   const handleHeartClick = (productId) => {

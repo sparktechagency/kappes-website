@@ -62,8 +62,8 @@ function TopNav() {
         <Image
           src="/assets/topnavimg.png"
           alt="Website Logo"
-          width={100}
-          height={100}
+          width={200}
+          height={200}
           className="object-contain hidden sm:block"
         />
         <Image
@@ -76,7 +76,7 @@ function TopNav() {
       </Link>
 
       {/* Search box */}
-      <div className="w-full sm:w-auto flex-1">
+      <div className="md:w-1/2 w-full">
         <SearchBox />
       </div>
 
@@ -86,21 +86,22 @@ function TopNav() {
         <Link href="/chat/454" className="relative hidden sm:block">
           <Button
             onClick={handleOpenChat}
-            className="text-gray-500 hover:text-gray-700 focus:outline-none bg-white shadow-none w-10 h-10 rounded-full hover:bg-gray-300 cursor-pointer"
+            className="relative flex items-center justify-center text-gray-500 hover:text-gray-700 focus:outline-none bg-white shadow-none w-12 h-12 rounded-full hover:bg-gray-300 cursor-pointer"
           >
-            <AiOutlineMessage size={24} />
+            <AiOutlineMessage className="!w-7 !h-7" />
+
+            {unreadCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full animate-pulse">
+                {unreadCount > 9 ? "9+" : unreadCount}
+              </span>
+            )}
           </Button>
-          {unreadCount > 0 && (
-            <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full animate-pulse">
-              {unreadCount > 9 ? "9+" : unreadCount}
-            </span>
-          )}
         </Link>
 
         {/* Cart Icon - Desktop only */}
         <Link href="/check-out" className="relative hidden sm:block">
-          <Button className="text-gray-500 hover:text-gray-700 focus:outline-none bg-white shadow-none w-10 h-10 rounded-full hover:bg-gray-300 cursor-pointer">
-            <HiOutlineShoppingCart size={24} />
+          <Button className="text-gray-500 hover:text-gray-700 focus:outline-none bg-white shadow-none w-12 h-12 rounded-full hover:bg-gray-300 cursor-pointer">
+            <HiOutlineShoppingCart className="!w-7 !h-7" />
           </Button>
           {cartItemCount > 0 && (
             <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
@@ -115,7 +116,7 @@ function TopNav() {
             href="/auth/login"
             className="flex items-center gap-2 text-gray-500 hover:text-gray-700"
           >
-            <FaRegUser size={20} />
+            <FaRegUser className="!w-7 !h-7 cursor-pointer border" />
             <span className="hidden md:inline">Sign In</span>
           </Link>
         ) : (
