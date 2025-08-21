@@ -98,7 +98,7 @@ function Footer() {
 
         {/* Additional Columns (Placeholders for Now) */}
         <div className="flex flex-col items-center md:items-start justify-start mx-auto">
-          <h3 className="text-sm font-semibold mb-2">Contact Us</h3>
+          <h3 className="text-sm font-semibold mb-2">Our Location</h3>
           <p>
             House #8, Road # 14,
             <br /> Toronto, Canada
@@ -107,11 +107,24 @@ function Footer() {
         </div>
 
         <div className="flex flex-col items-center md:items-start justify-start mx-auto">
-          <h3 className="text-sm font-semibold mb-2">Let Us Help You</h3>
+          {/* <h3 className="text-sm font-semibold mb-2">Let Us Help You</h3> */}
+          <h3 className="text-sm font-semibold mb-2">Useful Links</h3>
           <ul className="text-sm flex flex-col items-center justify-center md:items-start md:justify-start  space-y-2">
-            <li>Help Center</li>
-            <li>Returns</li>
-            <li>Order Tracking</li>
+            <li>
+              <Link href="/about-us">About Us</Link>
+            </li>
+            <li>
+              <Link href="/contact-us">Contact Us</Link>
+            </li>
+            <li>
+              <Link href="/terms-&-condition">Terms & Conditions</Link>
+            </li>
+            <li>
+              <Link href="/privacy-policy">Privacy Policy</Link>
+            </li>
+            <li>
+              <Link href="/faq">FAQ</Link>
+            </li>
           </ul>
         </div>
 
