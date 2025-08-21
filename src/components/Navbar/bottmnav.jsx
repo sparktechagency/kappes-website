@@ -51,10 +51,57 @@ function BottomNav() {
   // Helper function to get link classes based on active state
   const getLinkClasses = (href, baseClasses = "") => {
     const active = isActive(href);
-    return `${baseClasses} ${
-      active ? "text-yellow-200  font-semibold" : "hover:text-yellow-200"
+    return `${baseClasses} transition-all duration-300 ease-in-out relative ${
+      active ? "" : ""
     }`;
   };
+
+  // Custom Link component with hover animation
+  const AnimatedLink = ({ href, children, className = "" }) => {
+    const active = isActive(href);
+
+    return (
+      <Link href={href} className={`${className} relative group`}>
+        {children}
+        {/* Active state underline */}
+        {active && (
+          <div className="absolute bottom-[-4px] left-0 h-[2px] bg-white w-full" />
+        )}
+        {/* Hover state underline */}
+        {!active && (
+          <div className="absolute bottom-[-4px] left-0 h-[2px] bg-white w-0 group-hover:w-full transition-all duration-300 ease-in-out" />
+        )}
+      </Link>
+    );
+  };
+
+  // Custom Shop Dropdown Button with hover animation
+  const ShopDropdownButton = React.forwardRef((props, ref) => {
+    const active = isShopActive();
+
+    return (
+      <button
+        ref={ref}
+        {...props}
+        className={`bg-transparent px-2 flex gap-2 items-center transition-all duration-300 ease-in-out relative group cursor-pointer text-white ${
+          active ? "" : ""
+        }`}
+      >
+        <span>{provideIcon({ name: "shop" })}</span>
+        <span>Shop</span>
+        {/* Active state underline */}
+        {active && (
+          <div className="absolute bottom-[-4px] left-0 h-[2px] bg-white w-full" />
+        )}
+        {/* Hover state underline */}
+        {!active && (
+          <div className="absolute bottom-[-4px] left-0 h-[2px] bg-white w-0 group-hover:w-full transition-all duration-300 ease-in-out" />
+        )}
+      </button>
+    );
+  });
+
+  ShopDropdownButton.displayName = "ShopDropdownButton";
 
   // Helper function specifically for drawer menu items
   const getDrawerLinkClasses = (href, baseClasses = "") => {
@@ -74,7 +121,19 @@ function BottomNav() {
 
   const links = [
     { id: 1, link: "Home", href: "/" },
-    { id: 2, link: "Shop", href: "/shop" },
+    {
+      id: 2,
+      link: "Shop",
+      href: "/shop",
+      subLinks: [
+        { id: 1, link: "All Products", href: "/shop" },
+        { id: 2, link: "Shop By Province", href: "/shop-by-province" },
+        { id: 3, link: "Shop By Territory", href: "/shop-by-territory" },
+        { id: 4, link: "Shop By Store", href: "/shop-by-store" },
+        { id: 5, link: "Trades & Services", href: "/trades-&-services" },
+        { id: 6, link: "Deals & Offers", href: "/deals-&-offers" },
+      ],
+    },
     { id: 3, link: "About Us", href: "/about-us" },
     { id: 4, link: "Contact Us", href: "/contact-us" },
     { id: 5, link: "Become a Seller", href: "/auth/become-seller-login" },
@@ -89,31 +148,18 @@ function BottomNav() {
         { id: 4, link: "About Us", href: "/about-us" },
       ],
     },
-    {
-      id: 7,
-      link: "Categories",
-      href: "/",
-      subLinks: [
-        { id: 1, link: "Shop By Province", href: "/shop-by-province" },
-        { id: 2, link: "Shop By Territory", href: "/shop-by-territory" },
-        { id: 3, link: "Shop By Store", href: "/shop-by-store" },
-        { id: 4, link: "Trades & Services", href: "/trades-&-services" },
-        { id: 5, link: "Deals & Offers", href: "/deals-&-offers" },
-      ],
-    },
   ];
 
-  // Check if any category is active
-  const isCategoryActive = () => {
+  // Check if any shop item is active
+  const isShopActive = () => {
     if (!currentPath) return false;
-    const categoryPaths = [
+    const shopPaths = [
+      "/shop",
       "/shop-by-province",
       "/shop-by-territory",
       "/shop-by-store",
-      "/trades-&-services",
-      "/deals-&-offers",
     ];
-    return categoryPaths.some((path) => isActive(path));
+    return shopPaths.some((path) => isActive(path));
   };
 
   // Check if any "More" item is active
@@ -152,121 +198,184 @@ function BottomNav() {
   return (
     <div>
       <div className="flex items-center justify-between w-full py-4 border-b border-gray-300 bg-kappes  lg:px-32 text-white font-comfortaa">
-        <div className="flex items-center space-x-4">
-          {/* Mobile Menu Drawer */}
-          <div className="md:hidden block ">
-            <Drawer>
-              <DrawerTrigger asChild>
-                <Button variant="ghost" className="p-0 h-auto w-auto mt-1">
-                  {provideIcon({ name: "menu" })}
-                </Button>
-              </DrawerTrigger>
-              <DrawerContent className="max-w-full">
-                <DrawerHeader>
-                  <DrawerTitle>Menu</DrawerTitle>
-                </DrawerHeader>
-                <div className="p-4 space-y-4">
-                  <Link
-                    href="/"
-                    className={getDrawerLinkClasses("/", "block py-2")}
+        {/* Mobile Menu Drawer - stays on left */}
+        <div className="md:hidden flex items-center">
+          <Drawer>
+            <DrawerTrigger asChild>
+              <Button variant="ghost" className="p-0 h-auto w-auto mt-1">
+                {provideIcon({ name: "menu" })}
+              </Button>
+            </DrawerTrigger>
+            <DrawerContent className="max-w-full">
+              <DrawerHeader>
+                <DrawerTitle>Menu</DrawerTitle>
+              </DrawerHeader>
+              <div className="p-4 space-y-4">
+                <Link
+                  href="/"
+                  className={getDrawerLinkClasses("/", "block py-2")}
+                >
+                  Home
+                </Link>
+
+                <Link
+                  href="/trades-&-services"
+                  className={getDrawerLinkClasses(
+                    "/trades-&-services",
+                    "block py-2"
+                  )}
+                >
+                  Trades & Services
+                </Link>
+
+                {/* Shop Section with Sub-items */}
+                <div className="space-y-2">
+                  <p
+                    className={`font-medium flex gap-2 items-center ${
+                      isShopActive() ? "text-red-800" : ""
+                    }`}
                   >
-                    Home
-                  </Link>
+                    <span>{provideIcon({ name: "shop" })}</span>
+                    <span>Shop</span>
+                  </p>
                   <Link
                     href="/shop"
-                    className={getDrawerLinkClasses(
+                    className={getDrawerSubLinkClasses(
                       "/shop",
-                      "block py-2 flex gap-2 items-center"
+                      "block py-1 pl-4"
                     )}
                   >
-                    <span className="">{provideIcon({ name: "shop" })}</span>
-                    <span>Shop</span>
+                    All Products
+                  </Link>
+                  <Link
+                    href="/shop-by-province"
+                    className={getDrawerSubLinkClasses(
+                      "/shop-by-province",
+                      "block py-1 pl-4"
+                    )}
+                  >
+                    Shop By Province, Territory, City
+                  </Link>
+
+                  <Link
+                    href="/shop-by-store"
+                    className={getDrawerSubLinkClasses(
+                      "/shop-by-store",
+                      "block py-1 pl-4"
+                    )}
+                  >
+                    Shop By Store
+                  </Link>
+                </div>
+
+                <Link
+                  href="/deals-&-offers"
+                  className={getDrawerLinkClasses(
+                    "/deals-&-offers",
+                    "block py-2"
+                  )}
+                >
+                  Deals & Offers
+                </Link>
+
+                <Link
+                  href="/auth/become-seller-login"
+                  className={getDrawerLinkClasses(
+                    "/auth/become-seller-login",
+                    "block py-2"
+                  )}
+                >
+                  Become a Seller
+                </Link>
+                <div className="space-y-2">
+                  <p
+                    className={`font-medium ${
+                      isMoreActive() ? "text-red-800" : ""
+                    }`}
+                  >
+                    More
+                  </p>
+                  <Link
+                    href="/faq"
+                    className={getDrawerSubLinkClasses(
+                      "/faq",
+                      "block py-1 pl-4"
+                    )}
+                  >
+                    FAQs
+                  </Link>
+                  <Link
+                    href="/terms-&-condition"
+                    className={getDrawerSubLinkClasses(
+                      "/terms-&-condition",
+                      "block py-1 pl-4"
+                    )}
+                  >
+                    T&C
+                  </Link>
+                  <Link
+                    href="/privacy-policy"
+                    className={getDrawerSubLinkClasses(
+                      "/privacy-policy",
+                      "block py-1 pl-4"
+                    )}
+                  >
+                    Privacy Policy
                   </Link>
                   <Link
                     href="/about-us"
-                    className={getDrawerLinkClasses("/about-us", "block py-2")}
+                    className={getDrawerSubLinkClasses(
+                      "/about-us",
+                      "block py-1 pl-4"
+                    )}
                   >
                     About Us
                   </Link>
-                  <Link
-                    href="/contact-us"
-                    className={getDrawerLinkClasses(
-                      "/contact-us",
-                      "block py-2"
-                    )}
-                  >
-                    Contact Us
-                  </Link>
-                  <div className="space-y-2">
-                    <p
-                      className={`font-medium ${
-                        isMoreActive() ? "text-red-800" : ""
-                      }`}
-                    >
-                      More
-                    </p>
-                    <Link
-                      href="/faq"
-                      className={getDrawerSubLinkClasses(
-                        "/faq",
-                        "block py-1 pl-4"
-                      )}
-                    >
-                      FAQs
-                    </Link>
-                    <Link
-                      href="/terms-&-condition"
-                      className={getDrawerSubLinkClasses(
-                        "/terms-&-condition",
-                        "block py-1 pl-4"
-                      )}
-                    >
-                      T&C
-                    </Link>
-                    <Link
-                      href="/privacy-policy"
-                      className={getDrawerSubLinkClasses(
-                        "/privacy-policy",
-                        "block py-1 pl-4"
-                      )}
-                    >
-                      Privacy Policy
-                    </Link>
-                    <Link
-                      href="/about-us"
-                      className={getDrawerSubLinkClasses(
-                        "/about-us",
-                        "block py-1 pl-4"
-                      )}
-                    >
-                      About Us
-                    </Link>
-                  </div>
                 </div>
-                <div className="p-4 border-t">
-                  <DrawerClose asChild>
-                    <Button variant="outline" className="w-full">
-                      Close
-                    </Button>
-                  </DrawerClose>
-                </div>
-              </DrawerContent>
-            </Drawer>
-          </div>
+              </div>
+              <div className="p-4 border-t">
+                <DrawerClose asChild>
+                  <Button variant="outline" className="w-full">
+                    Close
+                  </Button>
+                </DrawerClose>
+              </div>
+            </DrawerContent>
+          </Drawer>
+        </div>
 
-          {/* Categories Dropdown - visible on all screens */}
+        {/* Desktop Navigation - centered */}
+        <div className="hidden md:flex items-center flex-1 justify-center space-x-8">
+          <AnimatedLink href="/" className={getLinkClasses("/")}>
+            Home
+          </AnimatedLink>
+          <AnimatedLink
+            href="/trades-&-services"
+            className={getLinkClasses("/trades-&-services")}
+          >
+            Trades & Services
+          </AnimatedLink>
+
+          {/* Shop Dropdown moved to middle */}
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
-              <Button
-                className={`bg-transparent shadow-none border-none px-2  ${
-                  isCategoryActive() ? "text-yellow-300 font-semibold" : ""
-                }`}
-              >
-                Categories
-              </Button>
+              <ShopDropdownButton />
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
               <DropdownMenuGroup>
+                <DropdownMenuItem asChild>
+                  <Link
+                    href="/shop"
+                    className={`flex items-center gap-2 ${
+                      isActive("/shop")
+                        ? "bg-kappes text-white font-semibold"
+                        : ""
+                    }`}
+                  >
+                    {provideIcon({ name: "shop" })} All Products
+                  </Link>
+                </DropdownMenuItem>
+
                 <DropdownMenuItem asChild>
                   <Link
                     href="/shop-by-province"
@@ -309,122 +418,29 @@ function BottomNav() {
                     {provideIcon({ name: "shopByStore" })} Shop By Store
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link
-                    href="/trades-&-services"
-                    className={`flex items-center gap-2 ${
-                      isActive("/trades-&-services")
-                        ? "bg-kappes text-white font-semibold"
-                        : ""
-                    }`}
-                  >
-                    {provideIcon({ name: "tradesAndService" })} Trades &
-                    Services
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link
-                    href="/deals-&-offers"
-                    className={`flex items-center gap-2 ${
-                      isActive("/deals-&-offers")
-                        ? "bg-kappes text-white font-semibold"
-                        : ""
-                    }`}
-                  >
-                    {provideIcon({ name: "dealsAndOffer" })} Deals & Offers
-                  </Link>
-                </DropdownMenuItem>
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
-        </div>
 
-        {/* Desktop Navigation - hidden on mobile */}
-        <div className="md:flex items-center gap-4 hidden">
-          <Link href="/" className={getLinkClasses("/")}>
-            Home
-          </Link>
-          <Link
-            href="/shop"
-            className={getLinkClasses(
-              "/shop",
-              "hover:text-yellow-200 flex gap-2 items-center"
-            )}
+          <AnimatedLink
+            href="/deals-&-offers"
+            className={getLinkClasses("/deals-&-offers")}
           >
-            <span>{provideIcon({ name: "shop" })}</span>
-            <span>Shop</span>
-          </Link>
-          <Link href="/about-us" className={getLinkClasses("/about-us")}>
-            About Us
-          </Link>
-          <Link href="/contact-us" className={getLinkClasses("/contact-us")}>
-            Contact Us
-          </Link>
-          <DropdownMenu modal={false}>
-            <DropdownMenuTrigger asChild>
-              <Button
-                className={`bg-transparent shadow-none border-none px-2 ${
-                  isMoreActive() ? "text-yellow-300 font-semibold" : ""
-                }`}
-              >
-                More
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-44">
-              <DropdownMenuGroup>
-                <DropdownMenuItem asChild>
-                  <Link
-                    href="/faq"
-                    className={
-                      isActive("/faq")
-                        ? "bg-kappes text-white font-semibold"
-                        : ""
-                    }
-                  >
-                    FAQs
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link
-                    href="/terms-&-condition"
-                    className={
-                      isActive("/terms-&-condition")
-                        ? "bg-kappes text-white font-semibold"
-                        : ""
-                    }
-                  >
-                    T&C
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link
-                    href="/privacy-policy"
-                    className={
-                      isActive("/privacy-policy")
-                        ? "bg-kappes text-white font-semibold"
-                        : ""
-                    }
-                  >
-                    Privacy Policy
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+            Deals & Offers
+          </AnimatedLink>
 
-        {/* Become a Seller - visible on all screens */}
-        <div className="flex items-center space-x-4 ">
-          <Link
+          <AnimatedLink
             href="/auth/become-seller-login"
-            className={getLinkClasses(
-              "/auth/become-seller-login",
-              "hover:text-yellow-200"
-            )}
+            className={`font-semibold shadow-none border-none rounded-md flex gap-2 items-center transition-all duration-300 ease-in-out ${
+              isActive("/auth/become-seller-login") ? "" : ""
+            }`}
           >
             Become a Seller
-          </Link>
+          </AnimatedLink>
         </div>
+
+        {/* Empty div for layout balance */}
+        <div className="w-6 md:w-0"></div>
       </div>
     </div>
   );
