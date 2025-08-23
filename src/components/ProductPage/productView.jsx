@@ -13,6 +13,7 @@ import provideIcon from "@/common/components/provideIcon";
 import Link from "next/link";
 import useProductDetails from "@/hooks/useProductDetails";
 import { getImageUrl } from "@/redux/baseUrl";
+import ProductSpecs from "./ProductSpecs";
 
 function ProductView() {
   const dispatch = useDispatch();
@@ -283,16 +284,14 @@ function ProductView() {
                   {availableColors.map((color) => (
                     <button
                       key={color}
-                      className={`w-8 h-8 rounded-full ${getColorClass(
-                        color,
-                        selectedColor === color
-                      )} ${
+                      className={`w-8 h-8 rounded-full ${
                         selectedColor === color
                           ? "ring-2 ring-offset-2 ring-black"
                           : ""
                       }`}
                       onClick={() => setSelectedColor(color)}
-                      style={{ backgroundColor: color }}
+                      style={{ backgroundColor: `#${color}` }}
+                      title={`#${color}`}
                     />
                   ))}
                 </div>
@@ -417,6 +416,9 @@ function ProductView() {
                 </div>
               )}
             </div>
+
+            {/* Product Specifications */}
+            <ProductSpecs productDetails={productDetails} />
           </div>
         </div>
       </div>

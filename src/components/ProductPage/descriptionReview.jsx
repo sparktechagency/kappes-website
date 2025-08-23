@@ -31,10 +31,7 @@ function DescriptionReview() {
           />
         </TabsContent>
         <TabsContent value="review">
-          <ReviewAndFeedback
-            productId={productDetails?._id}
-            reviews={productDetails?.reviews || []}
-          />
+          <ReviewAndFeedback />
         </TabsContent>
       </Tabs>
     </div>

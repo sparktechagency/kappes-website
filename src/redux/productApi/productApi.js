@@ -103,6 +103,28 @@ const productApi = api.injectEndpoints({
         };
       },
     }),
+    getReviewByProductId: builder.query({
+      query: (productId) => {
+        return {
+          url: `/review/product/${productId}`,
+          method: "GET",
+        };
+      },
+    }),
+    getShopProducts: builder.query({
+      query: (params) => {
+        const { page = 1, limit = 10, ...queryParams } = params || {};
+        return {
+          url: `/product`,
+          method: "GET",
+          params: {
+            page,
+            limit,
+            ...queryParams,
+          },
+        };
+      },
+    }),
   }),
   overrideExisting: true,
 });
@@ -115,6 +137,8 @@ export const {
   useGetAllProductsQuery,
   useGetFeaturedProductsQuery,
   useUpdateProductMutation,
+  useGetReviewByProductIdQuery,
+  useGetShopProductsQuery,
 } = productApi;
 
 // Export directly to ensure it's available

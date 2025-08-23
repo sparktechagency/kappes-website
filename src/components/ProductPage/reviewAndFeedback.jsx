@@ -1,62 +1,69 @@
-"use server";
-import React from "react";
+"use client";
+import React, { useEffect, useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Star } from "lucide-react";
 import Image from "next/image";
+import useProductReviews from "@/hooks/useProductReviews";
+import { getImageUrl } from "@/redux/baseUrl";
 
 function ReviewAndFeedback() {
-  // Review data
-  const reviewSummary = {
-    average: 4.9,
-    total: 320,
-    distribution: [
-      { stars: 5, count: 150 },
-      { stars: 4, count: 150 },
-      { stars: 3, count: 20 },
+  const { reviews, isLoading, error } = useProductReviews();
+
+  // Calculate review summary from actual reviews
+  const reviewSummary = useMemo(() => {
+    if (!reviews || reviews.length === 0) {
+      return {
+        average: 0,
+        total: 0,
+        distribution: [
+          { stars: 5, count: 0 },
+          { stars: 4, count: 0 },
+          { stars: 3, count: 0 },
+          { stars: 2, count: 0 },
+          { stars: 1, count: 0 },
+        ],
+      };
+    }
+
+    // Calculate average rating
+    const total = reviews.length;
+    const sumRatings = reviews.reduce((sum, review) => sum + review.rating, 0);
+    const average = total > 0 ? sumRatings / total : 0;
+
+    // Calculate distribution
+    const distribution = [
+      { stars: 5, count: 0 },
+      { stars: 4, count: 0 },
+      { stars: 3, count: 0 },
       { stars: 2, count: 0 },
       { stars: 1, count: 0 },
-    ],
-  };
+    ];
 
-  const reviews = [
-    {
-      id: 1,
-      author: "Randy Orton",
-      date: "2 Feb 2025",
-      rating: 4,
-      content:
-        "I took this bag on my recent vacation, and I couldn't be happier with it! It's sturdy, yet lightweight, and has enough compartments to keep all my belongings organized. The material feels high-quality, and it's comfortable to carry, even when it's fully packed. The size is perfect for both carry-on and checked luggage. It also holds up well in different weather conditions. Definitely a must-have for frequent travelers!",
-      images: ["/assets/productPage/bag2.png", "/assets/productPage/bag3.png"],
-    },
-    {
-      id: 2,
-      author: "Randy Orton",
-      date: "2 Feb 2025",
-      rating: 5,
-      content:
-        "I bought this bag for my trip, and it worked perfectly! It's durable, spacious, and easy to carry. The compartments keep everything organized, and the straps are comfortable. Perfect for both short and long trips. Highly recommend!",
-      images: ["/assets/productPage/bag3.png", "/assets/productPage/bag4.png"],
-    },
-    {
-      id: 3,
-      author: "Randy Orton",
-      date: "2 Feb 2025",
-      rating: 4,
-      content:
-        "I bought this bag for my trip, and it worked perfectly! It's durable, spacious, and easy to carry. The compartments keep everything organized, and the straps are comfortable. Perfect for both short and long trips. Highly recommend!",
-      images: ["/assets/productPage/bag2.png", "/assets/productPage/bag3.png"],
-    },
-    {
-      id: 4,
-      author: "Randy Orton",
-      date: "2 Feb 2025",
-      rating: 4,
-      content:
-        "I bought this bag for my trip, and it worked perfectly! It's durable, spacious, and easy to carry. The compartments keep everything organized, and the straps are comfortable. Perfect for both short and long trips. Highly recommend!",
-      images: ["/assets/productPage/bag2.png", "/assets/productPage/bag3.png"],
-    },
-  ];
+    reviews.forEach((review) => {
+      const rating = Math.round(review.rating);
+      const index = 5 - rating;
+      if (index >= 0 && index < 5) {
+        distribution[index].count++;
+      }
+    });
+
+    return {
+      average: parseFloat(average.toFixed(1)),
+      total,
+      distribution,
+    };
+  }, [reviews]);
+
+  // Format date function
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+  };
 
   // Star rating component
   const StarRating = ({ rating }) => {
@@ -76,6 +83,52 @@ function ReviewAndFeedback() {
       </div>
     );
   };
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="w-full mx-auto p-4">
+        <h2 className="text-2xl font-bold mb-6">Reviews</h2>
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="w-full mx-auto p-4">
+        <h2 className="text-2xl font-bold mb-6">Reviews</h2>
+        <div className="flex justify-center items-center h-64">
+          <div className="text-center">
+            <p className="text-red-600 mb-4">Failed to load reviews</p>
+            <p className="text-gray-500 text-sm">{error.toString()}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // No reviews state
+  if (!reviews || reviews.length === 0) {
+    return (
+      <div className="w-full mx-auto p-4">
+        <h2 className="text-2xl font-bold mb-6">Reviews</h2>
+        <div className="flex justify-center items-center h-64">
+          <div className="text-center">
+            <p className="text-gray-500">
+              No reviews available for this product
+            </p>
+            <p className="text-sm text-gray-400 mt-2">
+              Be the first to leave a review!
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full mx-auto p-4">
@@ -107,7 +160,7 @@ function ReviewAndFeedback() {
                   <span className="w-3">{item.stars}</span>
                   <Star size={16} className="text-yellow-400 fill-yellow-400" />
                   <Progress
-                    value={(item.count / reviewSummary.total) * 100}
+                    value={(item.count / (reviewSummary.total || 1)) * 100}
                     className="h-2 flex-1 inset-shadow-sm inset-shadow-white"
                   />
                   <span className="text-sm text-gray-500 w-8">
@@ -122,20 +175,24 @@ function ReviewAndFeedback() {
         {/* Review Cards */}
         <div className="col-span-1 md:col-span-2 space-y-4">
           {reviews.map((review) => (
-            <Card key={review.id} className="overflow-hidden">
+            <Card key={review._id} className="overflow-hidden">
               <CardContent className="p-6">
                 <div className="flex justify-between items-start mb-2">
                   <div className="flex items-center">
-                    <div className="font-medium">{review.author}</div>
+                    <div className="font-medium">
+                      {review.customer?.full_name || "Anonymous"}
+                    </div>
                   </div>
-                  <div className="text-sm text-gray-500">{review.date}</div>
+                  <div className="text-sm text-gray-500">
+                    {formatDate(review.createdAt)}
+                  </div>
                 </div>
 
                 <div className="flex mb-3">
                   <StarRating rating={review.rating} />
                 </div>
 
-                <p className="text-gray-700 mb-4">{review.content}</p>
+                <p className="text-gray-700 mb-4">{review.comment}</p>
 
                 {review.images && review.images.length > 0 && (
                   <div className="flex gap-2 mt-3">
@@ -145,7 +202,7 @@ function ReviewAndFeedback() {
                         className="w-16 h-16 rounded overflow-hidden border border-gray-200"
                       >
                         <Image
-                          src={image}
+                          src={`${getImageUrl}${image}`}
                           alt={`Review image ${index + 1}`}
                           width={64}
                           height={64}
