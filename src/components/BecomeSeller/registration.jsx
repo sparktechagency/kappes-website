@@ -12,6 +12,13 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 export default function SellerRegistrationForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -26,7 +33,7 @@ export default function SellerRegistrationForm() {
   };
 
   return (
-    <Card className="w-full max-w-md">
+    <Card className="w-full max-w-md ">
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl font-bold text-center text-red-700">
           Create Your Account
@@ -37,7 +44,7 @@ export default function SellerRegistrationForm() {
         </p>
       </CardHeader>
 
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-3">
         <div className="space-y-2">
           <Label htmlFor="fullName">
             Full Name<span className="text-red-600">*</span>
@@ -55,6 +62,37 @@ export default function SellerRegistrationForm() {
             placeholder="Enter your email address"
             required
           />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="storeName">
+            Store Name<span className="text-red-600">*</span>
+          </Label>
+          <Input
+            id="storeName"
+            type="text"
+            placeholder="Enter your store name"
+            required
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="storeName">
+            Store Category<span className="text-red-600">*</span>
+          </Label>
+          <Select>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select a category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="1">Electronics</SelectItem>
+              <SelectItem value="2">Clothing</SelectItem>
+              <SelectItem value="3">Home & Garden</SelectItem>
+              <SelectItem value="4">Beauty & Personal Care</SelectItem>
+              <SelectItem value="5">Sports & Outdoors</SelectItem>
+              <SelectItem value="6">Toys & Games</SelectItem>
+              <SelectItem value="7">Health & Wellness</SelectItem>
+              <SelectItem value="8">Automotive</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="space-y-2">

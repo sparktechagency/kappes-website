@@ -26,13 +26,13 @@ export default function SellerLogin() {
   };
 
   return (
-    <Card className="w-full h-full  bg-[#f7e8e5]">
+    <Card className="w-full h-full  bg-[#f7e8e5] w-[25rem]">
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl font-bold text-center text-red-700">
-          Welcome Back
+          Welcome to the Canuck Mall
         </CardTitle>
         <p className="text-center text-gray-600 text-sm ">
-          Log in to manage your products, orders, and more.
+          Log in to manage your products, orders, and more
         </p>
       </CardHeader>
 
@@ -148,6 +148,9 @@ export default function SellerLogin() {
             Create a Seller Account
           </Link>
         </p>
+        {/* <p className="text-sm text-gray-600">
+          already have an account login here
+        </p> */}
       </CardFooter>
     </Card>
   );

@@ -3,6 +3,7 @@ import React, { useRef, useEffect } from "react";
 import { IoArrowForward } from "react-icons/io5";
 import { Card } from "@/components/ui/card";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 // Import Swiper and required modules
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
@@ -17,6 +18,7 @@ const TrendingProduct = () => {
   const { trendingProducts, isLoading, error } = useTrendingProducts();
   const navigationPrevRef = useRef(null);
   const navigationNextRef = useRef(null);
+  const router = useRouter();
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -86,10 +88,19 @@ const TrendingProduct = () => {
           className="w-full product-swiper"
         >
           {trendingProducts.map((product) => (
-            <SwiperSlide key={product.id}>
-              <Card className="relative bg-white rounded-xl shadow-sm p-0 overflow-hidden h-80">
+            <SwiperSlide key={product.id || product._id}>
+              <Card
+                className="relative bg-white rounded-xl shadow-sm p-0 overflow-hidden h-80 cursor-pointer hover:shadow-md transition-shadow"
+                onClick={() => router.push(`/product-page/${product._id}`)}
+              >
                 {/* Heart Icon */}
-                <div className="absolute top-3 right-3 text-red-500 text-xl cursor-pointer hover:scale-110 transition-transform">
+                <div
+                  className="absolute top-3 right-3 text-red-500 text-xl cursor-pointer hover:scale-110 transition-transform z-10"
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent card click
+                    // Add favorite functionality here
+                  }}
+                >
                   ♥
                 </div>
 

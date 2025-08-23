@@ -7,6 +7,12 @@ const initialState = {
   featuredProducts: [],
   isLoading: false,
   error: null,
+  meta: {
+    total: 0,
+    limit: 10,
+    page: 1,
+    totalPage: 0,
+  },
 };
 
 const productSlice = createSlice({
@@ -15,7 +21,11 @@ const productSlice = createSlice({
   reducers: {
     // Recommended Products Actions
     setRecommendedProducts: (state, action) => {
-      state.recommendedProducts = action.payload || [];
+      if (action.payload?.data) {
+        state.recommendedProducts = action.payload.data.result || [];
+      } else {
+        state.recommendedProducts = action.payload || [];
+      }
     },
     addRecommendedProduct: (state, action) => {
       state.recommendedProducts.push(action.payload);
@@ -26,12 +36,27 @@ const productSlice = createSlice({
 
     // Trending Products Actions
     setTrendingProducts: (state, action) => {
-      state.trendingProducts = action.payload || [];
+      if (action.payload?.data) {
+        state.trendingProducts = action.payload.data.result || [];
+      } else {
+        state.trendingProducts = action.payload || [];
+      }
     },
 
     // All Products Actions
     setAllProducts: (state, action) => {
-      state.allProducts = action.payload || [];
+      // Handle new response format with meta and result
+      if (action.payload?.data) {
+        // Extract meta data if available
+        if (action.payload.data.meta) {
+          state.meta = action.payload.data.meta;
+        }
+        // Extract results array
+        state.allProducts = action.payload.data.result || [];
+      } else {
+        // Fallback for backward compatibility
+        state.allProducts = action.payload || [];
+      }
     },
     addProduct: (state, action) => {
       state.allProducts.push(action.payload);
@@ -55,7 +80,11 @@ const productSlice = createSlice({
 
     // Featured Products Actions
     setFeaturedProducts: (state, action) => {
-      state.featuredProducts = action.payload || [];
+      if (action.payload?.data) {
+        state.featuredProducts = action.payload.data.result || [];
+      } else {
+        state.featuredProducts = action.payload || [];
+      }
     },
 
     // Loading and Error States
@@ -118,6 +147,7 @@ export const selectFeaturedProducts = (state) =>
   state.products.featuredProducts;
 export const selectProductsLoading = (state) => state.products.isLoading;
 export const selectProductsError = (state) => state.products.error;
+export const selectProductsMeta = (state) => state.products.meta;
 
 // Get product by ID selector
 export const selectProductById = (productId) => (state) => {
