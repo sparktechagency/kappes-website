@@ -16,74 +16,59 @@ import { getImageUrl } from "@/redux/baseUrl";
 import provideIcon from "@/common/components/provideIcon";
 import { addFav, removeFav, isFav } from "@/features/productSlice";
 import { useRouter, useParams } from "next/navigation";
-import { useGetRelatedProductsQuery } from "@/redux/productApi/productApi";
+import {
+  useGetRelatedProductsQuery,
+  useGetRecommendedProductsQuery,
+} from "@/redux/productApi/productApi";
 import { useEffect, useState } from "react";
 import { useGetAllProductsQuery } from "@/redux/productApi/productApi";
 import { usePathname } from "next/navigation";
+import useProductDetails from "@/hooks/useProductDetails";
 
 const RelatedProducts = () => {
   const navigationPrevRef = useRef(null);
   const navigationNextRef = useRef(null);
   const dispatch = useDispatch();
   const router = useRouter();
-  const params = useParams();
-  const pathname = usePathname();
-  const [productId, setProductId] = useState(null);
   const [categoryId, setCategoryId] = useState(null);
 
-  // Extract product ID from URL path
-  useEffect(() => {
-    console.log("URL Path:", pathname);
-    console.log("Params:", params);
+  // Use the product details hook to get all information about the current product
+  const { productDetails, productId } = useProductDetails();
 
-    // Extract the ID from the URL path if params doesn't have it
-    if (pathname) {
-      const pathParts = pathname.split("/");
-      const id = pathParts[pathParts.length - 1];
-      console.log("Extracted ID:", id);
-      if (id && id !== "[id]") {
-        setProductId(id);
-      } else if (params?.id) {
-        setProductId(params.id);
+  // Set categoryId when product details are available
+  useEffect(() => {
+    if (productDetails) {
+      if (productDetails.categoryId?._id) {
+        setCategoryId(productDetails.categoryId._id);
       }
     }
-  }, [pathname, params]);
+  }, [productDetails]);
 
-  // Get current product to find its categoryId
-  const { data: productData } = useGetAllProductsQuery(
-    { id: productId },
-    { skip: !productId }
-  );
-
-  // Set categoryId once product data is available
-  useEffect(() => {
-    if (productData) {
-      // Handle the array response (multiple products)
-      if (productData?.data?.result?.length > 0) {
-        const product = productData.data.result[0];
-        if (product?.categoryId?._id) {
-          setCategoryId(product.categoryId._id);
-        }
-      }
-      // Handle single product response
-      else if (productData?.data?.categoryId?._id) {
-        setCategoryId(productData.data.categoryId._id);
-      }
-      // If product has nested category data
-      else if (productData?.categoryId?._id) {
-        setCategoryId(productData.categoryId._id);
-      }
-
-      console.log("Product data structure:", JSON.stringify(productData));
-    }
-  }, [productData]);
-
-  // Only fetch related products when we have the categoryId
-  const { data, isLoading, error } = useGetRelatedProductsQuery(categoryId, {
+  // Get related products based on category
+  const {
+    data: categoryProducts,
+    isLoading: categoryProductsLoading,
+    error: categoryProductsError,
+  } = useGetRelatedProductsQuery(categoryId, {
     skip: !categoryId,
   });
 
-  const hasProducts = data?.data?.result?.length > 0;
+  // Fallback to recommended products if category is not found
+  const {
+    data: recommendedProducts,
+    isLoading: recommendedProductsLoading,
+    error: recommendedProductsError,
+  } = useGetRecommendedProductsQuery(null, {
+    skip: categoryId !== null && !categoryProductsError,
+  });
+
+  // Determine which data source to use and if we have products
+  const finalData = categoryProducts || recommendedProducts;
+  const isLoading =
+    categoryProductsLoading ||
+    (recommendedProductsLoading && !categoryProducts);
+  const hasProducts = finalData?.data?.result?.length > 0;
+  const displayMode = categoryProducts ? "related" : "recommended";
 
   // Handle product click/view
   const handleProductView = (productId) => {
@@ -95,9 +80,11 @@ const RelatedProducts = () => {
 
   // Debug - remove in production
   console.log("Product ID:", productId);
-  console.log("Product Data:", productData);
+  console.log("Product Details:", productDetails);
   console.log("CategoryID:", categoryId);
-  console.log("Related products data:", data);
+  console.log("Related products data:", categoryProducts);
+  console.log("Recommended products data:", recommendedProducts);
+  console.log("Display mode:", displayMode);
 
   const handleHeartClick = (productId) => {
     if (isFav(productId)) {
@@ -123,8 +110,8 @@ const RelatedProducts = () => {
     );
   }
 
-  // Show error state
-  if (error) {
+  // Show error state when both related and recommended products fail
+  if (categoryProductsError && recommendedProductsError) {
     return (
       <div className="w-full px-4 py-16 lg:px-32">
         <div className="flex items-center justify-between pb-6">
@@ -134,10 +121,11 @@ const RelatedProducts = () => {
         </div>
         <div className="flex justify-center items-center h-64">
           <div className="text-center">
-            <p className="text-red-600 mb-4">
-              Failed to load recommended products
+            <p className="text-red-600 mb-4">Failed to load products</p>
+            <p className="text-gray-500 text-sm">
+              {categoryProductsError?.message ||
+                recommendedProductsError?.message}
             </p>
-            <p className="text-gray-500 text-sm">{error}</p>
           </div>
         </div>
       </div>
@@ -150,12 +138,14 @@ const RelatedProducts = () => {
       <div className="w-full px-4 py-16 lg:px-32">
         <div className="flex items-center justify-between pb-6">
           <h2 className="text-3xl font-extrabold font-comfortaa">
-            Related Products
+            {displayMode === "related"
+              ? "Related Products"
+              : "Recommended Products"}
           </h2>
         </div>
         <div className="flex justify-center items-center h-64">
           <div className="text-center">
-            <p className="text-gray-500">No related products available</p>
+            <p className="text-gray-500">No products available</p>
             <p className="text-xs text-gray-400 mt-2">
               Product ID: {productId || "Not found"}
             </p>
@@ -163,7 +153,7 @@ const RelatedProducts = () => {
               Category ID: {categoryId || "Not found"}
             </p>
             <p className="text-xs text-gray-400 mt-2">
-              Product Data: {productData ? "Found" : "Not found"}
+              Product Details: {productDetails ? "Found" : "Not found"}
             </p>
           </div>
         </div>
@@ -176,7 +166,9 @@ const RelatedProducts = () => {
       {/* Header */}
       <div className="flex items-center justify-between pb-6">
         <h2 className="text-3xl font-extrabold font-comfortaa">
-          Related Products
+          {displayMode === "related"
+            ? "Related Products"
+            : "Recommended Products"}
         </h2>
         <button className="flex items-center text-gray-600 hover:text-gray-800 hover:underline transition">
           See all
@@ -229,7 +221,7 @@ const RelatedProducts = () => {
           }}
           className="w-full product-swiper"
         >
-          {data?.data?.result?.map((product) => (
+          {finalData?.data?.result?.map((product) => (
             <SwiperSlide key={product._id || product.id}>
               <Card
                 className="relative bg-white rounded-xl shadow-sm p-0 overflow-hidden h-80 cursor-pointer hover:shadow-lg transition-shadow"
