@@ -22,13 +22,16 @@ import { AiOutlineMessage } from "react-icons/ai";
 import { BiMessageSquareDots } from "react-icons/bi";
 import { openChat } from "@/features/chatSlice";
 import useAuth from "@/hooks/useAuth";
-
+import useUser from "@/hooks/useUser";
+import { getImageUrl } from "@/redux/baseUrl";
 function TopNav() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const dispatch = useDispatch();
   const { role, isLoggedIn, logout: handleLogout } = useAuth();
   console.log("isLoggedIn", isLoggedIn);
-
+  const { userImage, userName } = useUser();
+  console.log("userImage", userImage);
+  console.log("userName", userName);
   const cartItemCount = useSelector((state) =>
     state.cart.reduce((total, item) => total + item.quantity, 0)
   );
@@ -131,10 +134,16 @@ function TopNav() {
                 className="cursor-pointer w-10 h-10 "
               >
                 <AvatarImage
-                  src={role?.image || "/default-avatar.png"}
-                  alt={role?.name}
+                  src={
+                    userImage
+                      ? `${getImageUrl}/${userImage}`
+                      : "/assets/userProfile/profileImage.jpg"
+                  }
+                  alt={userName || "User"}
                 />
-                <AvatarFallback>{role?.name}</AvatarFallback>
+                <AvatarFallback>
+                  {userName ? userName.charAt(0) : "U"}
+                </AvatarFallback>
               </Avatar>
             </DrawerTrigger>
             <DrawerContent className="p-4">
@@ -146,13 +155,19 @@ function TopNav() {
                   <Image
                     width={1000}
                     height={1000}
-                    alt="profile img"
-                    src="/assets/userProfile/profileImage.jpg"
+                    alt={userName || "User profile"}
+                    src={
+                      userImage
+                        ? `${getImageUrl}/${userImage}`
+                        : "/assets/userProfile/profileImage.jpg"
+                    }
                   />
-                  <AvatarFallback>CN</AvatarFallback>
+                  <AvatarFallback>
+                    {userName ? userName.charAt(0) : "U"}
+                  </AvatarFallback>
                 </Avatar>
                 <h3 className="my-2 text-xl font-comfortaa font-bold">
-                  Sarah Jones
+                  {userName}
                 </h3>
                 <Link
                   href="/profile/4545"
