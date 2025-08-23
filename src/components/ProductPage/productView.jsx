@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
 import { Heart, Minus, Plus, MessageCircle } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -9,45 +8,42 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { addCart } from "@/features/cartSlice";
-import { openChat } from "@/features/chatSlice"; // Add this import
+import { openChat } from "@/features/chatSlice";
 import provideIcon from "@/common/components/provideIcon";
 import Link from "next/link";
+import useProductDetails from "@/hooks/useProductDetails";
+import { getImageUrl } from "@/redux/baseUrl";
 
 function ProductView() {
-  const searchParams = useSearchParams();
   const dispatch = useDispatch();
 
   // Get chat state from Redux
   const { unreadCount } = useSelector((state) => state.chat);
 
-  const [productData, setProductData] = useState(null);
+  // Use our custom hook to get product details
+  const { productDetails, isLoading, error } = useProductDetails();
+
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
   const [mainImage, setMainImage] = useState(0);
 
+  // Set initial selections when product data is loaded
   useEffect(() => {
-    const productDataParam = searchParams.get("productData");
-    if (productDataParam) {
-      try {
-        const parsedData = JSON.parse(productDataParam);
-        setProductData(parsedData);
+    if (productDetails) {
+      console.log("Product details loaded:", productDetails);
 
-        if (
-          parsedData.size &&
-          parsedData.size.length > 0 &&
-          parsedData.size[0] !== ""
-        ) {
-          setSelectedSize(parsedData.size[0].toUpperCase());
-        }
-        if (parsedData.color && parsedData.color.length > 0) {
-          setSelectedColor(parsedData.color[0]);
-        }
-      } catch (error) {
-        console.error("Error parsing product data:", error);
+      // Check for size variations
+      if (productDetails.slugDetails?.size?.length > 0) {
+        setSelectedSize(productDetails.slugDetails.size[0].toUpperCase());
+      }
+
+      // Check for color variations
+      if (productDetails.slugDetails?.color?.length > 0) {
+        setSelectedColor(productDetails.slugDetails.color[0]);
       }
     }
-  }, [searchParams]);
+  }, [productDetails]);
 
   const getDiscountedPrice = (item) => {
     if (!item || !item.discountPrice[0]) return item?.originalPrice || 0;
@@ -101,13 +97,15 @@ function ProductView() {
   };
 
   const handleAddToCart = () => {
+    if (!productDetails) return;
+
     const cartItem = {
-      id: productData.id,
-      productName: productData.name,
+      id: productDetails._id || productDetails.id,
+      productName: productDetails.name,
       quantity,
-      price: getDiscountedPrice(productData),
+      price: productDetails.basePrice,
       productImage:
-        productData.productImage?.[0] || "/assets/productPage/bag1.png",
+        productDetails.images?.[0] || "/assets/productPage/bag1.png",
       size: selectedSize,
       color: selectedColor,
     };
@@ -116,37 +114,51 @@ function ProductView() {
   };
 
   const handleOpenChat = () => {
+    // Use shop info from product if available
     const sellerInfo = {
-      name: "Peak",
+      name: productDetails?.shopId?.name || "Shop",
       location: "Canada",
-      id: "4545",
+      id: productDetails?.shopId?.id || productDetails?.shopId?._id || "shop",
     };
     dispatch(openChat(sellerInfo));
   };
 
-  const handleCloseChat = () => {
-    setIsChatOpen(false);
-  };
-
-  if (!productData) {
+  if (isLoading || !productDetails) {
     return (
       <div className="max-w-6xl mx-auto p-4">
         <div className="text-center py-12">
           <h1 className="text-2xl">Loading product...</h1>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto mt-4"></div>
         </div>
       </div>
     );
   }
 
-  const discountedPrice = getDiscountedPrice(productData);
-  const hasDiscount = productData.discountPrice[0];
-  const productImages = productData.productImage || [
+  if (error) {
+    return (
+      <div className="max-w-6xl mx-auto p-4">
+        <div className="text-center py-12">
+          <h1 className="text-2xl text-red-600">Error loading product</h1>
+          <p className="mt-2">{error.toString()}</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Get available product variations from slugDetails
+  const productImages = productDetails.images || [
     "/assets/productPage/bag1.png",
   ];
-  const availableSizes = productData.size
-    .filter((size) => size !== "")
-    .map((size) => size.toUpperCase());
-  const availableColors = productData.color || [];
+
+  // Extract size variations if available
+  const availableSizes = productDetails.slugDetails?.size
+    ? productDetails.slugDetails.size
+        .filter((size) => size !== "")
+        .map((size) => size.toUpperCase())
+    : [];
+
+  // Extract color variations if available
+  const availableColors = productDetails.slugDetails?.color || [];
 
   // Seller info for chat
   const sellerInfo = {
@@ -165,9 +177,9 @@ function ProductView() {
               <Image
                 width={500}
                 height={500}
-                src={productImages[mainImage]}
-                alt={productData.name}
-                className="w-full h-[20rem] md:h-[30rem] lg:h-[40rem]  object-contain lg:object-cover transition-transform duration-300 hover:scale-150"
+                src={`${getImageUrl}/${productImages[mainImage]}`}
+                alt={productDetails.name}
+                className="w-full h-[20rem] md:h-[30rem] lg:h-[40rem] object-contain transition-transform duration-300 hover:scale-110"
                 priority
               />
               <Button
@@ -176,7 +188,7 @@ function ProductView() {
                 className="absolute top-4 right-4 bg-white"
               >
                 <Heart
-                  fill={productData.favourite ? "red" : "none"}
+                  fill={productDetails.isFeatured ? "red" : "none"}
                   size={25}
                 />
               </Button>
@@ -187,7 +199,7 @@ function ProductView() {
                 <Button
                   key={index}
                   variant="ghost"
-                  className={`p-0 rounded-md overflow-hidden  h-full ${
+                  className={`p-0 rounded-md overflow-hidden h-full ${
                     mainImage === index
                       ? "ring-2 ring-red-600"
                       : "ring-1 ring-gray-200"
@@ -195,7 +207,7 @@ function ProductView() {
                   onClick={() => setMainImage(index)}
                 >
                   <Image
-                    src={image}
+                    src={`${getImageUrl}/${image}`}
                     alt={`Thumbnail ${index + 1}`}
                     width={500}
                     height={500}
@@ -210,7 +222,7 @@ function ProductView() {
           <div className="w-full md:w-1/2">
             <div className="flex items-center justify-between">
               <h1 className="text-3xl font-bold mb-2 font-comfortaa">
-                {productData.name}
+                {productDetails.name}
               </h1>
               <span className="flex items-center gap-2 text-lg font-comfortaa font-bold cursor-pointer">
                 {provideIcon({ name: "share" })}Share
@@ -220,18 +232,24 @@ function ProductView() {
             <div className="flex items-center gap-2 mb-4">
               <div className="flex text-yellow-400">
                 <span>★</span>
-                <span>{productData.rating}</span>
+                <span>{productDetails.avg_rating || 0}</span>
               </div>
-              <span className="text-gray-500">({productData.reviews})</span>
+              <span className="text-gray-500">
+                ({productDetails.totalReviews || 0})
+              </span>
             </div>
 
             <div className="flex items-center gap-2 mb-6">
               <span className="text-2xl font-bold text-red-600">
-                ${discountedPrice.toFixed(2)}
+                ${productDetails.basePrice?.toFixed(2)}
               </span>
-              {hasDiscount && (
+              {productDetails.product_variant_Details?.[0]?.variantPrice >
+                productDetails.basePrice && (
                 <span className="text-gray-500 line-through">
-                  ${productData.originalPrice}
+                  $
+                  {productDetails.product_variant_Details[0].variantPrice.toFixed(
+                    2
+                  )}
                 </span>
               )}
             </div>
@@ -324,20 +342,29 @@ function ProductView() {
                 <span className="font-bold">•</span>
                 <div>
                   <span className="font-bold">Category:</span>{" "}
-                  {productData.category}
+                  {productDetails.categoryId?.name || "Uncategorized"}
                 </div>
               </div>
               <div className="flex items-start gap-2">
                 <span className="font-bold">•</span>
                 <div>
                   <span className="font-bold">Tags:</span>
-                  {productData.tags.map((tag, index) => (
+                  {productDetails.tags?.map((tag, index) => (
                     <Badge key={index} variant="outline" className="ml-1 mr-1">
                       {tag.charAt(0).toUpperCase() + tag.slice(1)}
                     </Badge>
-                  ))}
+                  )) || "No tags"}
                 </div>
               </div>
+              {productDetails.brandId && (
+                <div className="flex items-start gap-2 mt-2">
+                  <span className="font-bold">•</span>
+                  <div>
+                    <span className="font-bold">Brand:</span>{" "}
+                    {productDetails.brandId.name}
+                  </div>
+                </div>
+              )}
             </div>
 
             <Card className="mb-6">
@@ -345,14 +372,26 @@ function ProductView() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="bg-gray-800 text-white p-2 rounded-full">
-                      <span className="text-xs">PEAK</span>
+                      <span className="text-xs">
+                        {productDetails.shopId?.name
+                          ?.substring(0, 2)
+                          .toUpperCase() || "SH"}
+                      </span>
                     </div>
                     <div>
-                      <p className="font-bold">Peak</p>
+                      <p className="font-bold">
+                        {productDetails.shopId?.name || "Shop"}
+                      </p>
                       <p className="text-sm text-gray-500">Canada</p>
                     </div>
                   </div>
-                  <Link href="/store/4545">
+                  <Link
+                    href={`/store/${
+                      productDetails.shopId?._id ||
+                      productDetails.shopId?.id ||
+                      "shop"
+                    }`}
+                  >
                     <Button size="sm" className="bg-red-700 hover:bg-red-800">
                       Visit Store
                     </Button>
@@ -371,12 +410,12 @@ function ProductView() {
                 <span>Send Message to Seller</span>
               </Button>
 
-              {/* Show notification dot if there are unread messages
+              {/* Show notification dot if there are unread messages */}
               {unreadCount > 0 && (
                 <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center animate-pulse">
                   {unreadCount > 9 ? "9+" : unreadCount}
                 </div>
-              )} */}
+              )}
             </div>
           </div>
         </div>
