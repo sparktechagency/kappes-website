@@ -12,6 +12,7 @@ import userSlice from "./features/userSlice/userSlice";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import categorySlice from "./features/categorySlice/categorySlice";
+import serviceSlice from "./features/servieSlice/serviceSlice";
 
 const persistConfig = {
   key: "auth",
@@ -37,6 +38,7 @@ export const store = configureStore({
     products: productsSlice,
     chat: chatSlice,
     category: categorySlice,
+    service: serviceSlice,
     [api.reducerPath]: api.reducer,
     auth: persistedAuthReducer,
     user: persistedUserReducer,

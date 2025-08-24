@@ -3,109 +3,7 @@ import { useState } from "react";
 import { MapPin, Phone, ArrowUpDown } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-
-const searchResults = [
-  {
-    id: 1,
-    name: "Fresh Painting",
-    brandLogo: "/assets/tradesAndServies/freshPaint.png",
-    rating: 5,
-    reviews: 320,
-    service: "Home Service",
-    location: "Edmonton, Alberta, Canada",
-    phone: "1-(780) 555-1234",
-  },
-  {
-    id: 2,
-    name: "Fresh Painting",
-    brandLogo: "/assets/tradesAndServies/freshPaint.png",
-    rating: 5,
-    reviews: 320,
-    service: "Home Service",
-    location: "Edmonton, Alberta, Canada",
-    phone: "1-(780) 555-1234",
-  },
-  {
-    id: 3,
-    name: "Fresh Painting",
-    brandLogo: "/assets/tradesAndServies/freshPaint.png",
-    rating: 5,
-    reviews: 320,
-    service: "Home Service",
-    location: "Edmonton, Alberta, Canada",
-    phone: "1-(780) 555-1234",
-  },
-  {
-    id: 4,
-    name: "Fresh Painting",
-    brandLogo: "/assets/tradesAndServies/freshPaint.png",
-    rating: 2,
-    reviews: 320,
-    service: "Home Service",
-    location: "Edmonton, Alberta, Canada",
-    phone: "1-(780) 555-1234",
-  },
-  {
-    id: 5,
-    name: "Fresh Painting ",
-    brandLogo: "/assets/tradesAndServies/freshPaint.png",
-    rating: 0,
-    reviews: 320,
-    service: "Home Service",
-    location: "Edmonton, Alberta, Canada",
-    phone: "1-(780) 555-1234",
-  },
-  {
-    id: 6,
-    name: "Fresh Painting",
-    brandLogo: "/assets/tradesAndServies/freshPaint.png",
-    rating: 4,
-    reviews: 320,
-    service: "Home Service",
-    location: "Edmonton, Alberta, Canada",
-    phone: "1-(780) 555-1234",
-  },
-  {
-    id: 7,
-    name: "Fresh Painting",
-    brandLogo: "/assets/tradesAndServies/freshPaint.png",
-    rating: 2,
-    reviews: 320,
-    service: "Home Service",
-    location: "Edmonton, Alberta, Canada",
-    phone: "1-(780) 555-1234",
-  },
-  {
-    id: 8,
-    name: "Fresh Painting",
-    brandLogo: "/assets/tradesAndServies/freshPaint.png",
-    rating: 5,
-    reviews: 320,
-    service: "Home Service",
-    location: "Edmonton, Alberta, Canada",
-    phone: "1-(780) 555-1234",
-  },
-  {
-    id: 9,
-    name: "Fresh Painting",
-    brandLogo: "/assets/tradesAndServies/freshPaint.png",
-    rating: 5,
-    reviews: 320,
-    service: "Home Service",
-    location: "Edmonton, Alberta, Canada",
-    phone: "1-(780) 555-1234",
-  },
-  {
-    id: 10,
-    name: "Fresh Painting",
-    brandLogo: "/assets/tradesAndServies/freshPaint.png",
-    rating: 1,
-    reviews: 320,
-    service: "Home Service",
-    location: "Edmonton, Alberta, Canada",
-    phone: "1-(780) 555-1234",
-  },
-];
+import useService from "@/hooks/useService";
 
 // Star rating component
 function StarRating({ rating }) {
@@ -115,7 +13,7 @@ function StarRating({ rating }) {
         <svg
           key={i}
           className={`w-4 h-4 ${
-            i < rating ? "text-yellow-400" : "text-gray-300"
+            i < Math.round(rating) ? "text-yellow-400" : "text-gray-300"
           }`}
           aria-hidden="true"
           xmlns="http://www.w3.org/2000/svg"
@@ -129,58 +27,16 @@ function StarRating({ rating }) {
   );
 }
 
-// Business card component
-function BusinessCard({ business }) {
-  return (
-    <div className="border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow bg-white">
-      <div className="flex gap-3">
-        <div className="h-12 w-12 bg-blue-100 rounded-md flex items-center justify-center overflow-hidden">
-          <Image
-            src={business.brandLogo}
-            alt={business.name}
-            width={48}
-            height={48}
-            className="object-contain"
-          />
-        </div>
-        <div className="flex-1">
-          <h3 className="font-semibold text-lg">{business.name}</h3>
-          <div className="flex items-center gap-1 mt-1">
-            <StarRating rating={business.rating} />
-            <span className="text-sm text-gray-500 ml-2">
-              ({business.reviews} reviews)
-            </span>
-          </div>
-          <div className="bg-gray-300 inline-block px-2 py-1 rounded-md mt-1">
-            <div className="text-sm text-gray-500">{business.service}</div>
-          </div>
-          <div className="flex flex-col gap-1 mt-2">
-            <div className="flex items-center gap-1 text-sm">
-              <MapPin className="h-4 w-4 text-gray-500" />
-              <span>{business.location}</span>
-            </div>
-            <div className="flex items-center gap-1 text-sm">
-              <Phone className="h-4 w-4 text-gray-500" />
-              <span>{business.phone}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default function ServiceList() {
-  const [searchTerm, setSearchTerm] = useState("Dentist in Toronto");
-  const [sortOrder, setSortOrder] = useState("desc"); // "desc" for highest first, "asc" for lowest first
+  const [searchTerm, setSearchTerm] = useState("Services Near You");
+  const [sortOrder, setSortOrder] = useState("desc");
+  const { services, isLoading, error } = useService();
 
   // Sort the results based on rating
-  const sortedResults = [...searchResults].sort((a, b) => {
-    if (sortOrder === "desc") {
-      return b.rating - a.rating;
-    } else {
-      return a.rating - b.rating;
-    }
+  const sortedResults = [...services].sort((a, b) => {
+    const aRating = a.avg_rating || 0;
+    const bRating = b.avg_rating || 0;
+    return sortOrder === "desc" ? bRating - aRating : aRating - bRating;
   });
 
   // Toggle sort order
@@ -188,13 +44,20 @@ export default function ServiceList() {
     setSortOrder((prev) => (prev === "desc" ? "asc" : "desc"));
   };
 
-  return (
-    <div className="w-full mx-auto px-4 lg:px-32">
-      {/* Search header */}
+  // Loading and error states
+  if (isLoading)
+    return <div className="text-center py-10">Loading services...</div>;
+  if (error)
+    return <div className="text-center py-10 text-red-500">Error: {error}</div>;
+  if (services.length === 0)
+    return <div className="text-center py-10">No services found</div>;
 
-      <div className="flex justify-between mt-4 mb-6">
+  return (
+    <div className="w-full min-h-screen mx-auto px-4 lg:px-32">
+      {/* Search header */}
+      <div className="container mx-auto flex flex-col gap-3 md:flex-row justify-between mt-4 mb-6">
         <div className="flex-1 text-2xl font-bold">{searchTerm}</div>
-        <div className="flex gap-3">
+        <div className="flex flex-col md:flex-row gap-3">
           <button
             onClick={handleSortToggle}
             className="inline-flex items-center px-3 py-2 text-sm border rounded-md hover:bg-gray-50 cursor-pointer"
@@ -207,15 +70,62 @@ export default function ServiceList() {
       </div>
 
       {/* Results grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
+      <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
         {sortedResults.map((business) => (
           <Link
-            href={`/trades-&-services/services/${business.id}`}
-            key={business.id}
+            href={`/trades-&-services/services/${business._id}`}
+            key={business._id}
           >
             <BusinessCard business={business} />
           </Link>
         ))}
+      </div>
+    </div>
+  );
+}
+
+// Business card component
+function BusinessCard({ business }) {
+  return (
+    <div className=" border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow bg-white">
+      <div className="flex gap-3">
+        <div className="h-12 w-12 bg-blue-100 rounded-md flex items-center justify-center overflow-hidden">
+          <Image
+            src={business.logo || "/assets/tradesAndServies/freshPaint.png"}
+            alt={business.name}
+            width={48}
+            height={48}
+            className="object-contain"
+          />
+        </div>
+        <div className="flex-1">
+          <h3 className="font-semibold text-lg">{business.name}</h3>
+          <div className="flex items-center gap-1 mt-1">
+            <StarRating rating={business.avg_rating || 0} />
+            <span className="text-sm text-gray-500 ml-2">
+              ({business.totalReviews || 0} reviews)
+            </span>
+          </div>
+          <div className="bg-gray-300 inline-block px-2 py-1 rounded-md mt-1">
+            <div className="text-sm text-gray-500">
+              {business.service || "Unspecified Service"}
+            </div>
+          </div>
+          <div className="flex flex-col gap-1 mt-2">
+            <div className="flex items-center gap-1 text-sm">
+              <MapPin className="h-4 w-4 text-gray-500" />
+              <span>
+                {business.address
+                  ? `${business.address.city}, ${business.address.province}, ${business.address.country}`
+                  : "Location not specified"}
+              </span>
+            </div>
+            <div className="flex items-center gap-1 text-sm">
+              <Phone className="h-4 w-4 text-gray-500" />
+              <span>{business.phone || "Phone not available"}</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
