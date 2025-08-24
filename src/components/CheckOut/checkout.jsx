@@ -36,7 +36,7 @@ function Checkout() {
   }
 
   return (
-    <div className="w-full h-screen md:w-[90%] px-4 py-10 md:px-10 md:py-15 mx-auto">
+    <div className="w-full md:w-[90%] px-4 py-10 md:px-10 md:py-15 mx-auto min-h-screen">
       <Table>
         <TableCaption>
           {cartItems.length > 0
