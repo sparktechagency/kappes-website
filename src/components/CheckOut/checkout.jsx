@@ -10,32 +10,33 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import ControlButton from "@/common/components/controlButton";
+import CartControlButton from "./CartControlButton";
 import Image from "next/image";
-import { Button } from "../ui/button";
 import Link from "next/link";
-import { useSelector } from "react-redux";
+import { useCart } from "@/hooks/useCart";
 
 function Checkout() {
-  // Get cart items from Redux store
-  const cartItems = useSelector((state) => state.cart);
+  // Use our custom hook to get cart data
+  const { cartItems, isLoading, totalAmount, quantity, formatCurrency } =
+    useCart();
 
-  // Calculate total amount
-  const totalAmount = cartItems.reduce((total, item) => {
-    const itemPrice = parseFloat(item.price) || 0;
-    return total + itemPrice * item.quantity;
-  }, 0);
+  // Debug the cart items in the component
+  console.log("Checkout Component - Cart Items:", cartItems);
+  console.log("Checkout Component - Is Loading:", isLoading);
 
-  // Format currency
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(amount);
-  };
+  // Return early with a loading indicator if still loading
+  if (isLoading) {
+    return (
+      <div className="w-full md:w-[90%] px-4 py-10 md:px-10 md:py-15 mx-auto">
+        <div className="flex items-center justify-center p-10">
+          <p className="text-lg">Loading your cart...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="w-full md:w-[90%] px-4 py-10 md:px-10 md:py-15 mx-auto">
+    <div className="w-full h-screen md:w-[90%] px-4 py-10 md:px-10 md:py-15 mx-auto">
       <Table>
         <TableCaption>
           {cartItems.length > 0
@@ -55,7 +56,7 @@ function Checkout() {
           {cartItems.length > 0 ? (
             cartItems.map((item) => {
               const itemPrice = parseFloat(item.price) || 0;
-              const subTotal = itemPrice * item.quantity;
+              const subTotal = itemPrice * (item.quantity || 1);
 
               return (
                 <TableRow key={item.id}>
@@ -85,7 +86,10 @@ function Checkout() {
                   </TableCell>
                   <TableCell>{formatCurrency(itemPrice)}</TableCell>
                   <TableCell>
-                    <ControlButton itemId={item.id} />
+                    <CartControlButton
+                      itemId={item.id}
+                      currentQuantity={item.quantity || 1}
+                    />
                   </TableCell>
                   <TableCell className="text-right">
                     {formatCurrency(subTotal)}
