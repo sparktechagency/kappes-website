@@ -1,6 +1,5 @@
 "use client";
 import useVirtualizedList from "@/hooks/VirtualizedList";
-import { useState, useEffect } from "react";
 import Image from "next/image";
 import { FiFilter } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
@@ -15,72 +14,57 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
-
-// Redux
-import { useDispatch, useSelector } from "react-redux";
-import { addFav, removeFav } from "../../features/productSlice";
-import { useGetShopProductsQuery } from "@/redux/productApi/productApi";
 import { getImageUrl } from "@/redux/baseUrl";
 
 export default function ShopProductList({
-  habdleFilterVisbile,
-  filterVisible,
+  products = [], // Default to empty array
+  isLoading = false,
+  error = null,
+  filterVisible = false,
+  handleFilterVisible = () => {},
+  sortOption = "featured",
+  setSortOption = () => {},
+  toggleFavorite = () => {},
+  favoritesMap = {},
+  getProductPrice = () => 0,
+  hasDiscountedPrice = () => false,
 }) {
-  const [products, setProducts] = useState([]);
-  const [sortOption, setSortOption] = useState("featured");
-  const { data, isLoading, error } = useGetShopProductsQuery();
-
-  const dispatch = useDispatch();
-  const favorites = useSelector((state) => state.product);
-
-  const favoritesMap = favorites.reduce((acc, curr) => {
-    acc[curr.id] = true;
-    return acc;
-  }, {});
-
-  useEffect(() => {
-    // Set products from API response when data is available
-    if (data?.data?.result) {
-      setProducts(data.data.result);
-    }
-  }, [data]);
-
-  // Get lowest price from product variants or base price
-  const getProductPrice = (product) => {
-    if (!product) return 0;
-
-    // If product has variants, find the lowest price
-    if (
-      product.product_variant_Details &&
-      product.product_variant_Details.length > 0
-    ) {
-      const variantPrices = product.product_variant_Details.map(
-        (variant) => variant.variantPrice
-      );
-      return Math.min(...variantPrices, product.basePrice);
-    }
-
-    // Otherwise return base price
-    return product.basePrice;
-  };
-
-  // Check if product has a discounted price
-  const hasDiscountedPrice = (product) => {
-    if (!product || !product.product_variant_Details) return false;
-
-    // Check if any variant price is less than base price
-    return product.product_variant_Details.some(
-      (variant) => variant.variantPrice < product.basePrice
-    );
-  };
-
   const ITEM_HEIGHT = 300;
   const COLUMN_COUNT = 4;
   const OVERSCAN = 5;
 
   const { containerRef, visibleItems, totalHeight, offsetY } =
     useVirtualizedList(products, ITEM_HEIGHT, OVERSCAN, COLUMN_COUNT);
+
+  // Skeleton loading state
+  const ProductCardSkeleton = () => (
+    <Card className="border-2 p-0 w-full max-w-xs sm:max-w-sm md:max-w-md border-transparent rounded-lg overflow-hidden">
+      <div className="h-48 bg-gray-200 animate-pulse"></div>
+      <CardContent className="space-y-3 mt-4">
+        <Skeleton className="h-4 w-3/4" />
+        <div className="flex items-center space-x-2">
+          <Skeleton className="h-4 w-1/2" />
+          <Skeleton className="h-4 w-1/4" />
+        </div>
+        <Skeleton className="h-6 w-1/3" />
+      </CardContent>
+    </Card>
+  );
+
+  // Render loading state
+  if (isLoading) {
+    return (
+      <div className="w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 p-4">
+          {[...Array(8)].map((_, index) => (
+            <ProductCardSkeleton key={index} />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   const StarRating = ({ rating }) => (
     <div className="flex text-yellow-400">
@@ -99,25 +83,6 @@ export default function ShopProductList({
     </div>
   );
 
-  const toggleFavorite = (product, e) => {
-    e.stopPropagation();
-    e.preventDefault();
-
-    const productId = product._id || product.id;
-
-    if (favoritesMap[productId]) {
-      dispatch(removeFav(productId));
-    } else {
-      dispatch(
-        addFav({
-          ...product,
-          id: productId,
-          favourite: true,
-        })
-      );
-    }
-  };
-
   return (
     <div className="flex flex-col w-full">
       <div className="sticky top-0 z-10 bg-white flex items-center justify-between p-4 border-b flex-wrap gap-2">
@@ -125,7 +90,7 @@ export default function ShopProductList({
           <Button
             variant="outline"
             size="icon"
-            onClick={habdleFilterVisbile}
+            onClick={handleFilterVisible}
             className={`relative ${filterVisible ? "ring-2 ring-red-400" : ""}`}
           >
             <FiFilter
@@ -136,7 +101,7 @@ export default function ShopProductList({
             )}
           </Button>
           <span className="text-sm text-gray-500 hidden sm:inline">
-            Filter Products ({products.length} items)
+            Filter Products ({products?.length || 0} items)
           </span>
         </div>
 
@@ -157,21 +122,40 @@ export default function ShopProductList({
         </Select>
       </div>
 
-      {isLoading ? (
-        <div className="flex justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
-        </div>
-      ) : error ? (
-        <div className="flex justify-center items-center h-64">
-          <div className="text-center">
-            <p className="text-red-600 mb-4">Failed to load products</p>
-            <p className="text-gray-500 text-sm">{error.toString()}</p>
+      {error ? (
+        <div className="lg:px-32 min-h-screen flex items-center justify-center">
+          <div className="text-center p-6 bg-red-50 rounded-lg border border-red-200">
+            <h2 className="text-2xl font-bold text-red-600 mb-4">
+              {error.statusCode === 404
+                ? "No Products Found"
+                : "Error Occurred"}
+            </h2>
+            <p className="text-red-500 mb-4">{error.message}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+            >
+              Retry
+            </button>
           </div>
         </div>
-      ) : products.length === 0 ? (
-        <div className="flex justify-center items-center h-64">
-          <div className="text-center">
-            <p className="text-gray-500">No products available</p>
+      ) : !products || products.length === 0 ? (
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 p-4">
+          <div className="col-span-full flex flex-col items-center justify-center py-16 text-center bg-gray-50 rounded-lg">
+            <div className="text-center">
+              <h2 className="text-xl font-semibold text-gray-600 mb-2">
+                No Products Found
+              </h2>
+              <p className="text-gray-500 mb-4">
+                No products found for this shop
+              </p>
+              <button
+                onClick={() => window.location.reload()}
+                className="bg-kappes text-white px-4 py-2 rounded hover:bg-red-700 transition"
+              >
+                Retry
+              </button>
+            </div>
           </div>
         </div>
       ) : (

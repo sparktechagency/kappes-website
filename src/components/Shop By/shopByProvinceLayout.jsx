@@ -14,7 +14,7 @@ function ShopByProvinceLayout() {
 
   return (
     <div className="px-4 lg:px-32">
-      <div className="w-fit mx-auto mt-4">
+      <div className="w-2/3  mx-auto mt-4">
         <Tabs value={selectedTab} onValueChange={setSelectedTab}>
           <TabsList className="grid grid-cols-3 w-full bg-red-700">
             <TabsTrigger

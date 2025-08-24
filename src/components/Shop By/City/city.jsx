@@ -53,7 +53,7 @@ function CityList() {
         </Select>
 
         {selectedCity && (
-          <div className="mt-4 flex justify-center">
+          <div className="mt-4 mx-auto">
             <Image
               src={
                 cityList.find((p) => p.CityName === selectedCity)?.image || ""
@@ -68,10 +68,10 @@ function CityList() {
       </div>
 
       {/* Desktop View - Grid Layout */}
-      <div className="hidden md:block ">
+      <div className="hidden md:flex md:flex-col items-center justify-center gap-x-6  ">
         <h2 className="text-2xl font-bold mb-6 text-center">Canadian Citys</h2>
 
-        <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 ">
+        <ul className="flex flex-wrap gap-4 ">
           {cityList.map((City) => (
             <li
               key={City.id}
