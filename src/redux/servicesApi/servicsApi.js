@@ -19,8 +19,21 @@ const servicesApi = api.injectEndpoints({
         };
       },
     }),
+    sendMessage: builder.mutation({
+      query: ({ data, businessId }) => {
+        return {
+          url: `/business/message/${businessId}`, // Note: API endpoint uses businessId
+          method: "POST",
+          body: data,
+        };
+      },
+    }),
   }),
   overrideExisting: true,
 });
 
-export const { useGetBusinessListQuery, useGetBusinessByIdQuery } = servicesApi;
+export const {
+  useGetBusinessListQuery,
+  useGetBusinessByIdQuery,
+  useSendMessageMutation,
+} = servicesApi;

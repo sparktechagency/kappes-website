@@ -3,8 +3,9 @@ import { useState } from "react";
 import { MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { getImageUrl } from "@/redux/baseUrl";
 
-const FrontCover = ({ coverPhoto, profilePhoto, name, review, aboutUs }) => {
+const FrontCover = ({ coverPhoto, logo, name, totalReviews, description }) => {
   const [following, setFollowing] = useState(false);
 
   return (
@@ -12,7 +13,7 @@ const FrontCover = ({ coverPhoto, profilePhoto, name, review, aboutUs }) => {
       {/* Banner Image */}
       <div className="relative h-40 md:h-52 lg:h-64 w-full bg-gray-200 overflow-hidden">
         <Image
-          src="/assets/storeFront/storeCover3.png"
+          src={`${getImageUrl}${coverPhoto}`}
           width={5000}
           height={5000}
           alt="Mountain landscape with fog"
@@ -26,7 +27,7 @@ const FrontCover = ({ coverPhoto, profilePhoto, name, review, aboutUs }) => {
           {/* <Avatar className="h-24 w-24 md:h-32 md:w-32 border-4 border-white bg-white"> */}
           <div className="flex items-center justify-center h-full w-full  text-white">
             <Image
-              src="/assets/storeFront/storeLogo1.png"
+              src={`${getImageUrl}${logo}`}
               width={1000}
               height={1000}
               alt="storeLogo"
@@ -40,7 +41,7 @@ const FrontCover = ({ coverPhoto, profilePhoto, name, review, aboutUs }) => {
         <div className="flex-1 space-y-4 md:ml-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <h2 className="text-2xl font-bold">Peak</h2>
+              <h2 className="text-2xl font-bold">{name}</h2>
               <div className="flex items-center mt-1">
                 <div className="flex">
                   {[1, 2, 3, 4, 5].map((star) => (
@@ -50,7 +51,7 @@ const FrontCover = ({ coverPhoto, profilePhoto, name, review, aboutUs }) => {
                   ))}
                 </div>
                 <span className="text-sm text-gray-500 ml-1">
-                  (320 reviews)
+                  ({totalReviews} reviews)
                 </span>
               </div>
               <p className="text-sm text-gray-500 mt-1">1k Followers</p>
@@ -80,14 +81,7 @@ const FrontCover = ({ coverPhoto, profilePhoto, name, review, aboutUs }) => {
           {/* About Section */}
           <div>
             <h3 className="text-lg font-medium mb-2">About us</h3>
-            <p className="text-gray-700 text-sm md:text-base">
-              Peak Apparel offers stylish, high-quality t-shirts that blend
-              comfort and urban fashion. Perfect for everyday wear, our designs
-              help you express your unique personality and stay ahead of the
-              trend. Each shirt is made with premium fabrics that offer a
-              perfect balance of softness and durability, ensuring you look good
-              and feel great all day long.
-            </p>
+            <p className="text-gray-700 text-sm md:text-base">{description}</p>
           </div>
         </div>
       </div>

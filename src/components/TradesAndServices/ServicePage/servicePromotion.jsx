@@ -1,7 +1,13 @@
-import CarouselPlay from "@/common/components/carousel";
+"use client";
 import React from "react";
+import { useSelector } from "react-redux";
+import CarouselPlay from "@/common/components/carousel";
 
 function ServicePromotion() {
+  // Get services from Redux state
+  const { selectedService } = useSelector((state) => state.service);
+
+  // Default service promotion images
   const servicePromotionImage = [
     {
       id: 1,
@@ -17,34 +23,31 @@ function ServicePromotion() {
     },
   ];
 
-  const services = [
-    {
-      id: 1,
-      service: "Interior painting",
-    },
-    {
-      id: 2,
-      service: "Exterior painting",
-    },
-    {
-      id: 3,
-      service: "Commercial painting",
-    },
-    {
-      id: 4,
-      service: "Power washing",
-    },
-    {
-      id: 5,
-      service: "Custom color consultation",
-    },
-    {
-      id: 6,
-      service: "Cabinet and furniture painting",
-    },
-  ];
+  // If no service is selected, use default images
+  if (!selectedService) {
+    return (
+      <div className="w-full md:w-[70%] lg:w-[80%] md:p-0">
+        <CarouselPlay slideItem={servicePromotionImage} />
+        <div className="ml-5">
+          <h2 className="text-3xl font-comfortaa font-bold -ml-5 my-5 text-gray-500">
+            No Service Details Available
+          </h2>
+        </div>
+      </div>
+    );
+  }
+
+  // Determine services list (you might want to customize this)
+  const services = selectedService.service
+    ? [{ id: 1, service: selectedService.service }]
+    : [
+        { id: 1, service: "Home Painting" },
+        { id: 2, service: "Commercial Painting" },
+        { id: 3, service: "Residential Painting" },
+      ];
+
   return (
-    <div className="w-full md:w-[70%] lg:w-[80%]  md:p-0">
+    <div className="w-full md:w-[70%] lg:w-[80%] md:p-0">
       <CarouselPlay slideItem={servicePromotionImage} />
 
       <div className="ml-5">
@@ -55,7 +58,6 @@ function ServicePromotion() {
         <ul>
           {services.map((item) => (
             <li key={item.id} className="list-disc">
-              {" "}
               {item.service}
             </li>
           ))}
