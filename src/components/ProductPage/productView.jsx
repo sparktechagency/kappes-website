@@ -365,8 +365,9 @@ function ProductView() {
                 </div>
               )}
             </div>
-
-            <Card className="mb-6">
+            {/* Product Specifications */}
+            <ProductSpecs productDetails={productDetails} />
+            <Card className="mb-6 mt-6">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -416,9 +417,6 @@ function ProductView() {
                 </div>
               )}
             </div>
-
-            {/* Product Specifications */}
-            <ProductSpecs productDetails={productDetails} />
           </div>
         </div>
       </div>
