@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { useParams } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -7,12 +7,17 @@ import {
   clearError,
 } from "@/features/productSlice/productsSlice";
 import { useGetAllProductsQuery } from "@/redux/productApi/productApi";
+import {
+  findBestMatchingVariant,
+  getAvailableVariantSpecs,
+} from "@/utils/productUtils";
 
 const useProductDetails = () => {
   const dispatch = useDispatch();
   const params = useParams();
   const [productId, setProductId] = useState(null);
   const [productDetails, setProductDetails] = useState(null);
+  const [selectedVariant, setSelectedVariant] = useState(null);
 
   // Extract product ID from URL params
   useEffect(() => {
@@ -49,25 +54,45 @@ const useProductDetails = () => {
       console.log("Product data received:", productData);
 
       // Extract product details from response
-      if (productData.data) {
+      const product =
+        productData.data?.result?.[0] || productData.data || productData;
+
+      if (product) {
+        setProductDetails(product);
+
+        // Set initial selected variant if variants exist
         if (
-          Array.isArray(productData.data.result) &&
-          productData.data.result.length > 0
+          product.product_variant_Details &&
+          product.product_variant_Details.length > 0
         ) {
-          // If result is an array, take the first item
-          setProductDetails(productData.data.result[0]);
-        } else if (typeof productData.data === "object") {
-          // Direct product object
-          setProductDetails(productData.data);
+          setSelectedVariant(product.product_variant_Details[0]);
         }
-      } else if (typeof productData === "object") {
-        setProductDetails(productData);
       }
     }
   }, [productData]);
 
+  // Memoized variant by specifications
+  const getVariantBySpecs = useCallback(
+    (specs) => {
+      if (!productDetails?.product_variant_Details) return null;
+
+      return findBestMatchingVariant(productDetails, specs);
+    },
+    [productDetails]
+  );
+
+  // Memoized available variants
+  const getAvailableVariants = useMemo(() => {
+    if (!productDetails?.product_variant_Details) return {};
+    return getAvailableVariantSpecs(productDetails);
+  }, [productDetails]);
+
   return {
     productDetails,
+    selectedVariant,
+    setSelectedVariant,
+    getVariantBySpecs,
+    getAvailableVariants,
     isLoading: apiLoading,
     error: apiError,
     refetch,

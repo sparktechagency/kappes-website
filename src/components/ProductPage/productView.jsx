@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Heart, Minus, Plus, MessageCircle } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -12,8 +12,10 @@ import { openChat } from "@/features/chatSlice";
 import provideIcon from "@/common/components/provideIcon";
 import Link from "next/link";
 import useProductDetails from "@/hooks/useProductDetails";
+import useProductVariantSelection from "@/hooks/useProductVariantSelection";
 import { getImageUrl } from "@/redux/baseUrl";
 import ProductSpecs from "./ProductSpecs";
+import { isProductInStock } from "@/utils/productUtils";
 
 function ProductView() {
   const dispatch = useDispatch();
@@ -21,80 +23,72 @@ function ProductView() {
   // Get chat state from Redux
   const { unreadCount } = useSelector((state) => state.chat);
 
-  // Use our custom hook to get product details
+  // Use our custom hooks to get product details
   const { productDetails, isLoading, error } = useProductDetails();
 
-  const [quantity, setQuantity] = useState(1);
-  const [selectedSize, setSelectedSize] = useState("");
-  const [selectedColor, setSelectedColor] = useState("");
-  const [mainImage, setMainImage] = useState(0);
+  // Use variant selection hook
+  const {
+    // State setters
+    setSelectedColor,
+    setSelectedStorage,
+    setSelectedRam,
+    setSelectedSize,
+    setMainImage,
+    setQuantity,
 
-  // Set initial selections when product data is loaded
+    // State values
+    selectedColor,
+    selectedStorage,
+    selectedRam,
+    selectedSize,
+    selectedVariant,
+    mainImage,
+    quantity,
+
+    // Derived values
+    availableVariants,
+    availableSizesForColor,
+    productImages,
+    pricing,
+    stockStatus,
+
+    // Methods
+    initializeVariantSelection,
+    updateSelectedVariant,
+    updateSizeForColor,
+  } = useProductVariantSelection(productDetails);
+
+  // Initialize variant selection when product details load
   useEffect(() => {
     if (productDetails) {
-      console.log("Product details loaded:", productDetails);
-
-      // Check for size variations
-      if (productDetails.slugDetails?.size?.length > 0) {
-        setSelectedSize(productDetails.slugDetails.size[0].toUpperCase());
-      }
-
-      // Check for color variations
-      if (productDetails.slugDetails?.color?.length > 0) {
-        setSelectedColor(productDetails.slugDetails.color[0]);
-      }
+      initializeVariantSelection();
     }
-  }, [productDetails]);
+  }, [productDetails, initializeVariantSelection]);
 
-  const getDiscountedPrice = (item) => {
-    if (!item || !item.discountPrice[0]) return item?.originalPrice || 0;
-    const [hasDiscount, discountType, discountValue] = item.discountPrice;
-    if (!hasDiscount) return item.originalPrice;
+  // Update selected variant when specifications change
+  useEffect(() => {
+    updateSelectedVariant();
+  }, [
+    selectedColor,
+    selectedStorage,
+    selectedRam,
+    selectedSize,
+    updateSelectedVariant,
+  ]);
 
-    if (discountType === "percent") {
-      return item.originalPrice * (1 - discountValue / 100);
-    } else if (discountType === "price") {
-      return item.originalPrice - discountValue;
-    }
-    return item.originalPrice;
-  };
-
-  const getColorName = (hexColor) => {
-    const colorMap = {
-      "#f3b000": "yellow",
-      "#99a1ae": "gray",
-      "#008338": "green",
-      "#ea000b": "red",
-      "#9f0713": "maroon",
-    };
-    return colorMap[hexColor] || "gray";
-  };
-
-  const getColorClass = (hexColor, isSelected = false) => {
-    const colorName = getColorName(hexColor);
-    const colorClasses = {
-      yellow: "bg-yellow-500",
-      gray: "bg-gray-400",
-      green: "bg-green-700",
-      red: "bg-red-600",
-      maroon: "bg-red-800",
-    };
-
-    let className = colorClasses[colorName] || "bg-gray-400";
-    if (isSelected && colorName === "yellow") {
-      className += " border-2 border-black";
-    }
-    return className;
-  };
+  // Update size when color changes
+  useEffect(() => {
+    updateSizeForColor();
+  }, [selectedColor, updateSizeForColor]);
 
   const decreaseQuantity = () => {
     if (quantity > 1) {
-      setQuantity(quantity - 1);
+      setQuantity((prevQuantity) => prevQuantity - 1);
     }
   };
 
   const increaseQuantity = () => {
-    setQuantity(quantity + 1);
+    setQuantity((prevQuantity) => prevQuantity + 1);
   };
 
   const handleAddToCart = () => {
@@ -104,11 +98,19 @@ function ProductView() {
       id: productDetails._id || productDetails.id,
       productName: productDetails.name,
       quantity,
-      price: productDetails.basePrice,
-      productImage:
-        productDetails.images?.[0] || "/assets/productPage/bag1.png",
-      size: selectedSize,
-      color: selectedColor,
+      price: selectedVariant
+        ? selectedVariant.variantPrice
+        : productDetails.basePrice,
+      productImage: productImages[0] || "/assets/productPage/bag1.png",
+      variantId: selectedVariant?.variantId?._id,
+      variantSpecs: selectedVariant
+        ? {
+            color: selectedVariant.variantId.color?.name,
+            storage: selectedVariant.variantId.storage,
+            ram: selectedVariant.variantId.ram,
+            size: selectedVariant.variantId.size,
+          }
+        : {},
     };
 
     dispatch(addCart(cartItem));
@@ -145,28 +147,6 @@ function ProductView() {
       </div>
     );
   }
-
-  // Get available product variations from slugDetails
-  const productImages = productDetails.images || [
-    "/assets/productPage/bag1.png",
-  ];
-
-  // Extract size variations if available
-  const availableSizes = productDetails.slugDetails?.size
-    ? productDetails.slugDetails.size
-        .filter((size) => size !== "")
-        .map((size) => size.toUpperCase())
-    : [];
-
-  // Extract color variations if available
-  const availableColors = productDetails.slugDetails?.color || [];
-
-  // Seller info for chat
-  const sellerInfo = {
-    name: "Peak",
-    location: "Canada",
-    id: "4545",
-  };
 
   return (
     <>
@@ -242,24 +222,102 @@ function ProductView() {
 
             <div className="flex items-center gap-2 mb-6">
               <span className="text-2xl font-bold text-red-600">
-                ${productDetails.basePrice?.toFixed(2)}
+                ${pricing.currentPrice.toFixed(2)}
               </span>
-              {productDetails.product_variant_Details?.[0]?.variantPrice >
-                productDetails.basePrice && (
+              {pricing.hasDiscount && (
                 <span className="text-gray-500 line-through">
-                  $
-                  {productDetails.product_variant_Details[0].variantPrice.toFixed(
-                    2
-                  )}
+                  ${pricing.originalPrice.toFixed(2)}
                 </span>
+              )}
+              {pricing.hasDiscount && (
+                <Badge variant="destructive" className="text-xs">
+                  -{pricing.discountPercentage}%
+                </Badge>
               )}
             </div>
 
-            {availableSizes.length > 0 && (
+            {/* Stock Status */}
+            <div className="mb-6">
+              <p className="text-sm text-gray-600">{stockStatus}</p>
+            </div>
+
+            {/* Color Selection */}
+            {availableVariants.color && availableVariants.color.length > 0 && (
+              <div className="mb-6">
+                <p className="font-semibold mb-2">Color:</p>
+                <div className="flex gap-2">
+                  {availableVariants.color.map((color) => (
+                    <button
+                      key={color.code}
+                      className={`w-8 h-8 rounded-full ${
+                        selectedColor === color.code.replace("#", "")
+                          ? "ring-2 ring-offset-2 ring-black"
+                          : ""
+                      }`}
+                      onClick={() =>
+                        setSelectedColor(color.code.replace("#", ""))
+                      }
+                      style={{ backgroundColor: color.code }}
+                      title={color.name}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Storage Selection */}
+            {availableVariants.storage &&
+              availableVariants.storage.length > 0 && (
+                <div className="mb-6">
+                  <p className="font-semibold mb-2">Storage:</p>
+                  <div className="flex gap-2">
+                    {availableVariants.storage.map((storage) => (
+                      <Button
+                        key={storage}
+                        variant={
+                          selectedStorage === storage ? "default" : "outline"
+                        }
+                        className={`${
+                          selectedStorage === storage
+                            ? "bg-red-700 hover:bg-red-800"
+                            : ""
+                        }`}
+                        onClick={() => setSelectedStorage(storage)}
+                      >
+                        {storage}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+            {/* RAM Selection */}
+            {availableVariants.ram && availableVariants.ram.length > 0 && (
+              <div className="mb-6">
+                <p className="font-semibold mb-2">RAM:</p>
+                <div className="flex gap-2">
+                  {availableVariants.ram.map((ram) => (
+                    <Button
+                      key={ram}
+                      variant={selectedRam === ram ? "default" : "outline"}
+                      className={`${
+                        selectedRam === ram ? "bg-red-700 hover:bg-red-800" : ""
+                      }`}
+                      onClick={() => setSelectedRam(ram)}
+                    >
+                      {ram}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Size Selection */}
+            {selectedColor && availableVariants.size && (
               <div className="mb-6">
                 <p className="font-semibold mb-2">Size:</p>
                 <div className="flex gap-2">
-                  {availableSizes.map((size) => (
+                  {availableSizesForColor.map((size) => (
                     <Button
                       key={size}
                       variant={selectedSize === size ? "default" : "outline"}
@@ -272,27 +330,6 @@ function ProductView() {
                     >
                       {size}
                     </Button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {availableColors.length > 0 && (
-              <div className="mb-6">
-                <p className="font-semibold mb-2">Color:</p>
-                <div className="flex gap-2">
-                  {availableColors.map((color) => (
-                    <button
-                      key={color}
-                      className={`w-8 h-8 rounded-full ${
-                        selectedColor === color
-                          ? "ring-2 ring-offset-2 ring-black"
-                          : ""
-                      }`}
-                      onClick={() => setSelectedColor(color)}
-                      style={{ backgroundColor: `#${color}` }}
-                      title={`#${color}`}
-                    />
                   ))}
                 </div>
               </div>
@@ -328,10 +365,14 @@ function ProductView() {
                 variant="outline"
                 className="flex-1"
                 onClick={handleAddToCart}
+                disabled={!isProductInStock(productDetails, selectedVariant)}
               >
                 Add to Cart
               </Button>
-              <Button className="flex-1 bg-red-700 hover:bg-red-800">
+              <Button
+                className="flex-1 bg-red-700 hover:bg-red-800"
+                disabled={!isProductInStock(productDetails, selectedVariant)}
+              >
                 Buy Now
               </Button>
             </div>
@@ -365,8 +406,13 @@ function ProductView() {
                 </div>
               )}
             </div>
+
             {/* Product Specifications */}
-            <ProductSpecs productDetails={productDetails} />
+            <ProductSpecs
+              productDetails={productDetails}
+              selectedVariant={selectedVariant}
+            />
+
             <Card className="mb-6 mt-6">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">

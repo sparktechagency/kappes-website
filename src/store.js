@@ -58,5 +58,4 @@ export const store = configureStore({
       .concat(chatMiddleware)
       .concat(api.middleware), // add chat middleware
 });
-
 export const persistor = persistStore(store);
