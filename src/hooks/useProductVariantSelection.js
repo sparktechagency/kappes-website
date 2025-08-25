@@ -22,7 +22,7 @@ export const useProductVariantSelection = (productDetails) => {
     if (productDetails?.product_variant_Details?.length > 0) {
       const firstVariant = productDetails.product_variant_Details[0];
 
-      // Reset all selections
+      // Reset all selections to the first variant
       setSelectedVariant(firstVariant);
       setMainImage(0);
 
