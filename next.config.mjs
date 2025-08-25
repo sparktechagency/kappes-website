@@ -10,6 +10,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "10.10.7.79",
       },
+      {
+        protocol: "https",
+        hostname: "asif7001.binarybards.online",
+      },
     ],
   },
 };
