@@ -15,9 +15,23 @@ const useAuth = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const isLoggedIn = useSelector(selectIsLoggedIn);
-  const role = useSelector(selectRole);
+  // Get values from both Redux state and localStorage
+  const reduxIsLoggedIn = useSelector(selectIsLoggedIn);
   const accessToken = useSelector(selectAccessToken);
+  const role = useSelector(selectRole);
+
+  // Determine if user is logged in
+  const isLoggedIn = (() => {
+    // Check if we're in browser environment
+    if (typeof window === "undefined") return false;
+
+    // Check Redux state first
+    if (reduxIsLoggedIn) return true;
+
+    // Check localStorage as a fallback
+    const storedAccessToken = localStorage.getItem("accessToken");
+    return !!storedAccessToken;
+  })();
 
   const loginUser = (userData) => {
     dispatch(login(userData));

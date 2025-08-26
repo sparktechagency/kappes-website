@@ -1,11 +1,50 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { HiOutlineUser } from "react-icons/hi";
 import { LuShoppingCart, LuHeart } from "react-icons/lu";
 import { FiLock, FiLogOut } from "react-icons/fi";
+import useAuth from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
+
+const LogoutConfirmationModal = ({ isOpen, onClose, onConfirm }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white p-6 rounded-lg shadow-xl text-center">
+        <h2 className="text-xl font-bold mb-4">Confirm Logout</h2>
+        <p className="mb-6">Are you sure you want to log out?</p>
+        <div className="flex justify-center space-x-4">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={onConfirm}
+            className="px-4 py-2 bg-[#AF1500] text-white rounded hover:bg-red-700"
+          >
+            Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const Sidebar = ({ setSelectedMenu, selectedMenu }) => {
+  const { logout } = useAuth();
+  const router = useRouter();
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+
+  const handleLogout = () => {
+    logout();
+    router.push("/");
+  };
+
   const menuItem = [
     {
       id: 1,
@@ -31,12 +70,18 @@ const Sidebar = ({ setSelectedMenu, selectedMenu }) => {
       id: 5,
       icon: <FiLogOut size={24} />,
       label: "Logout",
+      onClick: () => setIsLogoutModalOpen(true),
     },
   ];
 
   return (
     <>
-      <div className="bg-white min-w-52 h-[30rem] flex-col items-center justify-center rounded-lg border shadow-sm hidden md:flex">
+      <LogoutConfirmationModal
+        isOpen={isLogoutModalOpen}
+        onClose={() => setIsLogoutModalOpen(false)}
+        onConfirm={handleLogout}
+      />
+      <div className="bg-white min-w-52 h-[30rem] flex-col items-center justify-center rounded-lg border shadow-sm hidden md:flex z-10">
         <div className="flex flex-col items-center pt-4 py-4">
           <Image
             src="/assets/userProfile/profileImage.jpg"
@@ -54,7 +99,16 @@ const Sidebar = ({ setSelectedMenu, selectedMenu }) => {
         <div className="mt-4 px-2">
           <ul className="space-y-2">
             {menuItem.map((item) => (
-              <li key={item.id} onClick={() => setSelectedMenu(item.id)}>
+              <li
+                key={item.id}
+                onClick={() => {
+                  if (item.onClick) {
+                    item.onClick();
+                  } else {
+                    setSelectedMenu(item.id);
+                  }
+                }}
+              >
                 <Link
                   href="#"
                   className={`flex items-center gap-2 p-2 rounded-md group transition-colors duration-200 ${

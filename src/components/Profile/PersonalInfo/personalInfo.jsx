@@ -112,7 +112,7 @@ function PersonalInfoCard({ user }) {
 
   return (
     <>
-      <Card className="p-0 w-full h-fit md:w-full lg:w-[40rem] lx:w-[60rem] overflow-hidden">
+      <Card className="p-0 w-full h-fit md:w-full lg:w-[40rem] lx:w-[60rem] overflow-hidden z-10">
         <div className="bg-kappes px-4 flex items-center justify-between">
           <div className="flex items-center gap-4 text-white">
             <span>{provideIcon({ name: "user_pen" })}</span>
@@ -316,7 +316,7 @@ const ShippingAddressCard = ({ user }) => {
 
   return (
     <>
-      <Card className="p-0 w-full h-fit md:w-full lg:w-[40rem] overflow-hidden">
+      <Card className="p-0 w-full h-fit md:w-full lg:w-[40rem] overflow-hidden z-10">
         <div className="bg-kappes px-4 flex items-center justify-between">
           <div className="flex items-center gap-4 text-white">
             <span>

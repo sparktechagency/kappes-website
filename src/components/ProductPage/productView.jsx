@@ -13,6 +13,7 @@ import provideIcon from "@/common/components/provideIcon";
 import Link from "next/link";
 import useProductDetails from "@/hooks/useProductDetails";
 import useProductVariantSelection from "@/hooks/useProductVariantSelection";
+import useProductSlug from "@/hooks/useProductSlug";
 import { getImageUrl } from "@/redux/baseUrl";
 import ProductSpecs from "./ProductSpecs";
 import { isProductInStock } from "@/utils/productUtils";
@@ -57,6 +58,10 @@ function ProductView() {
     updateSelectedVariant,
     updateSizeForColor,
   } = useProductVariantSelection(productDetails);
+
+  // Use product slug hook
+  const { slugDetails, isValidVariantSlug, isVariantAvailable } =
+    useProductSlug(productDetails, selectedVariant);
 
   // Initialize variant selection when product details load
   useEffect(() => {
@@ -241,6 +246,23 @@ function ProductView() {
               <p className="text-sm text-gray-600">{stockStatus}</p>
             </div>
 
+            {/* Variant Availability Warning */}
+            {(!isValidVariantSlug || !isVariantAvailable) && (
+              <div
+                className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4"
+                role="alert"
+              >
+                <p className="font-bold">Variant Unavailable</p>
+                <p>
+                  {!isValidVariantSlug &&
+                    "This product variant configuration is not valid. "}
+                  {!isVariantAvailable &&
+                    "This variant is currently out of stock. "}
+                  Please select a different variant or check back later.
+                </p>
+              </div>
+            )}
+
             {/* Color Selection */}
             {availableVariants.color && availableVariants.color.length > 0 && (
               <div className="mb-6">
@@ -416,33 +438,31 @@ function ProductView() {
             <Card className="mb-6 mt-6">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-gray-800 text-white p-2 rounded-full">
-                      <span className="text-xs">
-                        {productDetails.shopId?.name
-                          ?.substring(0, 2)
-                          .toUpperCase() || "SH"}
-                      </span>
-                    </div>
-                    <div>
-                      <p className="font-bold">
-                        {productDetails.shopId?.name || "Shop"}
-                      </p>
-                      <p className="text-sm text-gray-500">Canada</p>
-                    </div>
+                  <div className="bg-gray-800 text-white p-2 rounded-full">
+                    <span className="text-xs">
+                      {productDetails.shopId?.name
+                        ?.substring(0, 2)
+                        .toUpperCase() || "SH"}
+                    </span>
                   </div>
-                  <Link
-                    href={`/store/${
-                      productDetails.shopId?._id ||
-                      productDetails.shopId?.id ||
-                      "shop"
-                    }`}
-                  >
-                    <Button size="sm" className="bg-red-700 hover:bg-red-800">
-                      Visit Store
-                    </Button>
-                  </Link>
+                  <div>
+                    <p className="font-bold">
+                      {productDetails.shopId?.name || "Shop"}
+                    </p>
+                    <p className="text-sm text-gray-500">Canada</p>
+                  </div>
                 </div>
+                <Link
+                  href={`/store/${
+                    productDetails.shopId?._id ||
+                    productDetails.shopId?.id ||
+                    "shop"
+                  }`}
+                >
+                  <Button size="sm" className="bg-red-700 hover:bg-red-800">
+                    Visit Store
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
 

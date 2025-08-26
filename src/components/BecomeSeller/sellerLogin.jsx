@@ -31,8 +31,13 @@ export default function SellerLogin() {
         <CardTitle className="text-2xl font-bold text-center text-red-700">
           Welcome to the Canuck Mall
         </CardTitle>
-        <p className="text-center text-gray-600 text-sm ">
-          Log in to manage your products, orders, and more
+        <p className="text-center text-gray-600 text-sm font-semibold">
+          Create a seller account today to be part of Canada's largest growing
+          marketplace
+        </p>
+        <p className="text-center text-gray-600 text-xs text-left ">
+          * Already have an account login here then the store owner will be
+          redirected to login page.
         </p>
       </CardHeader>
 

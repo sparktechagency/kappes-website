@@ -8,6 +8,7 @@ import ChangePassword from "../Auth/changePassword";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import WishList from "./WishList/wishList";
+import Image from "next/image";
 
 function ProfileLayout() {
   // Using number IDs to match the existing Sidebar component
@@ -30,9 +31,9 @@ function ProfileLayout() {
   };
 
   return (
-    <div className="w-full min-h-screen flex flex-col lg:px-32 md:flex-row gap-10 p-5 pb-20">
+    <div className="w-full min-h-screen flex flex-col lg:px-32 md:flex-row gap-10 p-5 pb-20 ">
       {/* Mobile view tabs */}
-      <div className="md:hidden w-full">
+      <div className="md:hidden w-full z-10">
         <MobileTabs
           setSelectedMenu={setSelectedMenu}
           selectedMenu={selectedMenu}

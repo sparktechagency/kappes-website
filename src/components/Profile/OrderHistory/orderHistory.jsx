@@ -29,7 +29,7 @@ export default function OrderHistory({ selectedMenu }) {
   );
   if (selectedMenu !== 2) return null;
   return (
-    <div className="p-4 sm:p-6 h-fit bg-white rounded-md shadow-sm w-full overflow-auto">
+    <div className="p-4 sm:p-6 h-fit bg-white rounded-md shadow-sm w-full overflow-auto z-10">
       <h2 className="text-lg sm:text-xl font-semibold mb-4">Order History</h2>
 
       <div className="flex justify-end mb-3">

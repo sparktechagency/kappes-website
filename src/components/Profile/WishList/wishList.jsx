@@ -23,7 +23,7 @@ function WishList({ selectedMenu }) {
   }
 
   return (
-    <div className="w-full p-4">
+    <div className="w-full p-4 z-10">
       <div className="mb-4">
         <h2 className="text-2xl font-bold text-gray-800">My Wishlist</h2>
         <p className="text-gray-600">
