@@ -1,5 +1,6 @@
+"use client";
 import Checkout from "@/components/CheckOut/checkout";
-import { withAuth } from "@/components/Providers/AuthGuard";
+import { withAuth } from "@/Providers/AuthGuard";
 import React from "react";
 
 function CheckOutPage() {

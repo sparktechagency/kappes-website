@@ -27,7 +27,7 @@ function Checkout() {
   // Return early with a loading indicator if still loading
   if (isLoading) {
     return (
-      <div className="w-full md:w-[90%] px-4 py-10 md:px-10 md:py-15 mx-auto">
+      <div className="w-full md:w-[90%] px-4 py-10 md:px-10 md:py-15 mx-auto min-h-screen">
         <div className="flex items-center justify-center p-10">
           <p className="text-lg">Loading your cart...</p>
         </div>

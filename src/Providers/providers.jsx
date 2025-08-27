@@ -1,7 +1,7 @@
 "use client";
 
 import { Provider, useSelector } from "react-redux";
-import { store, persistor } from "../../store";
+import { store, persistor } from "../store";
 import { PersistGate } from "redux-persist/integration/react";
 import Chat from "@/common/components/chatComponent";
 import { usePathname } from "next/navigation";

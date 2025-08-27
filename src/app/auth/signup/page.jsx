@@ -3,7 +3,7 @@ import React from "react";
 
 function SignUp() {
   return (
-    <div className="w-full min-h-[calc(100vh-4rem)] pt-20 pb-10 flex items-center justify-center bg-gray-50">
+    <div className="w-full min-h-screen lg:pt-12 pb-10 flex items-start justify-center bg-gray-50">
       <RegistrationForm />
     </div>
   );

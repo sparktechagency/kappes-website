@@ -2,7 +2,7 @@ import { Geist, Geist_Mono, Comfortaa } from "next/font/google";
 import "./globals.css";
 import NavBar from "@/components/Navbar";
 import Footer from "@/components/Footer/footer";
-import Providers from "@/components/Providers/providers";
+import Providers from "@/Providers/providers";
 import Head from "./Head";
 
 const geistSans = Geist({
@@ -32,8 +32,7 @@ export default function RootLayout({ children }) {
       >
         <Providers>
           <NavBar />
-          {children}
-
+          <div className="min-h-screen">{children}</div>
           <Footer />
         </Providers>
       </body>

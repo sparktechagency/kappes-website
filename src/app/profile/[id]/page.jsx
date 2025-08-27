@@ -1,16 +1,16 @@
 "use client";
 import ProfileLayout from "@/components/Profile/layout";
 import React from "react";
-import { withAuth } from "@/components/Providers/AuthGuard";
+import { withAuth } from "@/Providers/AuthGuard";
 
 function Profile() {
   return (
     <div className="relative  w-full h-full bg-white  z-0">
       <div
-        className="absolute  w-full h-full bg-white  z-0"
+        className="absolute  w-full h-full bg-white  z-0 opacity-70"
         style={{
           backgroundImage: `url("/assets/texture.png")`,
-          backgroundSize: "cover",
+          backgroundSize: "600px",
           backgroundRepeat: "repeat",
           backgroundPosition: "center",
         }}

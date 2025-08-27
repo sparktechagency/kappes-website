@@ -17,10 +17,11 @@ import useProductSlug from "@/hooks/useProductSlug";
 import { getImageUrl } from "@/redux/baseUrl";
 import ProductSpecs from "./ProductSpecs";
 import { isProductInStock } from "@/utils/productUtils";
+import { useRouter } from "next/navigation";
 
 function ProductView() {
   const dispatch = useDispatch();
-
+  const router = useRouter();
   // Get chat state from Redux
   const { unreadCount } = useSelector((state) => state.chat);
 
@@ -394,6 +395,9 @@ function ProductView() {
               <Button
                 className="flex-1 bg-red-700 hover:bg-red-800"
                 disabled={!isProductInStock(productDetails, selectedVariant)}
+                onClick={() => {
+                  router.push("/check-out/billing-procedure");
+                }}
               >
                 Buy Now
               </Button>
